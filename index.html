@@ -1,12 +1,493 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Project</title>
+    <title>The AI Revolution: A Data-Driven Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A192F;
+            color: #CCD6F6;
+        }
+        .glass-card {
+            background: rgba(13, 38, 76, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -41px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #64FFDA;
+            border: 4px solid #172A45;
+            z-index: 10;
+        }
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .loader {
+            border: 4px solid #172A45;
+            border-top: 4px solid #64FFDA;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body>
-    <h1>Welcome to my first project!</h1>
-    <p>This is a new file in my repository.</p>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center my-12 md:my-20">
+            <h1 class="text-4xl md:text-7xl font-bold text-white mb-4">The AI Revolution</h1>
+            <p class="text-lg md:text-2xl text-[#64FFDA] mb-6">A Data-Driven Journey Through The Last 5 Years</p>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-[#8892B0]">This is an interactive "VibeCoded" website that explores the impressive advancements in Artificial Intelligence from 2020 into the future. Scroll to explore the timeline or dive into the data below.</p>
+        </header>
+
+        <section id="growth-graphs" class="my-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-12">The Exponential Curves of Progress</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+                <div class="glass-card p-6 rounded-lg shadow-xl lg:col-span-2">
+                    <h3 class="text-xl font-bold text-[#CCD6F6] mb-4">AI Model Size (Parameters)</h3>
+                    <div class="h-64 md:h-80"><canvas id="modelSizeChart"></canvas></div>
+                    <p class="text-[#8892B0] mt-4 text-sm">The complexity of AI models, measured in parameters, has exploded. This "bigger is better" approach has been a primary driver of new capabilities.</p>
+                </div>
+                <div class="glass-card p-6 rounded-lg shadow-xl lg:col-span-2">
+                    <h3 class="text-xl font-bold text-[#CCD6F6] mb-4">Training Compute Growth (FLOPs)</h3>
+                    <div class="h-64 md:h-80"><canvas id="trainingComputeChart"></canvas></div>
+                     <p class="text-[#8892B0] mt-4 text-sm">The computational power used to train top models has doubled roughly every 6-10 months, vastly outpacing Moore's Law and enabling larger, more capable systems.</p>
+                </div>
+                <div class="glass-card p-6 rounded-lg shadow-xl lg:col-span-2">
+                    <h3 class="text-xl font-bold text-[#CCD6F6] mb-4">MMLU Benchmark Performance</h3>
+                    <div class="h-64 md:h-80"><canvas id="benchmarkChart"></canvas></div>
+                    <p class="text-[#8892B0] mt-4 text-sm">On this comprehensive knowledge test, AI has rapidly surpassed the average human expert, with top models now approaching the highest levels of human performance.</p>
+                </div>
+                 <div class="glass-card p-6 rounded-lg shadow-xl lg:col-span-3">
+                    <h3 class="text-xl font-bold text-[#CCD6F6] mb-4">Global Private AI Investment</h3>
+                    <div class="h-64 md:h-80"><canvas id="investmentChart"></canvas></div>
+                    <p class="text-[#8892B0] mt-4 text-sm">Corporate investment has grown dramatically, fueling the massive compute resources and talent required to build frontier AI models.</p>
+                </div>
+                <div class="glass-card p-6 rounded-lg shadow-xl lg:col-span-3">
+                    <h3 class="text-xl font-bold text-[#CCD6F6] mb-4">AI Research Publications (arXiv)</h3>
+                    <div class="h-64 md:h-80"><canvas id="publicationsChart"></canvas></div>
+                    <p class="text-[#8892B0] mt-4 text-sm">The volume of academic and corporate research has surged, indicating a massive global effort to push the boundaries of AI technology.</p>
+                </div>
+            </div>
+        </section>
+
+        <main class="mt-20">
+            <div class="relative border-l-4 border-[#172A45] ml-10 md:ml-12">
+                
+                <div id="2020" class="mb-24 pl-16 md:pl-20 relative timeline-item">
+                    <h2 class="text-3xl font-bold text-[#64FFDA]">2020: The Power of Scale is Unleashed</h2>
+                    <p class="text-[#8892B0] mt-2 mb-4">The release of OpenAI's GPT-3 with 175 billion parameters proved that massive scale could unlock generalized, human-like language capabilities, setting the stage for the generative AI boom.</p>
+                    <button onclick="openModal('modal-2020')" class="text-[#64FFDA] border border-[#64FFDA] font-semibold py-2 px-4 rounded-lg hover:bg-[#64FFDA] hover:text-[#0A192F] transition-colors">Explore GPT-3's Impact</button>
+                </div>
+
+                <div id="2021" class="mb-24 pl-16 md:pl-20 relative timeline-item">
+                    <h2 class="text-3xl font-bold text-[#64FFDA]">2021: AI Learns to See and Create</h2>
+                    <p class="text-[#8892B0] mt-2 mb-4">The creative floodgates opened with models like DALL-E. AI was no longer just analyzing data; it was generating novel, often surreal, visual content from text prompts, bridging the gap between language and art.</p>
+                    <button onclick="openModal('modal-2021')" class="text-[#64FFDA] border border-[#64FFDA] font-semibold py-2 px-4 rounded-lg hover:bg-[#64FFDA] hover:text-[#0A192F] transition-colors">See the Visual Revolution</button>
+                </div>
+
+                <div id="2022" class="mb-24 pl-16 md:pl-20 relative timeline-item">
+                    <h2 class="text-3xl font-bold text-[#64FFDA]">2022: AI Goes Public</h2>
+                    <p class="text-[#8892B0] mt-2 mb-4">This was the year AI entered public consciousness. The launch of ChatGPT provided a simple conversational interface that millions could use, while open-source models like Stable Diffusion democratized image generation.</p>
+                    <button onclick="openModal('modal-2022')" class="text-[#64FFDA] border border-[#64FFDA] font-semibold py-2 px-4 rounded-lg hover:bg-[#64FFDA] hover:text-[#0A192F] transition-colors">Understand the Boom</button>
+                </div>
+
+                <div id="2023" class="mb-24 pl-16 md:pl-20 relative timeline-item">
+                    <h2 class="text-3xl font-bold text-[#64FFDA]">2023: The Multimodal Leap</h2>
+                    <p class="text-[#8892B0] mt-2 mb-4">With GPT-4, AI became truly multimodal, able to process and reason about text, images, and data simultaneously. This was a critical step towards AI systems that perceive the world more like humans do.</p>
+                    <button onclick="openModal('modal-2023')" class="text-[#64FFDA] border border-[#64FFDA] font-semibold py-2 px-4 rounded-lg hover:bg-[#64FFDA] hover:text-[#0A192F] transition-colors">Witness Multimodality</button>
+                </div>
+
+                <div id="2024" class="mb-24 pl-16 md:pl-20 relative timeline-item">
+                    <h2 class="text-3xl font-bold text-[#64FFDA]">2024: AI Becomes a World Simulator</h2>
+                    <p class="text-[#8892B0] mt-2 mb-4">Text-to-video models like Sora demonstrated the ability to generate coherent, high-fidelity video clips, effectively creating small-scale "world simulations" with consistent physics and characters from text prompts.</p>
+                    <button onclick="openModal('modal-2024')" class="text-[#64FFDA] border border-[#64FFDA] font-semibold py-2 px-4 rounded-lg hover:bg-[#64FFDA] hover:text-[#0A192F] transition-colors">Enter the Simulator</button>
+                </div>
+
+                <div id="2025" class="pl-16 md:pl-20 relative timeline-item">
+                    <h2 class="text-3xl font-bold text-[#64FFDA]">The Next Wave: The AI 2027 Vision</h2>
+                    <p class="text-[#8892B0] mt-2 mb-4">The focus now shifts from single-task tools to autonomous AI agents capable of complex, multi-step reasoning. The "AI 2027" forecast outlines a future where this trend accelerates dramatically, leading to profound societal shifts.</p>
+                    <button onclick="openModal('modal-2025')" class="text-[#64FFDA] border border-[#64FFDA] font-semibold py-2 px-4 rounded-lg hover:bg-[#64FFDA] hover:text-[#0A192F] transition-colors">Explore the 2027 Vision</button>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="text-center mt-20 text-[#8892B0]">
+            <p>This infographic was designed to provide a high-level overview of recent AI advancements.</p>
+        </footer>
+
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-2020" class="modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 invisible opacity-0 z-50">
+        <div class="modal-content glass-card rounded-xl shadow-2xl p-8 max-w-4xl w-full transform scale-95 overflow-y-auto max-h-screen">
+            <h3 class="text-2xl font-bold text-[#64FFDA] mb-4">2020: GPT-3 and the Power of Scale</h3>
+            <p class="text-[#8892B0] mb-4">The release of OpenAI's GPT-3 was a paradigm shift. Its 175 billion parameters were an order of magnitude larger than previous models, enabling a crucial emergent ability: <strong>in-context learning</strong>. This meant the model could perform tasks it wasn't explicitly trained for, simply by being shown a few examples in the prompt.</p>
+            <ul class="list-disc list-inside text-[#8892B0] mb-4 space-y-2">
+                <li><strong>Few-Shot Learning:</strong> You could show GPT-3 a couple of French-to-English translations, and it would then translate a new French sentence correctly without any new training.</li>
+                <li><strong>API as a Product:</strong> OpenAI released GPT-3 via an API, allowing developers to build new applications on top of its capabilities. This led to an explosion of AI-powered startups for copywriting (Copy.ai), code generation (Copilot's precursor), and more.</li>
+                <li><strong>Unprecedented Coherence:</strong> The model could generate long, coherent passages of text, write functioning code snippets, and create surprisingly nuanced poetry, demonstrating a level of language mastery that was previously science fiction.</li>
+            </ul>
+            <p class="text-[#8892B0] mb-6">However, GPT-3 also highlighted key challenges: it could "hallucinate" facts, reflect biases from its training data, and lacked true, grounded understanding of the world. It was a powerful text-prediction engine, but its success proved that the path forward was to scale even further.</p>
+            <button onclick="closeModal('modal-2020')" class="bg-transparent border border-[#CCD6F6] text-[#CCD6F6] font-semibold py-2 px-4 rounded-lg hover:bg-[#CCD6F6] hover:text-[#0A192F] transition-colors float-right">Close</button>
+        </div>
+    </div>
+
+    <div id="modal-2021" class="modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 invisible opacity-0 z-50">
+        <div class="modal-content glass-card rounded-xl shadow-2xl p-8 max-w-4xl w-full transform scale-95 overflow-y-auto max-h-screen">
+            <h3 class="text-2xl font-bold text-[#64FFDA] mb-4">2021: AI Learns to See and Create</h3>
+            <p class="text-[#8892B0] mb-4">This year marked the moment generative AI became a visual medium. The key innovation was connecting the powerful language understanding of transformers with image-generation techniques. Models like OpenAI's DALL-E and, later, Midjourney and Stable Diffusion, were built on this principle.</p>
+            <ul class="list-disc list-inside text-[#8892B0] mb-4 space-y-2">
+                <li><strong>The Technology:</strong> These models used a process called <strong>diffusion</strong>. In simple terms, the AI learns to take a field of random noise and gradually refine it, step-by-step, into an image that matches a text description. It's like a sculptor starting with a block of marble and chipping away until a statue emerges.</li>
+                <li><strong>Conceptual Fusion:</strong> The real breakthrough was the ability to fuse unrelated concepts. Prompts like "a photorealistic astronaut riding a horse" or "a stained glass window depicting a hamburger" showed the AI wasn't just finding images, but creating entirely new visual ideas.</li>
+                <li><strong>Artistic and Ethical Debates:</strong> The rise of AI art sparked immediate debate. Artists worried about copyright, as models were trained on vast datasets of existing art. Ethical questions arose about the potential for creating convincing fake images and the definition of creativity itself.</li>
+            </ul>
+            <p class="text-[#8892B0] mb-6">2021 proved that the scaling laws and architectural lessons from language models could be successfully applied to the visual domain, opening up a new frontier for creative expression and technological disruption.</p>
+            <button onclick="closeModal('modal-2021')" class="bg-transparent border border-[#CCD6F6] text-[#CCD6F6] font-semibold py-2 px-4 rounded-lg hover:bg-[#CCD6F6] hover:text-[#0A192F] transition-colors float-right">Close</button>
+        </div>
+    </div>
+    
+    <div id="modal-2022" class="modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 invisible opacity-0 z-50">
+        <div class="modal-content glass-card rounded-xl shadow-2xl p-8 max-w-4xl w-full transform scale-95 overflow-y-auto max-h-screen">
+            <h3 class="text-2xl font-bold text-[#64FFDA] mb-4">2022: AI Goes Public</h3>
+            <p class="text-[#8892B0] mb-4">If previous years built the engine, 2022 was the year the public got the keys. Two key releases were responsible for AI's mainstream explosion:</p>
+            <ul class="list-disc list-inside text-[#8892B0] mb-4 space-y-2">
+                <li><strong>ChatGPT & RLHF:</strong> The magic of ChatGPT wasn't just the underlying model (a version of GPT-3.5), but how it was fine-tuned. OpenAI used a technique called <strong>Reinforcement Learning from Human Feedback (RLHF)</strong>. Human trainers would rank different AI responses, teaching the model to be more helpful, conversational, and aligned with user intent. This made the AI feel less like a raw database and more like a helpful assistant, leading to its viral adoption.</li>
+                <li><strong>Stable Diffusion & Open Source:</strong> While DALL-E 2 was a powerful proprietary tool, the open-source release of Stable Diffusion changed the game. Because anyone could download, run, and modify the model, a massive community-driven ecosystem emerged almost overnight. Developers created plugins for Photoshop, custom tools for specific art styles, and new techniques that pushed the technology in unexpected directions. This demonstrated the immense power of open innovation in accelerating AI development.</li>
+            </ul>
+            <p class="text-[#8892B0] mb-6">This one-two punch of a user-friendly interface (ChatGPT) and a powerful open-source tool (Stable Diffusion) cemented generative AI as a transformative technology in the public consciousness.</p>
+            <button onclick="closeModal('modal-2022')" class="bg-transparent border border-[#CCD6F6] text-[#CCD6F6] font-semibold py-2 px-4 rounded-lg hover:bg-[#CCD6F6] hover:text-[#0A192F] transition-colors float-right">Close</button>
+        </div>
+    </div>
+
+    <div id="modal-2023" class="modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 invisible opacity-0 z-50">
+        <div class="modal-content glass-card rounded-xl shadow-2xl p-8 max-w-4xl w-full transform scale-95 overflow-y-auto max-h-screen">
+            <h3 class="text-2xl font-bold text-[#64FFDA] mb-4">2023: The Multimodal Leap</h3>
+            <p class="text-[#8892B0] mb-4">With models like GPT-4, AI began to perceive and reason about the world in multiple modalities at once, moving beyond single-format inputs. This was a crucial step towards creating AI systems that can understand context with human-like richness.</p>
+            <ul class="list-disc list-inside text-[#8892B0] mb-4 space-y-2">
+                <li><strong>Vision-Language Integration:</strong> The core capability was combining vision and language. A user could upload an image and have a conversation about it. This unlocked powerful new use cases.</li>
+                <li><strong>Real-World Examples:</strong>
+                    <ul>
+                        <li>- <strong>Debugging Code:</strong> A developer could take a photo of a whiteboard with a hand-drawn diagram of an app's architecture and ask the AI to write the corresponding code.</li>
+                        <li>- <strong>Analyzing Data:</strong> An analyst could upload a screenshot of a complex financial chart and ask the AI to summarize the trends, identify outliers, and forecast future performance.</li>
+                        <li>- <strong>Accessibility:</strong> A visually impaired person could use their phone's camera to show the AI their surroundings, and the AI could describe the scene, read text, and help them navigate.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="text-[#8892B0] mb-6">This move to multimodality was the first step toward creating more "embodied" AI—systems that can interact with and understand the messy, multi-format world we live in, rather than just processing clean, text-based data.</p>
+            <button onclick="closeModal('modal-2023')" class="bg-transparent border border-[#CCD6F6] text-[#CCD6F6] font-semibold py-2 px-4 rounded-lg hover:bg-[#CCD6F6] hover:text-[#0A192F] transition-colors float-right">Close</button>
+        </div>
+    </div>
+    
+    <div id="modal-2024" class="modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 invisible opacity-0 z-50">
+        <div class="modal-content glass-card rounded-xl shadow-2xl p-8 max-w-4xl w-full transform scale-95 overflow-y-auto max-h-screen">
+            <h3 class="text-2xl font-bold text-[#64FFDA] mb-4">2024: AI as a World Simulator</h3>
+            <p class="text-[#8892B0] mb-4">Text-to-video models like OpenAI's Sora represented a profound leap. They weren't just animating images; they were generating video based on an emergent, learned understanding of the physical world. This is why they are often described as "world simulators."</p>
+             <ul class="list-disc list-inside text-[#8892B0] mb-4 space-y-2">
+                <li><strong>Understanding Physics and Object Permanence:</strong> When Sora generates a video of a ball bouncing, it implicitly models gravity and momentum. When a character walks behind an object and re-emerges, the AI understands that the character continues to exist even when not visible.</li>
+                <li><strong>Coherent World Generation:</strong> The models could maintain the identity of characters and the consistency of environments over long video clips, even with complex camera movements.</li>
+                <li><strong>Creative and Scientific Implications:</strong>
+                    <ul>
+                        <li>- <strong>Filmmaking:</strong> A director could create photorealistic pre-visualizations of complex scenes, or even generate entire animated films, from a script.</li>
+                        <li>- <strong>Simulation:</strong> An engineer could simulate how a new car design might perform in different weather conditions, or a scientist could model complex molecular interactions, all generated from text descriptions.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="text-[#8892B0] mb-6">The ability to simulate reality, even on a small scale, is a powerful new capability that blurs the line between generative content and scientific modeling, with far-reaching implications for the future.</p>
+            <button onclick="closeModal('modal-2024')" class="bg-transparent border border-[#CCD6F6] text-[#CCD6F6] font-semibold py-2 px-4 rounded-lg hover:bg-[#CCD6F6] hover:text-[#0A192F] transition-colors float-right">Close</button>
+        </div>
+    </div>
+    
+    <div id="modal-2025" class="modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 invisible opacity-0 z-50">
+        <div class="modal-content glass-card rounded-xl shadow-2xl p-8 max-w-4xl w-full transform scale-95 overflow-y-auto max-h-screen">
+            <h3 class="text-2xl font-bold text-[#64FFDA] mb-4">The Next Wave: The AI 2027 Vision</h3>
+            <p class="text-[#8892B0] mb-4">Looking ahead, the focus shifts from specialized tools to autonomous AI agents. The "AI 2027" forecast, a scenario developed by AI researchers, predicts this trend will accelerate dramatically, leading to transformative, and potentially disruptive, outcomes.</p>
+            <h4 class="text-xl font-bold text-white mt-6 mb-2">Key Forecasts for the 2025-2027 Period:</h4>
+            <ul class="list-disc list-inside text-[#8892B0] mb-4 space-y-2">
+                <li><strong>Emergence of "Superhuman Coders":</strong> AI agents will begin to perform software development and AI research tasks faster, cheaper, and more effectively than human experts.</li>
+                <li><strong>Recursive Self-Improvement:</strong> This leads to a feedback loop where AI agents accelerate the development of even more powerful AI agents. The "AI 2027" scenario suggests this could compress years of R&D into months, leading to an "intelligence explosion."</li>
+                <li><strong>Profound Economic Disruption:</strong> As agents automate not just tasks but entire white-collar workflows (e.g., managing projects, performing financial analysis, running marketing campaigns), the model predicts significant, structural job displacement.</li>
+                <li><strong>The Challenge of Control:</strong> A central concern is that as these systems become more autonomous and capable of self-improvement, ensuring their goals remain aligned with human values becomes exponentially more difficult. We risk a loss of meaningful human control over these powerful systems.</li>
+            </ul>
+            
+            <div class="mt-8 pt-6 border-t border-[#172A45]">
+                <h4 class="text-xl font-bold text-[#64FFDA] mb-4">Interact with a Glimpse of the Future</h4>
+                <p class="text-[#8892B0] mb-4">Ask a question about the future of AI to get a prediction from a Gemini-powered model. This demonstrates the reasoning capabilities of today's systems.</p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="ai-question" class="flex-grow bg-[#0A192F] text-white border border-[#172A45] rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#64FFDA]" placeholder="e.g., How will AI agents change scientific research?">
+                    <button id="ask-button" onclick="askTheFuture()" class="bg-[#64FFDA] text-[#0A192F] font-bold py-2 px-4 rounded-lg hover:bg-opacity-80 transition-colors flex items-center justify-center">
+                        Ask the Future ✨
+                    </button>
+                </div>
+                <div id="loader" class="hidden my-4 mx-auto loader"></div>
+                <div id="gemini-response" class="mt-4 p-4 bg-black bg-opacity-20 rounded-lg text-[#8892B0] min-h-[50px]"></div>
+            </div>
+
+            <button onclick="closeModal('modal-2025')" class="mt-6 bg-transparent border border-[#CCD6F6] text-[#CCD6F6] font-semibold py-2 px-4 rounded-lg hover:bg-[#CCD6F6] hover:text-[#0A192F] transition-colors float-right">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('invisible', 'opacity-0');
+            modal.querySelector('.modal-content').classList.remove('scale-95');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('opacity-0');
+            modal.querySelector('.modal-content').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('invisible');
+            }, 300);
+        }
+        
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (!modal.classList.contains('invisible')) {
+                        closeModal(modal.id);
+                    }
+                });
+            }
+        });
+
+        // --- Chart.js Rendering ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const chartTextColor = '#8892B0';
+            const chartGridColor = 'rgba(204, 214, 246, 0.1)';
+            const chartBorderColor = '#64FFDA';
+            const chartBackgroundColor = 'rgba(100, 255, 218, 0.1)';
+            const humanBaselineColor = '#CCD6F6';
+
+            // Chart 1: Model Size
+            const modelSizeCtx = document.getElementById('modelSizeChart').getContext('2d');
+            new Chart(modelSizeCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                    datasets: [{
+                        label: 'Parameters (in Billions, log scale)',
+                        data: [1.5, 175, 530, 540, 1750, 4050], // GPT-2, GPT-3, Megatron, PaLM, GPT-4 (est), Llama3.1-405B
+                        borderColor: chartBorderColor,
+                        backgroundColor: chartBackgroundColor,
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { type: 'logarithmic', min: 1, ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+                        x: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Chart 2: Training Compute
+            const trainingComputeCtx = document.getElementById('trainingComputeChart').getContext('2d');
+            new Chart(trainingComputeCtx, {
+                 type: 'line',
+                data: {
+                    labels: ['2018', '2019', '2020', '2021', '2022', '2023'],
+                    datasets: [{
+                        label: 'Training Compute (PetaFLOPs, log scale)',
+                        data: [0.3, 3, 150, 2000, 8000, 24000], // GPT-1, GPT-2, GPT-3, Gopher, PaLM, GPT-4 (estimates)
+                        borderColor: chartBorderColor,
+                        backgroundColor: chartBackgroundColor,
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { type: 'logarithmic', min: 0.1, ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+                        x: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Chart 3: Benchmark
+            const benchmarkCtx = document.getElementById('benchmarkChart').getContext('2d');
+            new Chart(benchmarkCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2020-09', '2022-03', '2023-03', '2024-03', '2024-06'],
+                    datasets: [{
+                        label: 'MMLU Score',
+                        data: [43.9, 75.2, 86.4, 90.0, 93.0], // UnifiedQA, PaLM, GPT-4, Claude 3 Opus, o1 (est)
+                        borderColor: chartBorderColor,
+                        backgroundColor: chartBackgroundColor,
+                        fill: true,
+                        tension: 0.4,
+                    }, {
+                        label: 'Human Expert',
+                        data: [89.8, 89.8, 89.8, 89.8, 89.8],
+                        borderColor: humanBaselineColor,
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { min: 40, max: 100, ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+                        x: { type: 'time', time: { unit: 'year' }, ticks: { color: chartTextColor }, grid: { color: chartGridColor } }
+                    },
+                    plugins: { legend: { labels: { color: chartTextColor } } }
+                }
+            });
+
+            // Chart 4: Investment
+            const investmentCtx = document.getElementById('investmentChart').getContext('2d');
+            new Chart(investmentCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                    datasets: [{
+                        label: 'Global Private AI Investment ($B)',
+                        data: [36, 45, 93.5, 74, 91.9, 109.1], // Source: Stanford AI Index
+                        backgroundColor: chartBorderColor,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+                        x: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Chart 5: Publications
+            const publicationsCtx = document.getElementById('publicationsChart').getContext('2d');
+            new Chart(publicationsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+                    datasets: [{
+                        label: 'AI Publications on arXiv (in Thousands)',
+                        data: [18, 26, 35, 43, 56, 71, 90], // Approximate values based on arXiv trends
+                        backgroundColor: chartBorderColor,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+                        x: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        });
+
+        // --- Gemini API Integration ---
+        const loader = document.getElementById('loader');
+        const responseContainer = document.getElementById('gemini-response');
+        const askButton = document.getElementById('ask-button');
+
+        async function askTheFuture() {
+            const userInput = document.getElementById('ai-question').value;
+            if (!userInput) {
+                responseContainer.textContent = 'Please enter a question.';
+                return;
+            }
+
+            loader.classList.remove('hidden');
+            responseContainer.textContent = '';
+            askButton.disabled = true;
+
+            const prompt = `As an AI historian from the year 2040, looking back, briefly explain the development of the following topic from 2025 onwards in a concise, clear paragraph: "${userInput}"`;
+            
+            try {
+                const text = await callGeminiWithBackoff(prompt);
+                responseContainer.textContent = text;
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                responseContainer.textContent = 'Sorry, I couldn\'t get a response. Please try again later.';
+            } finally {
+                loader.classList.add('hidden');
+                askButton.disabled = false;
+            }
+        }
+
+        async function callGeminiWithBackoff(prompt, maxRetries = 3) {
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+
+            let attempt = 0;
+            let delay = 1000; // Start with 1 second
+
+            while (attempt < maxRetries) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status >= 400 && response.status < 600) {
+                           throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                    }
+                    
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        return result.candidates[0].content.parts[0].text;
+                    } else {
+                        throw new Error('Invalid response structure from Gemini API.');
+                    }
+
+                } catch (error) {
+                    console.warn(`Attempt ${attempt + 1} failed. Retrying in ${delay}ms...`);
+                    attempt++;
+                    if (attempt >= maxRetries) {
+                        throw error;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
+    </script>
+
 </body>
 </html>
