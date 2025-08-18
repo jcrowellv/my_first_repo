@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Odyssey</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #000005;
+            color: white;
+            cursor: grab;
+        }
+        body.dragging {
+            cursor: grabbing;
+        }
+        canvas {
+            display: block;
+        }
+        #info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 15px 25px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+        p {
+            margin: 0;
+            font-size: 1em;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="info-panel">
+        <h1>Cosmic Odyssey</h1>
+        <p>Explore the wonders of deep space.</p>
+    </div>
+
+    <div id="controls">
+        <p><strong>Arrow Keys</strong>: Move | <strong>Click & Drag</strong>: Look | <strong>Hold Shift</strong>: Warp Speed</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // === Basic Scene Setup ===
+        let scene, camera, renderer, clock;
+        let spaceship, spaceDust;
+        let keys = {};
+        let pulsars = [];
+
+        // === Mouse Control Variables ===
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        // FIX: Added variables for smoother quaternion-based rotation
+        let pitch = 0;
+        let yaw = 0;
+
+        function init() {
+            // Core Components
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x000005, 0.00025);
+            clock = new THREE.Clock();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 6000);
+            camera.position.z = 10;
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000005);
+            document.body.appendChild(renderer.domElement);
+            
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0x606080, 0.5);
+            scene.add(ambientLight);
+
+            // === Spaceship Setup (with physics properties) ===
+            spaceship = new THREE.Object3D();
+            spaceship.velocity = new THREE.Vector3();
+            spaceship.damping = 0.97; // Damping factor for smooth slowdown
+            scene.add(spaceship);
+
+            // === Generate the Cosmos ===
+            createDistantStars();
+            createGalaxyField();
+            createNebulae();
+            createAsteroidFields();
+            createSpaceDust();
+            createPulsars();
+
+            // === Event Listeners ===
+            window.addEventListener('keydown', e => keys[e.code] = true);
+            window.addEventListener('keyup', e => keys[e.code] = false);
+            window.addEventListener('mousedown', onMouseDown);
+            window.addEventListener('mouseup', onMouseUp);
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('resize', onWindowResize);
+
+            animate();
+        }
+
+        // === Texture Creation ===
+        function createGaseousTexture(color1, color2) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+            gradient.addColorStop(0, `rgba(${color1.r*255}, ${color1.g*255}, ${color1.b*255}, 0.8)`);
+            gradient.addColorStop(0.3, `rgba(${color2.r*255}, ${color2.g*255}, ${color2.b*255}, 0.4)`);
+            gradient.addColorStop(1, `rgba(${color2.r*255}, ${color2.g*255}, ${color2.b*255}, 0)`);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 256, 256);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        // === Cosmic Object Creation Functions ===
+        function createDistantStars() {
+            const starCount = 20000;
+            const positions = new Float32Array(starCount * 3);
+            const geometry = new THREE.BufferGeometry();
+            for (let i = 0; i < starCount; i++) {
+                positions.set([(Math.random() - 0.5) * 5000, (Math.random() - 0.5) * 5000, (Math.random() - 0.5) * 5000], i * 3);
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({ color: 0xffffff, size: 1.5, transparent: true, opacity: 0.5 });
+            const distantStars = new THREE.Points(geometry, material);
+            scene.add(distantStars);
+        }
+
+        function createGalaxyField() {
+            const galaxyCount = 5000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(galaxyCount * 3);
+            const colors = new Float32Array(galaxyCount * 3);
+            const sizes = new Float32Array(galaxyCount);
+            const color = new THREE.Color();
+            for (let i = 0; i < galaxyCount; i++) {
+                positions.set([(Math.random() - 0.5) * 4000, (Math.random() - 0.5) * 4000, (Math.random() - 0.5) * 4000], i * 3);
+                color.setHSL(0.5 + Math.random() * 0.5, 0.8, 0.6);
+                colors.set([color.r, color.g, color.b], i * 3);
+                sizes[i] = Math.random() * 30 + 15;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            const material = new THREE.ShaderMaterial({
+                uniforms: { pointTexture: { value: createGaseousTexture(new THREE.Color(1,1,1), new THREE.Color(0.8,0.8,1)) } },
+                vertexShader: `attribute float size; varying vec3 vColor; void main() { vColor = color; vec4 mvPosition = modelViewMatrix * vec4(position, 1.0); gl_PointSize = size * (400.0 / -mvPosition.z); gl_Position = projectionMatrix * mvPosition; }`,
+                fragmentShader: `uniform sampler2D pointTexture; varying vec3 vColor; void main() { gl_FragColor = vec4(vColor, 1.0) * texture2D(pointTexture, gl_PointCoord); }`,
+                blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, vertexColors: true
+            });
+            const galaxies = new THREE.Points(geometry, material);
+            scene.add(galaxies);
+        }
+
+        function createNebulae() {
+            for (let j = 0; j < 5; j++) {
+                const color1 = new THREE.Color().setHSL(Math.random(), 0.7, 0.5);
+                const color2 = new THREE.Color().setHSL(Math.random(), 0.8, 0.6);
+                const nebulaMaterial = new THREE.SpriteMaterial({
+                    map: createGaseousTexture(color1, color2),
+                    blending: THREE.AdditiveBlending,
+                    transparent: true,
+                    opacity: 0.25,
+                    depthWrite: false
+                });
+                const center = new THREE.Vector3((Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 3000);
+                for (let i = 0; i < 50; i++) {
+                    const sprite = new THREE.Sprite(nebulaMaterial);
+                    const pos = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(800).add(center);
+                    sprite.position.copy(pos);
+                    const scale = Math.random() * 400 + 200;
+                    sprite.scale.set(scale, scale, scale);
+                    scene.add(sprite);
+                }
+            }
+        }
+
+        function createAsteroidFields() {
+            const asteroidMaterial = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8 });
+            for (let i = 0; i < 3; i++) {
+                const fieldCenter = new THREE.Vector3((Math.random() - 0.5) * 2500, (Math.random() - 0.5) * 1000, (Math.random() - 0.5) * 2500);
+                for (let j = 0; j < 100; j++) {
+                    const size = Math.random() * 10 + 2;
+                    const geometry = new THREE.IcosahedronGeometry(size, 0);
+                    const asteroid = new THREE.Mesh(geometry, asteroidMaterial);
+                    const pos = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(Math.random() * 150);
+                    asteroid.position.copy(fieldCenter).add(pos);
+                    asteroid.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                    scene.add(asteroid);
+                }
+            }
+        }
+
+        function createSpaceDust() {
+            const dustCount = 500;
+            const positions = new Float32Array(dustCount * 3);
+            const geometry = new THREE.BufferGeometry();
+            for (let i = 0; i < dustCount; i++) {
+                positions.set([(Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100], i * 3);
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({ color: 0xaaaaaa, size: 0.2, transparent: true, opacity: 0.5 });
+            spaceDust = new THREE.Points(geometry, material);
+            scene.add(spaceDust);
+        }
+
+        function createPulsars() {
+            for (let i = 0; i < 2; i++) {
+                const geometry = new THREE.IcosahedronGeometry(5, 1);
+                const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+                const pulsar = new THREE.Mesh(geometry, material);
+                pulsar.position.set((Math.random() - 0.5) * 3500, (Math.random() - 0.5) * 3500, (Math.random() - 0.5) * 3500);
+                const light = new THREE.PointLight(0xaaaaff, 0, 500);
+                pulsar.add(light);
+                scene.add(pulsar);
+                pulsars.push({ mesh: pulsar, light: light });
+            }
+        }
+
+        // === Control Handlers ===
+        function onMouseDown(event) {
+            isDragging = true;
+            document.body.classList.add('dragging');
+            previousMousePosition = { x: event.clientX, y: event.clientY };
+        }
+        function onMouseUp(event) {
+            isDragging = false;
+            document.body.classList.remove('dragging');
+        }
+
+        function onMouseMove(event) {
+            if (!isDragging) return;
+            const deltaMove = { x: event.clientX - previousMousePosition.x, y: event.clientY - previousMousePosition.y };
+            
+            // FIX: Replaced buggy Euler rotation with stable Quaternion rotation
+            const rotationSpeed = 0.002;
+            yaw -= deltaMove.x * rotationSpeed;
+            pitch -= deltaMove.y * rotationSpeed;
+
+            // Clamp the pitch to prevent flipping upside down
+            pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch));
+
+            const yawQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+            const pitchQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
+            
+            // Combine rotations: yaw first, then pitch
+            spaceship.quaternion.copy(yawQuaternion).multiply(pitchQuaternion);
+            
+            previousMousePosition = { x: event.clientX, y: event.clientY };
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // === Animation Loop ===
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Handle Movement Physics
+            const isBoosting = keys['ShiftLeft'] || keys['ShiftRight'];
+            const acceleration = isBoosting ? 0.8 : 0.2;
+            const moveDirection = new THREE.Vector3();
+            if (keys['ArrowUp'] || keys['KeyW']) moveDirection.z -= 1;
+            if (keys['ArrowDown'] || keys['KeyS']) moveDirection.z += 1;
+            if (keys['ArrowLeft'] || keys['KeyA']) moveDirection.x -= 1;
+            if (keys['ArrowRight'] || keys['KeyD']) moveDirection.x += 1;
+
+            moveDirection.normalize().multiplyScalar(acceleration);
+            moveDirection.applyQuaternion(spaceship.quaternion); // Move relative to ship's direction
+            spaceship.velocity.add(moveDirection);
+            spaceship.velocity.multiplyScalar(spaceship.damping);
+            spaceship.position.add(spaceship.velocity);
+
+            // Update camera to smoothly follow the spaceship
+            const cameraOffset = new THREE.Vector3(0, 0, 10);
+            const cameraPosition = cameraOffset.applyMatrix4(spaceship.matrixWorld);
+            camera.position.lerp(cameraPosition, 0.1);
+            const lookDirection = new THREE.Vector3(0, 0, -1).applyQuaternion(spaceship.quaternion).add(spaceship.position);
+            camera.lookAt(lookDirection);
+
+            // Animate space dust for motion effect
+            spaceDust.position.copy(spaceship.position);
+            spaceDust.material.opacity = isBoosting ? 1.0 : 0.5;
+            spaceDust.material.size = isBoosting ? 0.4 : 0.2;
+            
+            // Animate pulsars
+            const time = clock.getElapsedTime();
+            pulsars.forEach(p => {
+                const pulse = (Math.sin(time * 3 + p.mesh.position.x) + 1) / 2; // Offset pulse by position
+                p.light.intensity = pulse * 4;
+                p.mesh.material.emissiveIntensity = pulse * 2;
+                p.mesh.material.emissive = p.light.color;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+    </script>
+</body>
+</html>
