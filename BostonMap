@@ -1,0 +1,348 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/interactive_map.html b/interactive_map.html
+new file mode 100644
+index 0000000000000000000000000000000000000000..53a1bd5f3a1a0eee6b3980536b8711d44052f8a0
+--- /dev/null
++++ b/interactive_map.html
+@@ -0,0 +1,338 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++  <meta charset="UTF-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <title>Boston University Explorer Map</title>
++  <link
++    rel="stylesheet"
++    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
++    integrity="sha256-sA+4wY0pLFpYHwdgEMCkVd6MprcL1a1uMBMQ1A6r0P8="
++    crossorigin=""
++  />
++  <style>
++    :root {
++      color-scheme: light dark;
++      --primary: #004b8d;
++      --background: #f8f9fa;
++      --panel-background: rgba(255, 255, 255, 0.9);
++      --text-color: #1c1c1c;
++      --muted: #6c757d;
++    }
++
++    body {
++      margin: 0;
++      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
++      background: var(--background);
++      color: var(--text-color);
++      display: flex;
++      flex-direction: column;
++      min-height: 100vh;
++    }
++
++    header {
++      padding: 1rem 2rem;
++      background: var(--primary);
++      color: white;
++      text-align: center;
++      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
++    }
++
++    header h1 {
++      margin: 0;
++      font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
++    }
++
++    header p {
++      margin: 0.5rem 0 0;
++      font-size: 1rem;
++      color: rgba(255, 255, 255, 0.85);
++    }
++
++    main {
++      flex: 1;
++      display: grid;
++      grid-template-columns: minmax(300px, 28%) 1fr;
++      gap: 1rem;
++      padding: 1rem;
++    }
++
++    #detail-panel {
++      background: var(--panel-background);
++      border-radius: 12px;
++      padding: 1.5rem;
++      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
++      backdrop-filter: blur(6px);
++      display: flex;
++      flex-direction: column;
++      justify-content: space-between;
++      transition: transform 0.3s ease, opacity 0.3s ease;
++    }
++
++    #detail-panel[hidden] {
++      display: none;
++    }
++
++    #detail-panel h2 {
++      margin-top: 0;
++      color: var(--primary);
++      font-size: 1.5rem;
++    }
++
++    #detail-panel .poi-type {
++      text-transform: uppercase;
++      font-size: 0.75rem;
++      letter-spacing: 0.1em;
++      color: var(--muted);
++      margin-bottom: 0.5rem;
++    }
++
++    #detail-panel .poi-description {
++      line-height: 1.6;
++      margin: 0.75rem 0;
++    }
++
++    #detail-panel .poi-contact {
++      font-size: 0.95rem;
++      color: var(--muted);
++      margin: 0.5rem 0 0;
++    }
++
++    #detail-panel.visible {
++      opacity: 1;
++      transform: translateY(0);
++    }
++
++    #map {
++      width: 100%;
++      height: calc(100vh - 160px);
++      min-height: 400px;
++      border-radius: 12px;
++      overflow: hidden;
++      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
++    }
++
++    @media (max-width: 900px) {
++      main {
++        grid-template-columns: 1fr;
++      }
++
++      #map {
++        height: 60vh;
++      }
++    }
++
++    .screenreader-only {
++      position: absolute;
++      width: 1px;
++      height: 1px;
++      padding: 0;
++      margin: -1px;
++      overflow: hidden;
++      clip: rect(0, 0, 0, 0);
++      border: 0;
++    }
++  </style>
++</head>
++<body>
++  <header>
++    <h1>Boston University Area Explorer</h1>
++    <p>Discover notable attractions, dining, and experiences near Boston University.</p>
++  </header>
++  <main>
++    <section
++      id="detail-panel"
++      role="complementary"
++      aria-live="polite"
++      aria-label="Point of interest details"
++      hidden
++    >
++      <div>
++        <p class="screenreader-only" id="detail-helper">
++          Select a marker on the map to view the location details.
++        </p>
++        <p class="poi-type" id="poi-type"></p>
++        <h2 id="poi-name" tabindex="-1"></h2>
++        <p class="poi-description" id="poi-description"></p>
++        <div class="poi-contact" id="poi-contact"></div>
++      </div>
++    </section>
++    <div id="map" role="application" aria-label="Interactive map of Boston University and nearby attractions"></div>
++  </main>
++
++  <script
++    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
++    integrity="sha256-o9N1j7kGStFZo3N2TKj08760HAt+lYdQ4ZjFZCI0h+8="
++    crossorigin=""
++  ></script>
++  <script>
++    const pointsOfInterest = [
++      {
++        name: "Boston University",
++        description: "A leading private research university known for its diverse academic programs and vibrant campus life.",
++        coordinates: { lat: 42.3505, lng: -71.1054 },
++        type: "university",
++        contact: {
++          address: "233 Bay State Rd, Boston, MA 02215",
++          website: "https://www.bu.edu/"
++        }
++      },
++      {
++        name: "Museum of Fine Arts, Boston",
++        description: "One of the largest museums in the United States featuring a world-class collection of art spanning centuries and cultures.",
++        coordinates: { lat: 42.3394, lng: -71.0942 },
++        type: "museum",
++        contact: {
++          address: "465 Huntington Ave, Boston, MA 02115",
++          website: "https://www.mfa.org/"
++        }
++      },
++      {
++        name: "Fenway Park",
++        description: "Historic home of the Boston Red Sox and the oldest ballpark in Major League Baseball, offering tours and game-day excitement.",
++        coordinates: { lat: 42.3467, lng: -71.0972 },
++        type: "stadium",
++        contact: {
++          address: "4 Jersey St, Boston, MA 02215",
++          website: "https://www.mlb.com/redsox/ballpark"
++        }
++      },
++      {
++        name: "Isabella Stewart Gardner Museum",
++        description: "A uniquely curated art museum set within a Venetian-style palace, showcasing an eclectic collection in intimate galleries.",
++        coordinates: { lat: 42.3386, lng: -71.0995 },
++        type: "museum",
++        contact: {
++          address: "25 Evans Way, Boston, MA 02115",
++          website: "https://www.gardnermuseum.org/"
++        }
++      },
++      {
++        name: "The Esplanade",
++        description: "Scenic riverside park along the Charles River with walking paths, boating, and seasonal performances at the Hatch Shell.",
++        coordinates: { lat: 42.3574, lng: -71.0836 },
++        type: "park",
++        contact: {
++          address: "Storrow Dr, Boston, MA 02114",
++          website: "https://www.esplanade.org/"
++        }
++      },
++      {
++        name: "Time Out Market Boston",
++        description: "A curated food hall featuring some of Boston's top chefs and eateries under one roof in the heart of Fenway.",
++        coordinates: { lat: 42.3478, lng: -71.0968 },
++        type: "restaurant",
++        contact: {
++          address: "401 Park Dr, Boston, MA 02215",
++          website: "https://www.timeoutmarket.com/boston/"
++        }
++      },
++      {
++        name: "Commonwealth Avenue Mall",
++        description: "Tree-lined parkway connecting the Back Bay to Boston University with statues, benches, and historic brownstones.",
++        coordinates: { lat: 42.3499, lng: -71.0897 },
++        type: "park",
++        contact: {
++          address: "Commonwealth Avenue, Boston, MA"
++        }
++      },
++      {
++        name: "House of Blues Boston",
++        description: "Live music venue offering concerts and entertainment steps away from Fenway Park.",
++        coordinates: { lat: 42.3473, lng: -71.0959 },
++        type: "venue",
++        contact: {
++          address: "15 Lansdowne St, Boston, MA 02215",
++          website: "https://www.houseofblues.com/Boston"
++        }
++      }
++    ];
++
++    const isValidCoordinate = (coord) =>
++      coord &&
++      typeof coord.lat === "number" &&
++      typeof coord.lng === "number" &&
++      Number.isFinite(coord.lat) &&
++      Number.isFinite(coord.lng);
++
++    const map = L.map("map", {
++      zoomSnap: 0.1,
++      scrollWheelZoom: true
++    }).setView([42.3505, -71.1054], 14);
++
++    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
++      attribution: "&copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors"
++    }).addTo(map);
++
++    const detailPanel = document.getElementById("detail-panel");
++    const detailType = document.getElementById("poi-type");
++    const detailName = document.getElementById("poi-name");
++    const detailDescription = document.getElementById("poi-description");
++    const detailContact = document.getElementById("poi-contact");
++
++    const showDetails = (poi) => {
++      detailType.textContent = poi.type;
++      detailName.textContent = poi.name;
++      detailDescription.textContent = poi.description;
++
++      if (poi.contact) {
++        const { address, phone, website } = poi.contact;
++        const lines = [];
++        if (address) lines.push(`<span aria-label="Address">${address}</span>`);
++        if (phone) lines.push(`<span aria-label="Phone">${phone}</span>`);
++        if (website) {
++          lines.push(
++            `<a href="${website}" target="_blank" rel="noopener" aria-label="Website for ${poi.name}">Website</a>`
++          );
++        }
++        detailContact.innerHTML = lines.join("<br />");
++      } else {
++        detailContact.innerHTML = "";
++      }
++
++      detailPanel.hidden = false;
++      detailPanel.classList.add("visible");
++      detailName.focus({ preventScroll: false });
++      validateDetailPanel();
++    };
++
++    const validateDetailPanel = () => {
++      const isVisible = !detailPanel.hidden && detailPanel.classList.contains("visible");
++      const hasContent = detailName.textContent.trim().length > 0;
++      if (!isVisible || !hasContent) {
++        detailPanel.hidden = false;
++        detailPanel.classList.add("visible");
++      }
++    };
++
++    const bounds = L.latLngBounds([]);
++
++    pointsOfInterest.forEach((poi) => {
++      if (!isValidCoordinate(poi.coordinates)) {
++        console.warn(`Skipping POI due to invalid coordinates: ${poi.name || "Unnamed"}`);
++        return;
++      }
++
++      const marker = L.marker([poi.coordinates.lat, poi.coordinates.lng]).addTo(map);
++      marker.on("click", () => {
++        showDetails(poi);
++      });
++
++      bounds.extend([poi.coordinates.lat, poi.coordinates.lng]);
++    });
++
++    if (bounds.isValid()) {
++      map.fitBounds(bounds.pad(0.1));
++    }
++
++    detailPanel.hidden = false;
++    detailPanel.classList.add("visible");
++    detailType.textContent = "Guide";
++    detailName.textContent = "Select a location";
++    detailDescription.textContent =
++      "Use the map markers to explore top attractions and experiences around Boston University.";
++    detailContact.textContent = "Details will appear here when you choose a marker.";
++    validateDetailPanel();
++  </script>
++</body>
++</html>
+ 
+EOF
+)
