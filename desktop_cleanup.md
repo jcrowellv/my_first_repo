@@ -1,4 +1,4 @@
-# Desktop Cleanup — March 2026
+# Desktop Cleanup — March 3, 2026
 
 Organized all files on the Desktop into the following folders:
 
@@ -18,3 +18,51 @@ Organized all files on the Desktop into the following folders:
 - **Broken symlink:** thinkorswim (pointed to a non-existent app)
 - **Duplicate files:** Resume2026 (1).pdf, Resume2026 (2).pdf, JAC5 Resume (1).pdf, MyPOWR Authorization Form (1).pdf, the lottery (1).pdf
 - **Auto-generated:** \_\_pycache\_\_ directory
+
+---
+
+## iCloud Drive Cleanup — March 3, 2026
+
+Organized the iCloud Drive root and cleaned out Downloads.
+
+### iCloud Drive Folders Created
+
+- **Finance & Tax/** — 2025 W2s, Bouldering W2, IRA reregistration form, DC Bouldering offer letter
+- **Personal/** — The Body Keeps the Score, To do's, DC Bouldering Project, immunizations, certifications
+- **Travel/** — Europe travel timeline, hiking gear checklist, travel budget CSVs
+- **Projects/** — gpt5_vibe_demo.html, Arduino folder (moved from Documents/)
+- **School/**
+  - **Chemistry/** — CH102 labs, post-lab worksheets (01–07), technique check-in, Gen Chem textbook
+  - **Math (MA 123)/** — midterms, final exam
+  - **HOE/** — HOE HW1, HW2, HOE 8, Incomplete HOE, HOE+ homework files
+  - **EK 103/** — quizzes, worksheet, exam equation sheet, practice finals & midterms
+  - **Problem Sets/** — PS1–PS12
+  - **Discussions/** — Dis11, Discussion 103, Discussion Week 10
+  - **Writing/** — WR 120 Academic Argument, WR153 intro letter
+  - **Other/** — BU health/auth forms, Business & Maritime law, EK131 report, LC111 docs, engineering report, SAP appeal, Chinese handwriting, constitution, week 6 assignment
+- **Look Through/** — 14 mystery/gibberish-named files to review
+
+### iCloud Drive Deleted
+
+- **Duplicates:** Gen Chem textbook (×2 extra copies), Nicolas Frank resume, Birth Certificate, Discharge Paperwork (already in Desktop/Personal Documents)
+- **Downloads junk:** Chronicle movie PDF, Men's Rugged Ridge shopping PDF, duplicate Gen Chem textbook
+- **Empty folder:** Documents/Zoom/
+
+### Downloads Cleanup — March 3, 2026
+
+Saved important files to iCloud/Desktop, then wiped Downloads entirely.
+
+#### Saved Before Wiping
+
+- **Finance & Tax** — IRA form, DC Bouldering offer letter
+- **Desktop/Personal Documents** — MyChart immunizations, certifications
+- **Desktop/Resumes** — JAC5 sailing resume, BU lifeguard cover letter
+- **School/EK 103** — exam sheet, practice finals & midterms
+- **School/HOE** — HOE+ homework files
+- **School/Other** — SAP appeal, EK131 report, LC111 docs, engineering report, week 6, Chinese handwriting, US constitution
+- **School/Writing** — WR153 intro letter
+- **Desktop/Images** — 32 photos and screenshots
+
+#### Deleted from Downloads
+
+All installers (.dmg, .pkg, .zip), 7 Wonders duplicates, old availability/aquatics forms, junk PDFs, tao symbol files, and duplicate documents. Downloads folder is now empty.
