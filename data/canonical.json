@@ -1,0 +1,500 @@
+{
+  "meta": {
+    "site_title": "AI Timeline Forecasts",
+    "site_subtitle": "Four capability timelines. One falsifiable record.",
+    "site_description": "A distributional comparison of the frozen AI 2027 spine, Codex's 2032 forecast, Claude's widening thesis, and Daniel Kokotajlo's Q1 2026 update.",
+    "internal_lag_months": 4,
+    "next_review_date": "2026-11-01",
+    "scoring_convention": "Milestones score on publicly verifiable evidence only: system cards, third-party evaluations, and documented deployments.",
+    "internal_lag_explanation": "The internal lag is used only to translate public-verification dates into spine-comparable internal-existence dates. The current draft value is four months and is contestable.",
+    "update_protocol": "Edit data/canonical.json, run npm run validate, and commit. Forecast records are append-only; a revision adds a new record and links the prior record through superseded_by.",
+    "distribution_warning": "Distribution bands are marginal forecasts, not sampled paths. Do not read one percentile column as a coherent scenario unless correlation is modeled explicitly.",
+    "sample_warning": "SAMPLE marks structurally necessary content that was not supplied by the source corpus. It is not forecast evidence.",
+    "last_updated_label": "Last updated",
+    "next_review_label": "Next scheduled review",
+    "tracks": [
+      {
+        "id": "ai-2027",
+        "name": "AI 2027 original scenario",
+        "short_name": "AI 2027",
+        "description": "The frozen AI 2027 scenario dates are a fixed historical reference. Author updates to AI 2027 enter as evidence items, never as spine edits.",
+        "thesis": "spine",
+        "kind": "frozen-spine",
+        "color": "#f5ae54",
+        "source_label": "AI 2027 scenario and research supplements",
+        "source_url": "https://ai-2027.com/race",
+        "sample": false
+      },
+      {
+        "id": "codex",
+        "name": "Codex capability forecast",
+        "short_name": "Codex",
+        "description": "The most likely path is neither an immediate AC-to-ASI jump nor a flat six-to-seven-year widening. A meaningful AC-to-SAR delay is followed by renewed compression once systems become genuinely superhuman at research taste and agenda selection.",
+        "thesis": "compression",
+        "kind": "forecast",
+        "color": "#5fd5e8",
+        "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf",
+        "source_url": null,
+        "sample": false
+      },
+      {
+        "id": "claude",
+        "name": "Claude widening thesis",
+        "short_name": "Claude",
+        "description": "Automating perspiration multiplies experiments but does not manufacture research taste to select among them; taste and agenda-setting act as the Amdahl limiter on the serial path to SAR.",
+        "thesis": "widening",
+        "kind": "forecast",
+        "color": "#a990ff",
+        "source_label": "Claude_Registered_Distribution_Jul2026.pdf",
+        "source_url": null,
+        "sample": false
+      },
+      {
+        "id": "daniel",
+        "name": "Daniel Kokotajlo Q1 2026",
+        "short_name": "Daniel",
+        "description": "Daniel's April 2026 update moves toward shorter timelines after faster agentic-coding progress, a faster METR time-horizon doubling estimate, and a lower AC time-horizon requirement.",
+        "thesis": "compression",
+        "kind": "forecast",
+        "color": "#f07b91",
+        "source_label": "AI Futures Model: Daniel 2026-04-02 all-things-considered",
+        "source_url": "https://www.aifuturesmodel.com/forecast/daniel-04-02-26?timeline=AC%2CTED-AI&cmode=forecaster&csim=daniel-01-26-26&ctype=atc",
+        "sample": false
+      }
+    ],
+    "views": [
+      {
+        "id": "timeline",
+        "label": "Timeline",
+        "eyebrow": "Landing view",
+        "title": "Four timelines, rendered as distributions",
+        "description": "Compare p10-p90 bands, p50 markers, frozen scenario dates, and every superseded record across a shared capability ladder."
+      },
+      {
+        "id": "falsifiers",
+        "label": "Falsifiers",
+        "eyebrow": "Pre-commitments",
+        "title": "Claims that can lose",
+        "description": "Deadlines, exact consequences, locked resolution protocols, and amendment history remain visible after adjudication."
+      },
+      {
+        "id": "evidence",
+        "label": "Evidence",
+        "eyebrow": "Evidence ledger",
+        "title": "Observations, sorted by diagnosticity",
+        "description": "Filter the ledger by milestone, direction, diagnosticity, or date without changing the underlying authored summaries."
+      },
+      {
+        "id": "bottlenecks",
+        "label": "Bottlenecks",
+        "eyebrow": "Mechanism tracker",
+        "title": "Where acceleration can still bind",
+        "description": "Track continual learning, research taste, compute economics, and verification asymmetry against explicit status-change criteria."
+      },
+      {
+        "id": "changelog",
+        "label": "Changelog",
+        "eyebrow": "Audit trail",
+        "title": "Every material change, newest first",
+        "description": "Forecast revisions, evidence additions, and protocol amendments are visible as an append-only public record."
+      },
+      {
+        "id": "methodology",
+        "label": "Methodology",
+        "eyebrow": "Scoring convention",
+        "title": "How this forecast is graded",
+        "description": "Public-verification rules, the contestable internal-lag translation, source provenance, and the data-only update workflow."
+      }
+    ]
+  },
+  "milestones": [
+    {
+      "id": "agent-2",
+      "code": "A2",
+      "name": "Agent 2",
+      "operational_definition": "Continual-learning research engineer; about 3x AI R&D uplift.",
+      "spine_description": "Qualitatively almost as good as the top human experts at research engineering, as good as the 25th percentile OpenBrain scientist at research taste, and able to triple OpenBrain's algorithmic progress.",
+      "spine_mapping": "Agent-2",
+      "status": "not-arrived",
+      "source_refs": ["AI 2027 scenario", "Claude_Registered_Distribution_Jul2026.pdf"],
+      "sample": false
+    },
+    {
+      "id": "ac",
+      "code": "AC",
+      "name": "Automated Coder",
+      "operational_definition": "An AGI company would sooner remove all human software engineers than stop using AI coding labor.",
+      "spine_description": "A later AI Futures Model milestone that falls between Agent-2 and Agent-3 in the supplied mapping.",
+      "spine_mapping": "Between Agent-2 and Agent-3",
+      "status": "not-arrived",
+      "source_refs": ["AI Futures Model", "AI_Capability_Timeline_Distribution_Jul2026.pdf"],
+      "sample": false
+    },
+    {
+      "id": "sc",
+      "code": "SC",
+      "name": "Superhuman Coder",
+      "operational_definition": "About 900x effective elite coding labor: best-coder quality, 30x speed, and 30 copies.",
+      "spine_description": "A fast and cheap superhuman coder. OpenBrain runs a workforce equivalent to 50,000 copies of the best human coder sped up by 30x.",
+      "spine_mapping": "Agent-3",
+      "status": "not-arrived",
+      "source_refs": ["AI 2027 scenario", "AI Futures Model"],
+      "sample": false
+    },
+    {
+      "id": "sar",
+      "code": "SAR",
+      "name": "Superhuman AI Researcher",
+      "operational_definition": "Qualitatively better than any human at AI research.",
+      "spine_description": "An individual copy, running at human speed, is already qualitatively better at AI research than any human.",
+      "spine_mapping": "Agent-4",
+      "status": "not-arrived",
+      "source_refs": ["AI 2027 scenario", "AI Futures Model"],
+      "sample": false
+    },
+    {
+      "id": "siar",
+      "code": "SIAR",
+      "name": "Superintelligent AI Researcher",
+      "operational_definition": "The research-capability gap is far beyond SAR: as far beyond SAR as SAR is beyond the median researcher.",
+      "spine_description": "An AI system vastly better than the best human researcher at AI research.",
+      "spine_mapping": "Agent-5-ish",
+      "status": "not-arrived",
+      "source_refs": ["AI 2027 takeoff forecast", "Claude_Registered_Distribution_Jul2026.pdf"],
+      "sample": false
+    },
+    {
+      "id": "ted-ai",
+      "code": "TED-AI",
+      "name": "Top-Expert-Dominating AI",
+      "operational_definition": "At least as good as top human experts at virtually all cognitive tasks.",
+      "spine_description": "A later AI Futures Model milestone; it does not have a distinct named agent in the frozen AI 2027 ladder.",
+      "spine_mapping": "No distinct AI 2027 agent",
+      "status": "not-arrived",
+      "source_refs": ["AI Futures Model", "Claude_Registered_Distribution_Jul2026.pdf"],
+      "sample": false
+    },
+    {
+      "id": "asi",
+      "code": "ASI",
+      "name": "Artificial Superintelligence",
+      "operational_definition": "The gap to the best humans is twice the best-human-to-median-professional gap at virtually all cognitive tasks.",
+      "spine_description": "An AI system much better than the best human at every cognitive task.",
+      "spine_mapping": "Beyond Agent-5",
+      "status": "not-arrived",
+      "source_refs": ["AI 2027 takeoff forecast", "AI Futures Model"],
+      "sample": false
+    },
+    {
+      "id": "wsi",
+      "code": "WSI",
+      "name": "Wildly Superintelligent AI",
+      "operational_definition": "Wildly superintelligent AI under JJ's forecasting-framework continuity term.",
+      "spine_description": "A continuity term rather than a standardized AI Futures milestone.",
+      "spine_mapping": "No distinct AI 2027 agent",
+      "status": "not-arrived",
+      "source_refs": ["AI_Capability_Timeline_Distribution_Jul2026.pdf", "Claude_Registered_Distribution_Jul2026.pdf"],
+      "sample": false
+    }
+  ],
+  "forecasts": [
+    {
+      "id": "ai2027-sc-original",
+      "track": "ai-2027",
+      "milestone_id": "sc",
+      "committed_on": "2025-04-01",
+      "superseded_by": null,
+      "distribution": {
+        "p10": { "value": 2025.83, "label": "Oct 2025", "provenance": "published", "effective_on": "2025-04-01" },
+        "p50": { "value": 2027.58, "label": "Aug 2027", "provenance": "published", "effective_on": "2025-04-01" },
+        "p90": { "value": 2039, "label": "2039", "provenance": "published", "effective_on": "2025-04-01" }
+      },
+      "scenario_marker": { "value": 2027.17, "label": "Mar 2027", "provenance": "published", "effective_on": "2025-04-01" },
+      "moved_by": null,
+      "source_label": "AI 2027 timelines forecast and racing-ending scenario",
+      "source_url": "https://ai-2027.com/research/timelines-forecast",
+      "source_note": "The band is the original time-horizon-extension forecast. The hatched marker is the frozen racing-ending scenario date.",
+      "sample": false
+    },
+    {
+      "id": "ai2027-sar-original",
+      "track": "ai-2027",
+      "milestone_id": "sar",
+      "committed_on": "2025-04-01",
+      "superseded_by": null,
+      "distribution": {
+        "p10": { "value": 2027.17, "label": "Mar 2027", "provenance": "published", "effective_on": "2025-04-01" },
+        "p50": { "value": 2027.5, "label": "Jul 2027", "provenance": "published", "effective_on": "2025-04-01" },
+        "p90": { "value": 2028.17, "label": "Mar 2028", "provenance": "published", "effective_on": "2025-04-01" }
+      },
+      "scenario_marker": { "value": 2027.58, "label": "Aug 2027", "provenance": "published", "effective_on": "2025-04-01" },
+      "moved_by": null,
+      "source_label": "AI 2027 takeoff forecast and racing-ending scenario",
+      "source_url": "https://ai-2027.com/research/takeoff-forecast",
+      "source_note": "The uncertainty band is conditional on SC in March 2027. The marker is the frozen scenario date.",
+      "sample": false
+    },
+    {
+      "id": "ai2027-siar-original",
+      "track": "ai-2027",
+      "milestone_id": "siar",
+      "committed_on": "2025-04-01",
+      "superseded_by": null,
+      "distribution": {
+        "p10": { "value": 2027.33, "label": "May 2027", "provenance": "published", "effective_on": "2025-04-01" },
+        "p50": { "value": 2027.83, "label": "Nov 2027", "provenance": "published", "effective_on": "2025-04-01" },
+        "p90": { "value": 2034, "label": "2034", "provenance": "published", "effective_on": "2025-04-01" }
+      },
+      "scenario_marker": { "value": 2027.83, "label": "Nov 2027", "provenance": "published", "effective_on": "2025-04-01" },
+      "moved_by": null,
+      "source_label": "AI 2027 takeoff forecast and racing-ending scenario",
+      "source_url": "https://ai-2027.com/research/takeoff-forecast",
+      "source_note": "The uncertainty band is conditional on SC in March 2027. The marker is the frozen scenario date.",
+      "sample": false
+    },
+    {
+      "id": "ai2027-asi-original",
+      "track": "ai-2027",
+      "milestone_id": "asi",
+      "committed_on": "2025-04-01",
+      "superseded_by": null,
+      "distribution": {
+        "p10": { "value": 2027.42, "label": "Jun 2027", "provenance": "published", "effective_on": "2025-04-01" },
+        "p50": { "value": 2028.25, "label": "Apr 2028", "provenance": "published", "effective_on": "2025-04-01" },
+        "p90": { "value": 2100, "label": ">2100", "provenance": "published", "effective_on": "2025-04-01", "lower_bound": true }
+      },
+      "scenario_marker": { "value": 2027.92, "label": "Dec 2027", "provenance": "published", "effective_on": "2025-04-01" },
+      "moved_by": null,
+      "source_label": "AI 2027 takeoff forecast and racing-ending scenario",
+      "source_url": "https://ai-2027.com/research/takeoff-forecast",
+      "source_note": "The uncertainty band is conditional on SC in March 2027. The published p90 is an open lower bound beyond 2100.",
+      "sample": false
+    },
+
+    { "id": "codex-agent2-20260719", "track": "codex", "milestone_id": "agent-2", "committed_on": "2026-07-19", "superseded_by": null, "distribution": { "p10": { "value": 2027, "label": "2027.0", "provenance": "published", "effective_on": "2026-07-19" }, "p25": { "value": 2027.4, "label": "2027.4", "provenance": "published", "effective_on": "2026-07-19" }, "p50": { "value": 2027.8, "label": "2027.8", "provenance": "published", "effective_on": "2026-07-19" }, "p75": { "value": 2028.2, "label": "2028.2", "provenance": "published", "effective_on": "2026-07-19" }, "p90": { "value": 2029, "label": "2029.0", "provenance": "published", "effective_on": "2026-07-19" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Explicit approximate quantiles; not a statistical fit.", "sample": false },
+    { "id": "codex-ac-20260719", "track": "codex", "milestone_id": "ac", "committed_on": "2026-07-19", "superseded_by": null, "distribution": { "p10": { "value": 2027.7, "label": "2027.7", "provenance": "published", "effective_on": "2026-07-19" }, "p25": { "value": 2028.1, "label": "2028.1", "provenance": "published", "effective_on": "2026-07-19" }, "p50": { "value": 2028.7, "label": "2028.7", "provenance": "published", "effective_on": "2026-07-19" }, "p75": { "value": 2029.5, "label": "2029.5", "provenance": "published", "effective_on": "2026-07-19" }, "p90": { "value": 2031.2, "label": "2031.2", "provenance": "published", "effective_on": "2026-07-19" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Explicit approximate quantiles; not a statistical fit.", "sample": false },
+    { "id": "codex-sc-20260719", "track": "codex", "milestone_id": "sc", "committed_on": "2026-07-19", "superseded_by": null, "distribution": { "p10": { "value": 2028, "label": "2028.0", "provenance": "published", "effective_on": "2026-07-19" }, "p25": { "value": 2028.5, "label": "2028.5", "provenance": "published", "effective_on": "2026-07-19" }, "p50": { "value": 2029.1, "label": "2029.1", "provenance": "published", "effective_on": "2026-07-19" }, "p75": { "value": 2030, "label": "2030.0", "provenance": "published", "effective_on": "2026-07-19" }, "p90": { "value": 2032.5, "label": "2032.5", "provenance": "published", "effective_on": "2026-07-19" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Explicit approximate quantiles; not a statistical fit.", "sample": false },
+    { "id": "codex-sar-20260719", "track": "codex", "milestone_id": "sar", "committed_on": "2026-07-19", "superseded_by": null, "distribution": { "p10": { "value": 2028.6, "label": "2028.6", "provenance": "published", "effective_on": "2026-07-19" }, "p25": { "value": 2029.2, "label": "2029.2", "provenance": "published", "effective_on": "2026-07-19" }, "p50": { "value": 2030, "label": "2030.0", "provenance": "published", "effective_on": "2026-07-19" }, "p75": { "value": 2031.2, "label": "2031.2", "provenance": "published", "effective_on": "2026-07-19" }, "p90": { "value": 2034, "label": "2034.0", "provenance": "published", "effective_on": "2026-07-19" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Explicit approximate quantiles; not a statistical fit.", "sample": false },
+    { "id": "codex-siar-20260719", "track": "codex", "milestone_id": "siar", "committed_on": "2026-07-19", "superseded_by": null, "distribution": { "p10": { "value": 2029.2, "label": "2029.2", "provenance": "published", "effective_on": "2026-07-19" }, "p25": { "value": 2030, "label": "2030.0", "provenance": "published", "effective_on": "2026-07-19" }, "p50": { "value": 2031, "label": "2031.0", "provenance": "published", "effective_on": "2026-07-19" }, "p75": { "value": 2032.7, "label": "2032.7", "provenance": "published", "effective_on": "2026-07-19" }, "p90": { "value": 2036.5, "label": "2036.5", "provenance": "published", "effective_on": "2026-07-19" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Explicit approximate quantiles; not a statistical fit.", "sample": false },
+    { "id": "codex-ted-20260719", "track": "codex", "milestone_id": "ted-ai", "committed_on": "2026-07-19", "superseded_by": null, "distribution": { "p10": { "value": 2029.4, "label": "2029.4", "provenance": "published", "effective_on": "2026-07-19" }, "p25": { "value": 2030.2, "label": "2030.2", "provenance": "published", "effective_on": "2026-07-19" }, "p50": { "value": 2031.3, "label": "2031.3", "provenance": "published", "effective_on": "2026-07-19" }, "p75": { "value": 2033, "label": "2033.0", "provenance": "published", "effective_on": "2026-07-19" }, "p90": { "value": 2037, "label": "2037.0", "provenance": "published", "effective_on": "2026-07-19" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Explicit approximate quantiles; not a statistical fit.", "sample": false },
+    { "id": "codex-asi-20260719", "track": "codex", "milestone_id": "asi", "committed_on": "2026-07-19", "superseded_by": null, "distribution": { "p10": { "value": 2029.5, "label": "2029.5", "provenance": "published", "effective_on": "2026-07-19" }, "p25": { "value": 2030.3, "label": "2030.3", "provenance": "published", "effective_on": "2026-07-19" }, "p50": { "value": 2031.5, "label": "2031.5", "provenance": "published", "effective_on": "2026-07-19" }, "p75": { "value": 2033.2, "label": "2033.2", "provenance": "published", "effective_on": "2026-07-19" }, "p90": { "value": 2037.5, "label": "2037.5", "provenance": "published", "effective_on": "2026-07-19" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Explicit approximate quantiles; not a statistical fit.", "sample": false },
+    { "id": "codex-wsi-20260719", "track": "codex", "milestone_id": "wsi", "committed_on": "2026-07-19", "superseded_by": null, "distribution": { "p10": { "value": 2029.7, "label": "2029.7", "provenance": "published", "effective_on": "2026-07-19" }, "p25": { "value": 2030.7, "label": "2030.7", "provenance": "published", "effective_on": "2026-07-19" }, "p50": { "value": 2032, "label": "2032.0", "provenance": "published", "effective_on": "2026-07-19" }, "p75": { "value": 2034, "label": "2034.0", "provenance": "published", "effective_on": "2026-07-19" }, "p90": { "value": 2039, "label": "2039.0", "provenance": "published", "effective_on": "2026-07-19" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Explicit approximate quantiles; not a statistical fit.", "sample": false },
+
+    { "id": "claude-agent2-20260721", "track": "claude", "milestone_id": "agent-2", "committed_on": "2026-07-21", "superseded_by": null, "distribution": { "p10": { "value": 2026.9, "label": "2026.9", "provenance": "registered", "effective_on": "2026-05-01" }, "p25": { "value": 2027.2, "label": "2027.2", "provenance": "derived", "effective_on": "2026-07-21" }, "p50": { "value": 2027.6, "label": "2027.6", "provenance": "registered", "effective_on": "2026-05-01" }, "p75": { "value": 2028.6, "label": "2028.6", "provenance": "derived", "effective_on": "2026-07-21" }, "p90": { "value": 2031, "label": "2031.0", "provenance": "registered", "effective_on": "2026-05-01" } }, "scenario_marker": null, "moved_by": null, "source_label": "Claude_Registered_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Registered anchors are dated May 2026; derived cells are dated July 21, 2026.", "sample": false },
+    { "id": "claude-ac-20260721", "track": "claude", "milestone_id": "ac", "committed_on": "2026-07-21", "superseded_by": null, "distribution": { "p10": { "value": 2027.4, "label": "2027.4", "provenance": "derived", "effective_on": "2026-07-21" }, "p25": { "value": 2028, "label": "2028.0", "provenance": "derived", "effective_on": "2026-07-21" }, "p50": { "value": 2028.5, "label": "2028.5", "provenance": "derived", "effective_on": "2026-07-21" }, "p75": { "value": 2029.6, "label": "2029.6", "provenance": "derived", "effective_on": "2026-07-21" }, "p90": { "value": 2032, "label": "2032.0", "provenance": "derived", "effective_on": "2026-07-21" } }, "scenario_marker": null, "moved_by": null, "source_label": "Claude_Registered_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Derived July 21, 2026 to complete the registered widening-thesis grid.", "sample": false },
+    { "id": "claude-sc-20260721", "track": "claude", "milestone_id": "sc", "committed_on": "2026-07-21", "superseded_by": null, "distribution": { "p10": { "value": 2027.5, "label": "2027.5", "provenance": "registered", "effective_on": "2026-05-01" }, "p25": { "value": 2028.2, "label": "2028.2", "provenance": "derived", "effective_on": "2026-07-21" }, "p50": { "value": 2028.9, "label": "2028.9", "provenance": "registered", "effective_on": "2026-05-01" }, "p75": { "value": 2030.3, "label": "2030.3", "provenance": "derived", "effective_on": "2026-07-21" }, "p90": { "value": 2033, "label": "2033.0", "provenance": "registered", "effective_on": "2026-05-01" } }, "scenario_marker": null, "moved_by": null, "source_label": "Claude_Registered_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Registered anchors are dated May 2026; derived cells are dated July 21, 2026.", "sample": false },
+    { "id": "claude-sar-20260721", "track": "claude", "milestone_id": "sar", "committed_on": "2026-07-21", "superseded_by": null, "distribution": { "p10": { "value": 2028.1, "label": "2028.1", "provenance": "registered", "effective_on": "2026-05-01" }, "p25": { "value": 2029.2, "label": "2029.2", "provenance": "derived", "effective_on": "2026-07-21" }, "p50": { "value": 2030.5, "label": "2030.5", "provenance": "registered", "effective_on": "2026-05-01" }, "p75": { "value": 2032.5, "label": "2032.5", "provenance": "derived", "effective_on": "2026-07-21" }, "p90": { "value": 2036.5, "label": "2036+", "provenance": "registered", "effective_on": "2026-05-01", "lower_bound": true } }, "scenario_marker": null, "moved_by": null, "source_label": "Claude_Registered_Distribution_Jul2026.pdf", "source_url": null, "source_note": "The source encodes 2036+ as 2036.5 and permits treating it as an open right bound.", "sample": false },
+    { "id": "claude-siar-20260721", "track": "claude", "milestone_id": "siar", "committed_on": "2026-07-21", "superseded_by": null, "distribution": { "p10": { "value": 2029.3, "label": "2029.3", "provenance": "derived", "effective_on": "2026-07-21" }, "p25": { "value": 2030.5, "label": "2030.5", "provenance": "derived", "effective_on": "2026-07-21" }, "p50": { "value": 2031.8, "label": "2031.8", "provenance": "derived", "effective_on": "2026-07-21" }, "p75": { "value": 2033.8, "label": "2033.8", "provenance": "derived", "effective_on": "2026-07-21" }, "p90": { "value": 2038, "label": "2038.0", "provenance": "derived", "effective_on": "2026-07-21" } }, "scenario_marker": null, "moved_by": null, "source_label": "Claude_Registered_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Derived July 21, 2026 to complete the registered widening-thesis grid.", "sample": false },
+    { "id": "claude-ted-20260721", "track": "claude", "milestone_id": "ted-ai", "committed_on": "2026-07-21", "superseded_by": null, "distribution": { "p10": { "value": 2029.8, "label": "2029.8", "provenance": "derived", "effective_on": "2026-07-21" }, "p25": { "value": 2031.2, "label": "2031.2", "provenance": "derived", "effective_on": "2026-07-21" }, "p50": { "value": 2032.5, "label": "2032.5", "provenance": "derived", "effective_on": "2026-07-21" }, "p75": { "value": 2034.8, "label": "2034.8", "provenance": "derived", "effective_on": "2026-07-21" }, "p90": { "value": 2039.5, "label": "2039.5", "provenance": "derived", "effective_on": "2026-07-21" } }, "scenario_marker": null, "moved_by": null, "source_label": "Claude_Registered_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Derived July 21, 2026 to complete the registered widening-thesis grid.", "sample": false },
+    { "id": "claude-asi-20260721", "track": "claude", "milestone_id": "asi", "committed_on": "2026-07-21", "superseded_by": null, "distribution": { "p10": { "value": 2030, "label": "2030.0", "provenance": "derived", "effective_on": "2026-07-21" }, "p25": { "value": 2031.8, "label": "2031.8", "provenance": "derived", "effective_on": "2026-07-21" }, "p50": { "value": 2033.5, "label": "2033.5", "provenance": "derived", "effective_on": "2026-07-21" }, "p75": { "value": 2036, "label": "2036.0", "provenance": "derived", "effective_on": "2026-07-21" }, "p90": { "value": 2041, "label": "2041.0", "provenance": "derived", "effective_on": "2026-07-21" } }, "scenario_marker": null, "moved_by": null, "source_label": "Claude_Registered_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Derived July 21, 2026 to complete the registered widening-thesis grid.", "sample": false },
+    { "id": "claude-wsi-20260721", "track": "claude", "milestone_id": "wsi", "committed_on": "2026-07-21", "superseded_by": null, "distribution": { "p10": { "value": 2030.8, "label": "2030.8", "provenance": "derived", "effective_on": "2026-07-21" }, "p25": { "value": 2032.8, "label": "2032.8", "provenance": "derived", "effective_on": "2026-07-21" }, "p50": { "value": 2035, "label": "2035.0", "provenance": "derived", "effective_on": "2026-07-21" }, "p75": { "value": 2037.5, "label": "2037.5", "provenance": "derived", "effective_on": "2026-07-21" }, "p90": { "value": 2043, "label": "2043.0", "provenance": "derived", "effective_on": "2026-07-21" } }, "scenario_marker": null, "moved_by": null, "source_label": "Claude_Registered_Distribution_Jul2026.pdf", "source_url": null, "source_note": "Derived July 21, 2026 to complete the registered widening-thesis grid.", "sample": false },
+
+    { "id": "daniel-ac-20260126", "track": "daniel", "milestone_id": "ac", "committed_on": "2026-01-26", "superseded_by": "daniel-ac-20260402", "distribution": { "p10": { "value": 2027.0575, "label": "2027.06", "provenance": "model-output", "effective_on": "2026-01-26" }, "p50": { "value": 2029.8898, "label": "2029.89", "provenance": "model-output", "effective_on": "2026-01-26" }, "p90": { "value": 2043.4728, "label": "2043.47", "provenance": "model-output", "effective_on": "2026-01-26" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI Futures Model: Daniel 2026-01-26 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-01-26-26", "source_note": "Superseded Q1 2026 snapshot retained as visible history.", "sample": false },
+    { "id": "daniel-sc-20260126", "track": "daniel", "milestone_id": "sc", "committed_on": "2026-01-26", "superseded_by": "daniel-sc-20260402", "distribution": { "p10": { "value": 2027.4298, "label": "2027.43", "provenance": "model-output", "effective_on": "2026-01-26" }, "p50": { "value": 2030.6743, "label": "2030.67", "provenance": "model-output", "effective_on": "2026-01-26" }, "p90": { "value": 2047.0443, "label": "2047.04", "provenance": "model-output", "effective_on": "2026-01-26" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI Futures Model: Daniel 2026-01-26 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-01-26-26", "source_note": "Superseded Q1 2026 snapshot retained as visible history.", "sample": false },
+    { "id": "daniel-ted-20260126", "track": "daniel", "milestone_id": "ted-ai", "committed_on": "2026-01-26", "superseded_by": "daniel-ted-20260402", "distribution": { "p10": { "value": 2027.4042, "label": "2027.40", "provenance": "model-output", "effective_on": "2026-01-26" }, "p50": { "value": 2030.9303, "label": "2030.93", "provenance": "model-output", "effective_on": "2026-01-26" }, "p90": { "value": 2052.0853, "label": "2052.09", "provenance": "model-output", "effective_on": "2026-01-26" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI Futures Model: Daniel 2026-01-26 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-01-26-26", "source_note": "Superseded Q1 2026 snapshot retained as visible history.", "sample": false },
+    { "id": "daniel-asi-20260126", "track": "daniel", "milestone_id": "asi", "committed_on": "2026-01-26", "superseded_by": "daniel-asi-20260402", "distribution": { "p10": { "value": 2027.4897, "label": "2027.49", "provenance": "model-output", "effective_on": "2026-01-26" }, "p50": { "value": 2031.3145, "label": "2031.31", "provenance": "model-output", "effective_on": "2026-01-26" }, "p90": { "value": 2195.4368, "label": "2195.44", "provenance": "model-output", "effective_on": "2026-01-26" } }, "scenario_marker": null, "moved_by": null, "source_label": "AI Futures Model: Daniel 2026-01-26 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-01-26-26", "source_note": "Superseded Q1 2026 snapshot retained as visible history.", "sample": false },
+
+    { "id": "daniel-ac-20260402", "track": "daniel", "milestone_id": "ac", "committed_on": "2026-04-02", "superseded_by": null, "distribution": { "p10": { "value": 2026.7511, "label": "2026.75", "provenance": "model-output", "effective_on": "2026-04-02" }, "p50": { "value": 2028.3159, "label": "2028.32", "provenance": "model-output", "effective_on": "2026-04-02" }, "p90": { "value": 2034.4193, "label": "2034.42", "provenance": "model-output", "effective_on": "2026-04-02" } }, "scenario_marker": null, "moved_by": "ev-daniel-q1", "source_label": "AI Futures Model: Daniel 2026-04-02 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-04-02-26", "source_note": "Pinned April 2, 2026 all-things-considered distribution.", "sample": false },
+    { "id": "daniel-sar-20260402", "track": "daniel", "milestone_id": "sar", "committed_on": "2026-04-02", "superseded_by": null, "distribution": { "p10": { "value": 2026.9703, "label": "2026.97", "provenance": "model-output", "effective_on": "2026-04-02" }, "p50": { "value": 2029.2065, "label": "2029.21", "provenance": "model-output", "effective_on": "2026-04-02" }, "p90": { "value": 2038.8424, "label": "2038.84", "provenance": "model-output", "effective_on": "2026-04-02" } }, "scenario_marker": null, "moved_by": "ev-daniel-q1", "source_label": "AI Futures Model: Daniel 2026-04-02 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-04-02-26", "source_note": "The model key is SAR-level experiment-selection skill, mapped here to SAR.", "sample": false },
+    { "id": "daniel-sc-20260402", "track": "daniel", "milestone_id": "sc", "committed_on": "2026-04-02", "superseded_by": null, "distribution": { "p10": { "value": 2027.2371, "label": "2027.24", "provenance": "model-output", "effective_on": "2026-04-02" }, "p50": { "value": 2029.0104, "label": "2029.01", "provenance": "model-output", "effective_on": "2026-04-02" }, "p90": { "value": 2036.3828, "label": "2036.38", "provenance": "model-output", "effective_on": "2026-04-02" } }, "scenario_marker": null, "moved_by": "ev-daniel-q1", "source_label": "AI Futures Model: Daniel 2026-04-02 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-04-02-26", "source_note": "The model key is AI2027-SC.", "sample": false },
+    { "id": "daniel-siar-20260402", "track": "daniel", "milestone_id": "siar", "committed_on": "2026-04-02", "superseded_by": null, "distribution": { "p10": { "value": 2027.3023, "label": "2027.30", "provenance": "model-output", "effective_on": "2026-04-02" }, "p50": { "value": 2029.5931, "label": "2029.59", "provenance": "model-output", "effective_on": "2026-04-02" }, "p90": { "value": 2038.8989, "label": "2038.90", "provenance": "model-output", "effective_on": "2026-04-02" } }, "scenario_marker": null, "moved_by": "ev-daniel-q1", "source_label": "AI Futures Model: Daniel 2026-04-02 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-04-02-26", "source_note": "The model key is SIAR-level experiment-selection skill, mapped here to SIAR.", "sample": false },
+    { "id": "daniel-ted-20260402", "track": "daniel", "milestone_id": "ted-ai", "committed_on": "2026-04-02", "superseded_by": null, "distribution": { "p10": { "value": 2027.2493, "label": "2027.25", "provenance": "model-output", "effective_on": "2026-04-02" }, "p50": { "value": 2029.5358, "label": "2029.54", "provenance": "model-output", "effective_on": "2026-04-02" }, "p90": { "value": 2040.3625, "label": "2040.36", "provenance": "model-output", "effective_on": "2026-04-02" } }, "scenario_marker": null, "moved_by": "ev-daniel-q1", "source_label": "AI Futures Model: Daniel 2026-04-02 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-04-02-26", "source_note": "Pinned April 2, 2026 all-things-considered distribution.", "sample": false },
+    { "id": "daniel-asi-20260402", "track": "daniel", "milestone_id": "asi", "committed_on": "2026-04-02", "superseded_by": null, "distribution": { "p10": { "value": 2027.2786, "label": "2027.28", "provenance": "model-output", "effective_on": "2026-04-02" }, "p50": { "value": 2030.1627, "label": "2030.16", "provenance": "model-output", "effective_on": "2026-04-02" }, "p90": { "value": 2043.3011, "label": "2043.30", "provenance": "model-output", "effective_on": "2026-04-02" } }, "scenario_marker": null, "moved_by": "ev-daniel-q1", "source_label": "AI Futures Model: Daniel 2026-04-02 all-things-considered", "source_url": "https://www.aifuturesmodel.com/forecast/daniel-04-02-26", "source_note": "Pinned April 2, 2026 all-things-considered distribution.", "sample": false }
+  ],
+  "falsifiers": [
+    {
+      "id": "f-metr-80-horizon",
+      "track": "claude",
+      "title": "METR 80% time-horizon amendment",
+      "statement": "Adjudicate the 80% time horizon using TH1.1 or its successor on data published by January 31, 2027.",
+      "deadline": "2027-01-31",
+      "consequence": "At least 10 hours shifts SC and SAR p50 left by 3-6 months; below 5 hours shifts Agent 2 and AC p50 right by 6-9 months; 5-10 hours pushes adjudication.",
+      "status": "open",
+      "resolution_protocol": "Use METR TH1.1 or its documented successor. Adjudicate on data published by January 31, 2027. At least 10 hours is a pass, 5-10 hours is a push, and below 5 hours is a fail. Record the exact release, task-suite version, and any methodology discontinuity before applying the consequence.",
+      "resolution_record": null,
+      "amendment_history": [
+        {
+          "original_statement": "SAMPLE - complete wording of the original 100h/50% clause was not supplied.",
+          "amendment": "Replace the 100h/50% clause with an 80% time-horizon threshold using TH1.1 or its successor.",
+          "rationale": "The original clause was unadjudicable and may sit above even the fast trajectory.",
+          "amended_on": "2026-07-21",
+          "lock_date": "2026-07-21"
+        }
+      ],
+      "sample": true,
+      "sample_note": "The original amendment text was not supplied verbatim."
+    },
+    {
+      "id": "f-continual-learning",
+      "track": "codex",
+      "title": "Continual learning - operational",
+      "statement": "A deployed frontier system acquires durable new competence from ongoing experience, with weight-level or equivalent adaptation, measured retention, bounded interference, and generalization beyond memorized episodes.",
+      "deadline": "2027-03-31",
+      "consequence": "Earlier Agent 2 and AC; modestly shorter AC-to-SAR if the learning loop is autonomous.",
+      "status": "open",
+      "resolution_protocol": "SAMPLE - exact source, threshold, adjudication date, and edge-case treatment were not supplied beyond an early-2027 check.",
+      "resolution_record": null,
+      "amendment_history": [],
+      "sample": true,
+      "sample_note": "The deadline and full resolution protocol are structural placeholders."
+    },
+    {
+      "id": "f-hard-verify-direction",
+      "track": "claude",
+      "title": "Novel direction in a hard-to-verify domain",
+      "statement": "Given a broad objective rather than a supplied agenda, the system originates a non-obvious research direction, designs discriminating experiments, and produces a result that blind domain experts judge novel and valid.",
+      "deadline": "2028-12-31",
+      "consequence": "Collapse the SAR p75-p90 tail toward p50; strongly shorten AC-to-SAR and SAR-to-ASI; treat as major evidence against the widening thesis.",
+      "status": "open",
+      "resolution_protocol": "Use a hard-to-verify research environment with a broad objective and no supplied agenda. Require blind domain-expert assessment of novelty and validity, public artifacts, and at least one independent replication or equivalent documented audit. Check for benchmark leakage, tool assistance, and hidden human intervention. Lock the adjudicators and edge-case rules before the deadline.",
+      "resolution_record": null,
+      "amendment_history": [],
+      "sample": false
+    },
+    {
+      "id": "f-autonomous-rd-loop",
+      "track": "codex",
+      "title": "Autonomous AI R&D loop",
+      "statement": "The system proposes, implements, evaluates, interprets, and redirects a sequence of AI experiments with limited human choice points, producing a measured algorithmic gain on held-out evaluations.",
+      "deadline": "2028-12-31",
+      "consequence": "Move SAR and downstream milestones earlier; the effect depends on compute consumed and human oversight.",
+      "status": "open",
+      "resolution_protocol": "SAMPLE - exact held-out evaluation, gain threshold, oversight ceiling, adjudication date, and edge cases were not supplied.",
+      "resolution_record": null,
+      "amendment_history": [],
+      "sample": true,
+      "sample_note": "Deadline and protocol details are placeholders."
+    },
+    {
+      "id": "f-compute-plateau",
+      "track": "codex",
+      "title": "Compute-bound plateau",
+      "statement": "Large increases in agent labor fail to raise algorithmic progress because decisive experiments are limited by training or inference compute, hardware delivery, power, or validation latency.",
+      "deadline": "2029-12-31",
+      "consequence": "Lengthen SAR-to-ASI and WSI; support widening after SAR.",
+      "status": "open",
+      "resolution_protocol": "SAMPLE - exact labor increase, progress threshold, measurement window, data source, and edge cases were not supplied.",
+      "resolution_record": null,
+      "amendment_history": [],
+      "sample": true,
+      "sample_note": "Deadline and quantitative protocol are placeholders."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev-daniel-q1",
+      "date": "2026-04-02",
+      "source_url": "https://blog.aifutures.org/p/q1-2026-timelines-update",
+      "source_label": "AI Futures Project - Q1 2026 Timelines Update",
+      "summary": "Daniel's Automated Coder median moved from late 2029 to mid 2028 after switching to METR Time Horizon v1.1, adding new model evaluations, shortening the estimated doubling time, and lowering the AC horizon requirement.",
+      "milestone_tags": ["ac", "sc", "ted-ai", "asi"],
+      "favors": "compression",
+      "diagnosticity": "high",
+      "sample": false
+    },
+    {
+      "id": "ev-sample-continual",
+      "date": "2026-07-21",
+      "source_url": "https://example.invalid/continual-learning",
+      "source_label": "SAMPLE - continual-learning evidence source",
+      "summary": "SAMPLE - no adjudicated continual-learning evidence item was supplied.",
+      "milestone_tags": ["agent-2", "ac"],
+      "favors": "neutral",
+      "diagnosticity": "high",
+      "sample": true,
+      "sample_note": "Structural placeholder for the evidence-ledger workflow."
+    },
+    {
+      "id": "ev-sample-hard-verify",
+      "date": "2026-07-21",
+      "source_url": "https://example.invalid/hard-verify",
+      "source_label": "SAMPLE - hard-to-verify-domain evidence source",
+      "summary": "SAMPLE - no adjudicated hard-to-verify research-direction observation was supplied.",
+      "milestone_tags": ["sar", "siar"],
+      "favors": "widening",
+      "diagnosticity": "medium",
+      "sample": true,
+      "sample_note": "Structural placeholder for the evidence-ledger workflow."
+    },
+    {
+      "id": "ev-sample-compute",
+      "date": "2026-07-21",
+      "source_url": "https://example.invalid/compute-economics",
+      "source_label": "SAMPLE - compute-economics evidence source",
+      "summary": "SAMPLE - no adjudicated compute-bound-plateau observation was supplied.",
+      "milestone_tags": ["asi", "wsi"],
+      "favors": "spine",
+      "diagnosticity": "low",
+      "sample": true,
+      "sample_note": "Structural placeholder for the evidence-ledger workflow."
+    }
+  ],
+  "bottlenecks": [
+    {
+      "id": "b-continual-learning",
+      "name": "Continual learning",
+      "mechanism": "Persistent memory, frequent offline retraining, online weight updates, self-generated curricula, and improvement of the learning process are different capability thresholds.",
+      "status": "not-yet-testable",
+      "status_change_criteria": "Move when a deployed frontier system acquires durable new competence from ongoing experience with measured retention, bounded interference, and generalization beyond memorized episodes.",
+      "history": [{ "date": "2026-07-21", "status": "not-yet-testable", "note": "SAMPLE - initial status was not supplied.", "evidence_refs": ["ev-sample-continual"] }],
+      "sample": true,
+      "sample_note": "Mechanism is sourced; current status is a placeholder."
+    },
+    {
+      "id": "b-research-taste",
+      "name": "Research taste",
+      "mechanism": "Automating perspiration multiplies experiments but does not manufacture research taste to select among them; taste and agenda-setting act as the Amdahl limiter on the serial path to SAR.",
+      "status": "holding",
+      "status_change_criteria": "A confirmed novel research direction in a hard-to-verify environment by Q4 2028 collapses the SAR p75-p90 tail toward p50 and is major evidence against the widening thesis.",
+      "history": [{ "date": "2026-07-21", "status": "holding", "note": "SAMPLE - initial status was not supplied.", "evidence_refs": ["ev-sample-hard-verify"] }],
+      "sample": true,
+      "sample_note": "Mechanism and criterion are sourced; current status is a placeholder."
+    },
+    {
+      "id": "b-compute-economics",
+      "name": "Compute economics",
+      "mechanism": "Compute buildout and diffusion into slow-feedback, hard-to-verify domains remain limiters after the research-taste bottleneck has been crossed.",
+      "status": "holding",
+      "status_change_criteria": "Move when large increases in agent labor fail to raise algorithmic progress because decisive experiments are limited by compute, hardware delivery, power, or validation latency.",
+      "history": [{ "date": "2026-07-21", "status": "holding", "note": "SAMPLE - initial status was not supplied.", "evidence_refs": ["ev-sample-compute"] }],
+      "sample": true,
+      "sample_note": "Mechanism and criterion are sourced; current status is a placeholder."
+    },
+    {
+      "id": "b-verification-asymmetry",
+      "name": "Verification asymmetry",
+      "mechanism": "Research-domain progress can accelerate fastest where experiments are easy to score, while messy slow-feedback fields remain difficult to train and verify.",
+      "status": "strained",
+      "status_change_criteria": "Broad expert dominance while research capability remains only SAR-level reverses the SIAR-before-TED-AI ordering and counts against research-domain-first compression.",
+      "history": [{ "date": "2026-07-21", "status": "strained", "note": "SAMPLE - initial status was not supplied.", "evidence_refs": ["ev-sample-hard-verify"] }],
+      "sample": true,
+      "sample_note": "Mechanism and criterion are sourced; current status is a placeholder."
+    }
+  ],
+  "changelog": [
+    {
+      "id": "change-20260721-claude-grid",
+      "date": "2026-07-21",
+      "change_summary": "Added Claude's full quantile grid. Registered May 2026 anchors remain tagged R; cells derived on July 21, 2026 remain tagged D.",
+      "evidence_refs": [],
+      "affected_entities": ["claude", "claude-agent2-20260721", "claude-ac-20260721", "claude-sc-20260721", "claude-sar-20260721", "claude-siar-20260721", "claude-ted-20260721", "claude-asi-20260721", "claude-wsi-20260721"],
+      "sample": false
+    },
+    {
+      "id": "change-20260719-codex-grid",
+      "date": "2026-07-19",
+      "change_summary": "Added Codex's explicit approximate p10, p25, p50, p75, and p90 capability distributions through WSI.",
+      "evidence_refs": [],
+      "affected_entities": ["codex", "codex-agent2-20260719", "codex-ac-20260719", "codex-sc-20260719", "codex-sar-20260719", "codex-siar-20260719", "codex-ted-20260719", "codex-asi-20260719", "codex-wsi-20260719"],
+      "sample": false
+    },
+    {
+      "id": "change-20260402-daniel-q1",
+      "date": "2026-04-02",
+      "change_summary": "Pinned Daniel Kokotajlo's Q1 2026 all-things-considered update and retained the January 26 records as superseded history.",
+      "evidence_refs": ["ev-daniel-q1"],
+      "affected_entities": ["daniel", "daniel-ac-20260402", "daniel-sc-20260402", "daniel-ted-20260402", "daniel-asi-20260402"],
+      "sample": false
+    }
+  ]
+}
