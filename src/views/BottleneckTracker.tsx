@@ -5,6 +5,20 @@ import { Markdown } from "../components/Markdown";
 
 const steps = ["not-yet-testable", "holding", "strained", "broken"] as const;
 
+const stepFill: Record<(typeof steps)[number], string> = {
+  "not-yet-testable": "bg-muted",
+  holding: "bg-green",
+  strained: "bg-amber",
+  broken: "bg-rose",
+};
+
+const stepText: Record<(typeof steps)[number], string> = {
+  "not-yet-testable": "text-muted",
+  holding: "text-green",
+  strained: "text-amber",
+  broken: "text-rose",
+};
+
 export function BottleneckTracker() {
   return (
     <div>
@@ -27,8 +41,10 @@ export function BottleneckTracker() {
                 <div className="grid grid-cols-4 gap-1">
                   {steps.map((step, index) => (
                     <div key={step} className="text-center">
-                      <div className={`mb-2 h-1.5 rounded-full ${index <= currentIndex ? "bg-cyan" : "bg-line"}`} />
-                      <span className={`font-mono text-[8px] uppercase tracking-[0.08em] ${index === currentIndex ? "text-cyan" : "text-muted"}`}>
+                      <div
+                        className={`mb-2 h-1.5 rounded-full ${index <= currentIndex ? stepFill[bottleneck.status] : "bg-line"} ${index < currentIndex ? "opacity-40" : ""}`}
+                      />
+                      <span className={`font-mono text-[8px] uppercase tracking-[0.08em] ${index === currentIndex ? stepText[bottleneck.status] : "text-muted"}`}>
                         {step.replaceAll("-", " ")}
                       </span>
                     </div>

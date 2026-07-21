@@ -83,7 +83,7 @@ export function EvidenceLedger() {
         {evidence.length ? evidence.map((item) => (
           <article
             key={item.id}
-            className={`relative grid gap-4 border-b border-line p-5 last:border-b-0 lg:grid-cols-[120px_150px_1fr_150px_120px] ${item.diagnosticity === "low" ? "opacity-55" : ""}`}
+            className={`relative grid gap-4 border-b border-line p-5 last:border-b-0 lg:grid-cols-[120px_150px_1fr_150px_120px] ${item.diagnosticity === "low" ? "opacity-70" : ""}`}
           >
             <div>
               <span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.12em] text-muted lg:hidden">Date</span>

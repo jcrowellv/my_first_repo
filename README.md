@@ -95,7 +95,9 @@ No component change is required. The timeline shows the new band and the superse
 ## Distribution and provenance conventions
 
 - Timeline bands always show p10-p90 and a p50 marker. p25-p75 is emphasized when supplied.
-- AI 2027 scenario dates are separate hatched diamond markers. They are not presented as distributions.
+- The AI 2027 spine renders as a thin range line with a median tick and a diamond scenario marker. It has no p25-p75 band and is never presented as a full distribution.
+- Superseded records render on their own dashed, dimmed lanes directly above the current record, ordered by commitment date; they never overlap it.
+- Landing-page headline statistics are hand-authored in `meta.headline_stats` and must be re-derived whenever a forecast record changes.
 - The AI 2027 SC band comes from the original time-horizon-extension forecast. Later bands come from the original takeoff forecast conditional on SC in March 2027.
 - Open right bounds such as `>2100` remain explicitly marked as lower bounds.
 - Claude quantiles retain per-cell `registered` or `derived` provenance and effective dates.

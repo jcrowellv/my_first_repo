@@ -14,7 +14,7 @@ const statusStyles: Record<string, string> = {
   holding: "border-green/35 bg-green/10 text-green",
   strained: "border-amber/35 bg-amber/10 text-amber",
   broken: "border-rose/35 bg-rose/10 text-rose",
-  high: "border-rose/35 bg-rose/10 text-rose",
+  high: "border-cyan/35 bg-cyan/10 text-cyan",
   medium: "border-amber/35 bg-amber/10 text-amber",
   low: "border-line bg-raised text-muted",
 };
@@ -61,10 +61,10 @@ export function PageHeader({ viewId }: { viewId: string }) {
       <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cyan">
         {view.eyebrow}
       </p>
-      <h1 className="max-w-4xl text-balance text-3xl font-semibold tracking-[-0.035em] text-ink md:text-5xl">
+      <h1 className="max-w-4xl text-balance text-3xl font-semibold tracking-[-0.03em] text-ink md:text-4xl">
         {view.title}
       </h1>
-      <p className="mt-4 max-w-3xl text-sm leading-6 text-muted md:text-base">
+      <p className="mt-4 max-w-3xl text-sm leading-6 text-muted md:text-[15px] md:leading-7">
         {view.description}
       </p>
     </header>

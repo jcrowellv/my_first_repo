@@ -2,7 +2,7 @@
   "meta": {
     "site_title": "AI Timeline Forecasts",
     "site_subtitle": "Four capability timelines. One falsifiable record.",
-    "site_description": "A distributional comparison of the frozen AI 2027 spine, Codex's 2032 forecast, Claude's widening thesis, and Daniel Kokotajlo's Q1 2026 update.",
+    "site_description": "Four AI capability forecasts — the frozen AI 2027 scenario, Codex's provisional distribution, Claude's widening thesis, and Daniel Kokotajlo's pinned April 2026 update — plotted as distributions against pre-committed falsifiers and an append-only evidence ledger.",
     "internal_lag_months": 4,
     "next_review_date": "2026-11-01",
     "scoring_convention": "Milestones score on publicly verifiable evidence only: system cards, third-party evaluations, and documented deployments.",
@@ -12,15 +12,32 @@
     "sample_warning": "SAMPLE marks structurally necessary content that was not supplied by the source corpus. It is not forecast evidence.",
     "last_updated_label": "Last updated",
     "next_review_label": "Next scheduled review",
+    "headline_stats": [
+      {
+        "label": "Automated Coder median spread",
+        "value": "~5 months",
+        "detail": "Codex 2028.7 · Claude 2028.5 · Daniel 2028.3 — the three live forecasts have converged on when AC arrives."
+      },
+      {
+        "label": "AC → ASI median gap",
+        "value": "1.8–5.0 years",
+        "detail": "Daniel 1.8 y · Codex 2.8 y · Claude 5.0 y — the live disagreement is takeoff speed, not timelines."
+      },
+      {
+        "label": "Next adjudication",
+        "value": "Jan 31, 2027",
+        "detail": "METR 80% time-horizon falsifier: at least 10 h passes, 5–10 h pushes, below 5 h fails."
+      }
+    ],
     "tracks": [
       {
         "id": "ai-2027",
         "name": "AI 2027 original scenario",
         "short_name": "AI 2027",
-        "description": "The frozen AI 2027 scenario dates are a fixed historical reference. Author updates to AI 2027 enter as evidence items, never as spine edits.",
+        "description": "The frozen April 2025 scenario dates, kept as a fixed historical reference. Author updates never edit this spine; they enter the record as evidence items.",
         "thesis": "spine",
         "kind": "frozen-spine",
-        "color": "#f5ae54",
+        "color": "#c5842a",
         "source_label": "AI 2027 scenario and research supplements",
         "source_url": "https://ai-2027.com/race",
         "sample": false
@@ -29,10 +46,10 @@
         "id": "codex",
         "name": "Codex capability forecast",
         "short_name": "Codex",
-        "description": "The most likely path is neither an immediate AC-to-ASI jump nor a flat six-to-seven-year widening. A meaningful AC-to-SAR delay is followed by renewed compression once systems become genuinely superhuman at research taste and agenda selection.",
+        "description": "A July 2026 provisional distribution with a 2032 WSI median. Neither an immediate AC-to-ASI jump nor a flat multi-year widening: a real AC-to-SAR delay while research taste binds, then renewed compression once systems select their own research agendas.",
         "thesis": "compression",
         "kind": "forecast",
-        "color": "#5fd5e8",
+        "color": "#1fa5bd",
         "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf",
         "source_url": null,
         "sample": false
@@ -41,10 +58,10 @@
         "id": "claude",
         "name": "Claude widening thesis",
         "short_name": "Claude",
-        "description": "Automating perspiration multiplies experiments but does not manufacture research taste to select among them; taste and agenda-setting act as the Amdahl limiter on the serial path to SAR.",
+        "description": "The widening thesis, with a 2035 WSI median: automating perspiration multiplies experiments but does not manufacture research taste to select among them, so gaps stretch through SAR before compression resumes.",
         "thesis": "widening",
         "kind": "forecast",
-        "color": "#a990ff",
+        "color": "#8a75e6",
         "source_label": "Claude_Registered_Distribution_Jul2026.pdf",
         "source_url": null,
         "sample": false
@@ -53,10 +70,10 @@
         "id": "daniel",
         "name": "Daniel Kokotajlo Q1 2026",
         "short_name": "Daniel",
-        "description": "Daniel's April 2026 update moves toward shorter timelines after faster agentic-coding progress, a faster METR time-horizon doubling estimate, and a lower AC time-horizon requirement.",
+        "description": "Daniel Kokotajlo's pinned April 2026 all-things-considered model output, moved toward shorter timelines by faster agentic-coding progress, a faster METR time-horizon doubling estimate, and a lower AC horizon requirement.",
         "thesis": "compression",
         "kind": "forecast",
-        "color": "#f07b91",
+        "color": "#dc4f70",
         "source_label": "AI Futures Model: Daniel 2026-04-02 all-things-considered",
         "source_url": "https://www.aifuturesmodel.com/forecast/daniel-04-02-26?timeline=AC%2CTED-AI&cmode=forecaster&csim=daniel-01-26-26&ctype=atc",
         "sample": false
@@ -66,44 +83,44 @@
       {
         "id": "timeline",
         "label": "Timeline",
-        "eyebrow": "Landing view",
-        "title": "Four timelines, rendered as distributions",
-        "description": "Compare p10-p90 bands, p50 markers, frozen scenario dates, and every superseded record across a shared capability ladder."
+        "eyebrow": "The record",
+        "title": "Timelines converged. Takeoff didn't.",
+        "description": "The three live forecasts now put an Automated Coder within about five months of each other. What they still dispute — by years — is how fast everything after that arrives. Each band is a p10–p90 range with its median marked; select any band to inspect provenance, sources, and revision history."
       },
       {
         "id": "falsifiers",
         "label": "Falsifiers",
         "eyebrow": "Pre-commitments",
         "title": "Claims that can lose",
-        "description": "Deadlines, exact consequences, locked resolution protocols, and amendment history remain visible after adjudication."
+        "description": "Each falsifier locks its deadline, resolution protocol, and consequence before the outcome is known. When one fires, the forecast moves by the pre-committed amount — and the record of the move stays public."
       },
       {
         "id": "evidence",
         "label": "Evidence",
         "eyebrow": "Evidence ledger",
-        "title": "Observations, sorted by diagnosticity",
-        "description": "Filter the ledger by milestone, direction, diagnosticity, or date without changing the underlying authored summaries."
+        "title": "Observations, weighed by how much they cut",
+        "description": "Every entry is an authored summary of a public source, tagged by milestone, direction, and diagnosticity. Filters narrow the view; the underlying record only ever grows."
       },
       {
         "id": "bottlenecks",
         "label": "Bottlenecks",
         "eyebrow": "Mechanism tracker",
         "title": "Where acceleration can still bind",
-        "description": "Track continual learning, research taste, compute economics, and verification asymmetry against explicit status-change criteria."
+        "description": "Four mechanisms carry the takeoff argument: continual learning, research taste, compute economics, and verification asymmetry. Each has an explicit status and pre-registered criteria for changing it."
       },
       {
         "id": "changelog",
         "label": "Changelog",
         "eyebrow": "Audit trail",
         "title": "Every material change, newest first",
-        "description": "Forecast revisions, evidence additions, and protocol amendments are visible as an append-only public record."
+        "description": "Forecast revisions, evidence additions, and protocol amendments, kept as an append-only public record. Nothing is silently overwritten."
       },
       {
         "id": "methodology",
         "label": "Methodology",
         "eyebrow": "Scoring convention",
-        "title": "How this forecast is graded",
-        "description": "Public-verification rules, the contestable internal-lag translation, source provenance, and the data-only update workflow."
+        "title": "How this record is graded",
+        "description": "Milestones score on publicly verifiable evidence. Internal existence is inferred through a contestable four-month lag, forecast records are append-only, and every revision names the evidence that moved it."
       }
     ]
   },
@@ -189,7 +206,7 @@
       "id": "wsi",
       "code": "WSI",
       "name": "Wildly Superintelligent AI",
-      "operational_definition": "Wildly superintelligent AI under JJ's forecasting-framework continuity term.",
+      "operational_definition": "The continuity endpoint of JJ's forecasting framework: wildly superintelligent AI, far past the ASI threshold. Not a standardized AI Futures milestone.",
       "spine_description": "A continuity term rather than a standardized AI Futures milestone.",
       "spine_mapping": "No distinct AI 2027 agent",
       "status": "not-arrived",

@@ -38,6 +38,12 @@ export const ViewMetaSchema = z.object({
   description: z.string().min(1),
 });
 
+export const HeadlineStatSchema = z.object({
+  label: z.string().min(1),
+  value: z.string().min(1),
+  detail: z.string().min(1).optional(),
+});
+
 export const MetaSchema = z.object({
   site_title: z.string().min(1),
   site_subtitle: z.string().min(1),
@@ -51,6 +57,7 @@ export const MetaSchema = z.object({
   sample_warning: z.string().min(1),
   last_updated_label: z.string().min(1),
   next_review_label: z.string().min(1),
+  headline_stats: z.array(HeadlineStatSchema).max(4).optional(),
   tracks: z.array(TrackSchema).min(1),
   views: z.array(ViewMetaSchema).length(6),
 });

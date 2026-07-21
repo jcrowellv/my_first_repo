@@ -42,7 +42,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <HashRouter>
       <div className="min-h-screen bg-canvas text-ink">
-        <header className="sticky top-0 z-50 border-b border-line/80 bg-canvas/90 backdrop-blur-xl">
+        <header className="sticky top-0 z-50 border-b border-line/80 bg-canvas/95 backdrop-blur-sm">
           <div className="mx-auto flex min-h-16 max-w-[1500px] items-center justify-between gap-5 px-4 md:px-6">
             <NavLink to="/" className="min-w-0">
               <span className="block truncate text-sm font-semibold tracking-[-0.01em] text-ink">
