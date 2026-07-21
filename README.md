@@ -41,7 +41,7 @@ vercel.json                  Vercel build configuration
 
 ## Local development
 
-Prerequisite: Node.js 20 or newer.
+Prerequisite: Node.js 22.13 or newer.
 
 ```bash
 npm install
