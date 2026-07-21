@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Geist Variable", Inter, system-ui, sans-serif;
+  color: #e8edf4;
+  background: #080c12;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+html { background: #080c12; scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #080c12; }
+button, input, select { font: inherit; }
+button, summary, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid #5fd5e8;
+  outline-offset: 2px;
+}
+::selection { color: #080c12; background: #5fd5e8; }
+
+.prose-data p { margin: 0; }
+.prose-data p + p { margin-top: .75rem; }
+.prose-data a { color: #5fd5e8; text-decoration: underline; text-underline-offset: 3px; }
+.prose-data strong { color: #e8edf4; font-weight: 600; }
+.prose-data ul, .prose-data ol { margin: .75rem 0 0; padding-left: 1.1rem; }
+.prose-data li + li { margin-top: .35rem; }
+
+summary::-webkit-details-marker { display: none; }
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.75); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
