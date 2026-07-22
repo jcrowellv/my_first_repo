@@ -61,7 +61,7 @@ export function PageHeader({ viewId }: { viewId: string }) {
       <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cyan">
         {view.eyebrow}
       </p>
-      <h1 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-ink md:text-5xl">
+      <h1 className="text-balance font-serif text-4xl font-semibold tracking-[-0.015em] text-ink md:text-[54px] md:leading-[1.08]">
         {view.title}
       </h1>
       <p className="mt-5 max-w-3xl text-base leading-7 text-muted">

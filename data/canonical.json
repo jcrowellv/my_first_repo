@@ -32,96 +32,6 @@
         "detail": "The registered METR 80% time-horizon threshold is the next dated tripwire."
       }
     ],
-    "navigation_groups": [
-      {
-        "id": "timeline",
-        "label": "Overview",
-        "summary": "Start with the capability score, then compare the forecasts and inspect the mechanisms moving them.",
-        "items": [
-          {
-            "view_id": "timeline",
-            "label": "Capability overview",
-            "description": "Rubric completion, forecast bands, and the newest signals."
-          },
-          {
-            "view_id": "bottlenecks",
-            "label": "Mechanism map",
-            "description": "The drivers pulling capability timelines earlier or later."
-          },
-          {
-            "view_id": "changelog",
-            "label": "What changed",
-            "description": "The append-only record of evidence and forecast revisions."
-          }
-        ]
-      },
-      {
-        "id": "falsifiers",
-        "label": "Tests",
-        "summary": "See the dated tripwires and structural monitors that could change the forecast.",
-        "items": [
-          {
-            "view_id": "falsifiers",
-            "label": "Dated tests",
-            "description": "Locked thresholds, deadlines, consequences, and protocols."
-          },
-          {
-            "view_id": "bottlenecks",
-            "label": "Structural monitors",
-            "description": "Research taste, reliability, learning, verification, and scale."
-          },
-          {
-            "view_id": "changelog",
-            "label": "Resolution history",
-            "description": "Every material adjudication and amendment, newest first."
-          }
-        ]
-      },
-      {
-        "id": "evidence",
-        "label": "Evidence",
-        "summary": "Separate model releases from independent evaluations and ask what each result actually establishes.",
-        "items": [
-          {
-            "view_id": "evidence",
-            "label": "Evidence ledger",
-            "description": "Filter public observations by capability, source, and signal strength."
-          },
-          {
-            "view_id": "bottlenecks",
-            "label": "Evidence by mechanism",
-            "description": "See which observations bear on each timeline driver."
-          },
-          {
-            "view_id": "methodology",
-            "label": "How evidence scores",
-            "description": "Public-verification rules, rubric logic, and known limits."
-          }
-        ]
-      },
-      {
-        "id": "methodology",
-        "label": "Methodology",
-        "summary": "Audit the definitions, source provenance, scoring convention, and update discipline.",
-        "items": [
-          {
-            "view_id": "methodology",
-            "label": "Scoring method",
-            "description": "Capability rubric, internal lag, and distribution discipline."
-          },
-          {
-            "view_id": "changelog",
-            "label": "Audit trail",
-            "description": "Forecast revisions and evidence additions are never overwritten."
-          },
-          {
-            "view_id": "bottlenecks",
-            "label": "Mechanism assumptions",
-            "description": "The causal claims underneath compression and widening."
-          }
-        ]
-      }
-    ],
     "action_center": {
       "eyebrow": "From forecast to action",
       "title": "Use the uncertainty productively.",
@@ -197,7 +107,7 @@
         "description": "A July 2026 provisional distribution with a 2032 WSI median. Neither an immediate AC-to-ASI jump nor a flat multi-year widening: a real AC-to-SAR delay while research taste binds, then renewed compression once systems select their own research agendas.",
         "thesis": "compression",
         "kind": "forecast",
-        "color": "#1fa5bd",
+        "color": "#0e8ea8",
         "source_label": "AI_Capability_Timeline_Distribution_Jul2026.pdf",
         "source_url": null,
         "sample": false
@@ -594,6 +504,52 @@
     }
   ],
   "evidence": [
+    {
+      "id": "ev-kimi-k3",
+      "date": "2026-07-16",
+      "source_url": "https://venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems",
+      "source_label": "Kimi K3",
+      "publisher": "Moonshot AI",
+      "source_type": "system-card",
+      "summary": "Moonshot AI announced Kimi K3, a 2.8-trillion-parameter mixture-of-experts model activating 16 of 896 experts per token, reporting a 2.5x scaling-efficiency gain over K2 from its Delta Attention and Attention Residuals changes. Composite third-party indices placed it just behind the strongest closed U.S. models, it ranked first in blind front-end coding preference testing, and weights were scheduled for release on July 27, 2026.",
+      "implication": "The open-weight frontier now trails the closed frontier by months rather than years on agentic-coding indices, spreading Agent-1-scale coding labor well beyond a few U.S. labs.",
+      "limitation": "Headline results are vendor-reported or preference-based composites rather than held-out agentic evaluations, and the weights had not shipped at announcement time.",
+      "milestone_tags": [
+        "agent-1",
+        "agent-2",
+        "sc"
+      ],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": [
+        "open-weight",
+        "evaluation-methods"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-claude-fable5",
+      "date": "2026-06-09",
+      "source_url": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
+      "source_label": "Claude Fable 5",
+      "publisher": "Anthropic",
+      "source_type": "system-card",
+      "summary": "Anthropic released Claude Fable 5, its first generally available Mythos-class model, positioned above Opus for demanding reasoning and long-horizon agentic work and reported to work autonomously for longer than any prior Claude model, with added safety classifiers for dual-use capabilities.",
+      "implication": "Extends deployed long-horizon autonomy at the closed frontier and feeds the reliable-autonomy driver; it does not by itself demonstrate Agent-2 research taste or continual learning.",
+      "limitation": "Autonomy and capability claims are the vendor's own; independent horizon measurements for this model were not yet public inside the ledger's window.",
+      "milestone_tags": [
+        "agent-1",
+        "agent-2",
+        "ac"
+      ],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": [
+        "frontier-lab",
+        "research-autonomy"
+      ],
+      "sample": false
+    },
     {
       "id": "ev-aisi-test-time-compute",
       "date": "2026-07-02",
@@ -1067,7 +1023,7 @@
       "confidence": "high",
       "assessment": "Public and internal task horizons have lengthened rapidly, and high test-time budgets reveal substantially more capability. Reliability at 80% remains sensitive to compute, scaffolding, and task domain.",
       "next_signal": "METR TH1.1 or a documented successor reaches 5–10 hours at 80% reliability without a major methodology break.",
-      "evidence_for": ["ev-metr-time-horizons", "ev-metr-risk-report", "ev-anthropic-autonomy", "ev-aisi-test-time-compute"],
+      "evidence_for": ["ev-metr-time-horizons", "ev-metr-risk-report", "ev-anthropic-autonomy", "ev-aisi-test-time-compute", "ev-claude-fable5"],
       "evidence_against": ["ev-gpt56-system-card"],
       "sample": false
     },
@@ -1079,7 +1035,7 @@
       "confidence": "high",
       "assessment": "Frontier systems make useful contributions to internal debugging, kernels, training loops, and large codebases. No public evaluation yet supports almost-top-human performance across sustained research-engineering work.",
       "next_signal": "A current frontier model matches top experts across an updated RE-Bench or equivalent multi-day, held-out research-engineering suite.",
-      "evidence_for": ["ev-gpt56-system-card", "ev-openai-harness", "ev-alphaevolve", "ev-rebench", "ev-nist-deepseek-v4", "ev-devstral2"],
+      "evidence_for": ["ev-gpt56-system-card", "ev-openai-harness", "ev-alphaevolve", "ev-rebench", "ev-nist-deepseek-v4", "ev-devstral2", "ev-kimi-k3"],
       "evidence_against": ["ev-paperbench", "ev-anthropic-coding-practice"],
       "sample": false
     },
@@ -1195,6 +1151,14 @@
     }
   ],
   "changelog": [
+    {
+      "id": "change-20260721-redesign-kimi",
+      "date": "2026-07-21",
+      "change_summary": "Flattened the site navigation to a single level, rebuilt the forecast chart and expansion mechanics, reorganized the evidence ledger chronologically, and added the Kimi K3 open-weight announcement and the Claude Fable 5 release to the ledger.",
+      "evidence_refs": ["ev-kimi-k3", "ev-claude-fable5"],
+      "affected_entities": ["b-research-engineering", "b-autonomy-horizon"],
+      "sample": false
+    },
     {
       "id": "change-20260721-evidence-navigation",
       "date": "2026-07-21",

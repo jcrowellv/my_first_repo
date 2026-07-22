@@ -44,26 +44,6 @@ export const HeadlineStatSchema = z.object({
   detail: z.string().min(1).optional(),
 });
 
-export const NavigationItemSchema = z.object({
-  view_id: z.enum([
-    "timeline",
-    "falsifiers",
-    "evidence",
-    "bottlenecks",
-    "changelog",
-    "methodology",
-  ]),
-  label: z.string().min(1),
-  description: z.string().min(1),
-});
-
-export const NavigationGroupSchema = z.object({
-  id: z.enum(["timeline", "falsifiers", "evidence", "methodology"]),
-  label: z.string().min(1),
-  summary: z.string().min(1),
-  items: z.array(NavigationItemSchema).min(2),
-});
-
 export const ActionLinkSchema = z.object({
   label: z.string().min(1),
   description: z.string().min(1),
@@ -100,7 +80,6 @@ export const MetaSchema = z.object({
   last_updated_label: z.string().min(1),
   next_review_label: z.string().min(1),
   headline_stats: z.array(HeadlineStatSchema).max(4).optional(),
-  navigation_groups: z.array(NavigationGroupSchema).length(4),
   action_center: ActionCenterSchema,
   tracks: z.array(TrackSchema).min(1),
   views: z.array(ViewMetaSchema).length(6),

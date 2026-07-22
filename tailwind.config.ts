@@ -4,6 +4,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ['"Newsreader Variable"', "Georgia", "Cambria", "serif"]
+      },
       colors: {
         canvas: "#f3f0e8",
         panel: "#fffdf8",

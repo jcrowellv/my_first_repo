@@ -14,6 +14,26 @@ export function daysUntil(value: string) {
   return Math.ceil((deadline - Date.now()) / 86_400_000);
 }
 
+const monthAbbreviations = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+export function formatDecimalYear(value: number, lowerBound = false) {
+  const year = Math.floor(value);
+  const month = Math.min(12, Math.max(1, Math.floor((value - year) * 12) + 1));
+  return `${monthAbbreviations[month - 1]} ${year}${lowerBound ? "+" : ""}`;
+}
+
+const decimalLabelPattern = /^\d{4}(\.\d+)?\+?$/;
+
+export function displayQuantileLabel(quantile: { value: number; label: string; lower_bound?: boolean }) {
+  if (decimalLabelPattern.test(quantile.label)) {
+    return formatDecimalYear(quantile.value, quantile.lower_bound ?? quantile.label.endsWith("+"));
+  }
+  return `${quantile.label}${quantile.lower_bound && !quantile.label.includes("+") && !quantile.label.startsWith(">") ? "+" : ""}`;
+}
+
 export function formatCountdown(value: string) {
   const days = daysUntil(value);
   if (days === 0) return "Due today";
