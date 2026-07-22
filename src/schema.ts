@@ -44,6 +44,45 @@ export const HeadlineStatSchema = z.object({
   detail: z.string().min(1).optional(),
 });
 
+export const NavigationItemSchema = z.object({
+  view_id: z.enum([
+    "timeline",
+    "falsifiers",
+    "evidence",
+    "bottlenecks",
+    "changelog",
+    "methodology",
+  ]),
+  label: z.string().min(1),
+  description: z.string().min(1),
+});
+
+export const NavigationGroupSchema = z.object({
+  id: z.enum(["timeline", "falsifiers", "evidence", "methodology"]),
+  label: z.string().min(1),
+  summary: z.string().min(1),
+  items: z.array(NavigationItemSchema).min(2),
+});
+
+export const ActionLinkSchema = z.object({
+  label: z.string().min(1),
+  description: z.string().min(1),
+  url: z.string().url(),
+});
+
+export const ActionGroupSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  items: z.array(ActionLinkSchema).min(1),
+});
+
+export const ActionCenterSchema = z.object({
+  eyebrow: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  groups: z.array(ActionGroupSchema).min(1),
+});
+
 export const MetaSchema = z.object({
   site_title: z.string().min(1),
   site_subtitle: z.string().min(1),
@@ -61,6 +100,8 @@ export const MetaSchema = z.object({
   last_updated_label: z.string().min(1),
   next_review_label: z.string().min(1),
   headline_stats: z.array(HeadlineStatSchema).max(4).optional(),
+  navigation_groups: z.array(NavigationGroupSchema).length(4),
+  action_center: ActionCenterSchema,
   tracks: z.array(TrackSchema).min(1),
   views: z.array(ViewMetaSchema).length(6),
 });
@@ -166,6 +207,13 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
   milestone_tags: z.array(z.string().min(1)).min(1),
   favors: z.enum(["compression", "widening", "spine", "neutral"]),
   diagnosticity: z.enum(["high", "medium", "low"]),
+  themes: z.array(z.enum([
+    "open-weight",
+    "frontier-lab",
+    "independent-evaluation",
+    "research-autonomy",
+    "evaluation-methods",
+  ])).optional(),
 });
 
 export const BottleneckStatusSchema = z.enum(["easing", "mixed", "binding", "unresolved"]);

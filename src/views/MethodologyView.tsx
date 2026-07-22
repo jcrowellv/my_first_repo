@@ -16,11 +16,14 @@ export function MethodologyView() {
   return (
     <div>
       <PageHeader viewId="methodology" />
-      <div className="mb-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2 xl:grid-cols-5">
+      <div className="mb-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2 lg:grid-cols-6">
         {principles.map((principle, index) => {
           const Icon = iconByIndex[index];
           return (
-            <div key={principle.title} className="bg-panel p-5 md:p-6">
+            <div
+              key={principle.title}
+              className={`bg-panel p-5 md:p-6 ${index < 2 ? "lg:col-span-3" : "lg:col-span-2"} ${index === 4 ? "md:col-span-2 lg:col-span-2" : ""}`}
+            >
               <Icon size={18} className="mb-5 text-cyan" />
               <h2 className="text-sm font-semibold text-ink">{principle.title}</h2>
               <p className="mt-3 text-xs leading-5 text-muted">{principle.text}</p>

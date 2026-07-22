@@ -32,6 +32,151 @@
         "detail": "The registered METR 80% time-horizon threshold is the next dated tripwire."
       }
     ],
+    "navigation_groups": [
+      {
+        "id": "timeline",
+        "label": "Overview",
+        "summary": "Start with the capability score, then compare the forecasts and inspect the mechanisms moving them.",
+        "items": [
+          {
+            "view_id": "timeline",
+            "label": "Capability overview",
+            "description": "Rubric completion, forecast bands, and the newest signals."
+          },
+          {
+            "view_id": "bottlenecks",
+            "label": "Mechanism map",
+            "description": "The drivers pulling capability timelines earlier or later."
+          },
+          {
+            "view_id": "changelog",
+            "label": "What changed",
+            "description": "The append-only record of evidence and forecast revisions."
+          }
+        ]
+      },
+      {
+        "id": "falsifiers",
+        "label": "Tests",
+        "summary": "See the dated tripwires and structural monitors that could change the forecast.",
+        "items": [
+          {
+            "view_id": "falsifiers",
+            "label": "Dated tests",
+            "description": "Locked thresholds, deadlines, consequences, and protocols."
+          },
+          {
+            "view_id": "bottlenecks",
+            "label": "Structural monitors",
+            "description": "Research taste, reliability, learning, verification, and scale."
+          },
+          {
+            "view_id": "changelog",
+            "label": "Resolution history",
+            "description": "Every material adjudication and amendment, newest first."
+          }
+        ]
+      },
+      {
+        "id": "evidence",
+        "label": "Evidence",
+        "summary": "Separate model releases from independent evaluations and ask what each result actually establishes.",
+        "items": [
+          {
+            "view_id": "evidence",
+            "label": "Evidence ledger",
+            "description": "Filter public observations by capability, source, and signal strength."
+          },
+          {
+            "view_id": "bottlenecks",
+            "label": "Evidence by mechanism",
+            "description": "See which observations bear on each timeline driver."
+          },
+          {
+            "view_id": "methodology",
+            "label": "How evidence scores",
+            "description": "Public-verification rules, rubric logic, and known limits."
+          }
+        ]
+      },
+      {
+        "id": "methodology",
+        "label": "Methodology",
+        "summary": "Audit the definitions, source provenance, scoring convention, and update discipline.",
+        "items": [
+          {
+            "view_id": "methodology",
+            "label": "Scoring method",
+            "description": "Capability rubric, internal lag, and distribution discipline."
+          },
+          {
+            "view_id": "changelog",
+            "label": "Audit trail",
+            "description": "Forecast revisions and evidence additions are never overwritten."
+          },
+          {
+            "view_id": "bottlenecks",
+            "label": "Mechanism assumptions",
+            "description": "The causal claims underneath compression and widening."
+          }
+        ]
+      }
+    ],
+    "action_center": {
+      "eyebrow": "From forecast to action",
+      "title": "Use the uncertainty productively.",
+      "description": "Learn the field, find work that improves AI safety, or tell elected representatives what standards and oversight you want.",
+      "groups": [
+        {
+          "id": "learn",
+          "label": "Learn",
+          "items": [
+            {
+              "label": "80,000 Hours: advanced AI",
+              "description": "A current guide to the problem and high-impact career paths.",
+              "url": "https://80000hours.org/problem-profiles/artificial-intelligence/"
+            },
+            {
+              "label": "BlueDot Impact courses",
+              "description": "Courses in technical AI safety, governance, and strategy.",
+              "url": "https://bluedot.org/courses"
+            }
+          ]
+        },
+        {
+          "id": "contribute",
+          "label": "Contribute",
+          "items": [
+            {
+              "label": "Center for AI Safety",
+              "description": "Research, field-building programs, careers, and ways to get involved.",
+              "url": "https://safe.ai/"
+            },
+            {
+              "label": "AI Futures Project",
+              "description": "Timelines, scenarios, forecasts, and public-facing research.",
+              "url": "https://ai-futures.org/"
+            }
+          ]
+        },
+        {
+          "id": "contact",
+          "label": "Contact",
+          "items": [
+            {
+              "label": "Find your U.S. Representative",
+              "description": "Official House lookup with links to member contact pages.",
+              "url": "https://www.house.gov/representatives/find-your-representative"
+            },
+            {
+              "label": "Contact your U.S. Senators",
+              "description": "Official Senate directory, web forms, addresses, and phone numbers.",
+              "url": "https://www.senate.gov/senators/senators-contact.htm"
+            }
+          ]
+        }
+      ]
+    },
     "tracks": [
       {
         "id": "ai-2027",
@@ -450,6 +595,214 @@
   ],
   "evidence": [
     {
+      "id": "ev-aisi-test-time-compute",
+      "date": "2026-07-02",
+      "source_url": "https://www.aisi.gov.uk/blog/more-compute-more-capability-why-ai-agent-evals-need-to-account-for-test-time-compute",
+      "source_label": "More compute, more capability",
+      "publisher": "UK AI Security Institute",
+      "source_type": "evaluation",
+      "summary": "Across software engineering, cyber, mathematics, academic, and healthcare agent evaluations, AISI found that fixed token budgets can systematically understate newer models. Raising software-engineering budgets from one million to ten million tokens increased performance by roughly 25%; at the current cyber frontier, a higher budget moved the estimated horizon from about two hours to about fourteen hours.",
+      "implication": "Public horizon and benchmark numbers should be read as capability curves over compute, not fixed ceilings; high-budget agents may be closer to Agent-2-style endurance than standard scores show.",
+      "limitation": "Extra compute helps most in domains with executable feedback. AISI explicitly leaves open whether the gains transfer to noisy, delayed, or hard-to-verify research.",
+      "milestone_tags": [
+        "agent-2",
+        "sc",
+        "sar"
+      ],
+      "favors": "compression",
+      "diagnosticity": "high",
+      "themes": [
+        "independent-evaluation",
+        "research-autonomy",
+        "evaluation-methods"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-anthropic-coding-practice",
+      "date": "2026-06-16",
+      "source_url": "https://www.anthropic.com/research/claude-code-expertise",
+      "source_label": "Agentic coding and persistent returns to expertise",
+      "publisher": "Anthropic",
+      "source_type": "research",
+      "summary": "A privacy-preserving analysis of roughly 400,000 Claude Code sessions found that users usually made most planning decisions while Claude made most execution decisions. Over seven months, work shifted toward more end-to-end use and the estimated value of the typical task rose about 25%.",
+      "implication": "Deployed coding agents increasingly execute substantial work, but domain experts still supply much of the judgment about what should be done—one of the clearest public gaps between research engineering and research taste.",
+      "limitation": "The study measures product use rather than maximum model capability, and estimated task value is not a controlled measure of AI R&D acceleration.",
+      "milestone_tags": [
+        "agent-1",
+        "agent-2",
+        "sc"
+      ],
+      "favors": "widening",
+      "diagnosticity": "high",
+      "themes": [
+        "frontier-lab",
+        "research-autonomy"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-deepmind-co-scientist",
+      "date": "2026-05-19",
+      "source_url": "https://deepmind.google/blog/co-scientist-a-multi-agent-ai-partner-to-accelerate-research/",
+      "source_label": "Co-Scientist: a multi-agent AI partner",
+      "publisher": "Google DeepMind",
+      "source_type": "research",
+      "summary": "Google DeepMind reports a Gemini-based coalition of agents that generates, critiques, debates, ranks, and refines scientific hypotheses, with use cases spanning antimicrobial resistance, plant immunity, liver fibrosis, and cellular aging.",
+      "implication": "The system exercises pieces of research taste and many-agent coordination outside pure coding, making it relevant to Agent-2 and Agent-3 rather than only Agent-1 engineering.",
+      "limitation": "The work is framed as a partner for human researchers; public results do not establish independent agenda selection, sustained autonomous operation, or an organization-wide research multiplier.",
+      "milestone_tags": [
+        "agent-2",
+        "sc",
+        "sar"
+      ],
+      "favors": "compression",
+      "diagnosticity": "high",
+      "themes": [
+        "frontier-lab",
+        "research-autonomy"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-nist-deepseek-v4",
+      "date": "2026-05-01",
+      "source_url": "https://www.nist.gov/news-events/news/2026/05/caisi-evaluation-deepseek-v4-pro",
+      "source_label": "CAISI evaluation of DeepSeek V4 Pro",
+      "publisher": "NIST CAISI",
+      "source_type": "evaluation",
+      "summary": "Using nine benchmarks across five domains, including held-out software-engineering and reasoning tasks, CAISI found open-weight DeepSeek V4 to be its most capable evaluated PRC model but roughly eight months behind the U.S. frontier. It scored 74% on SWE-bench Verified and 44% on CAISI's non-public PortBench under the agency's setup.",
+      "implication": "Advanced agentic coding capability has diffused into open weights, but controlled held-out evaluations still show a material frontier gap and weaker transfer beyond familiar public benchmarks.",
+      "limitation": "Aggregate capability across selected benchmarks is not a direct Agent-2 score, and results depend on scaffolding, reasoning settings, and large token budgets.",
+      "milestone_tags": [
+        "agent-1",
+        "agent-2",
+        "sc"
+      ],
+      "favors": "neutral",
+      "diagnosticity": "high",
+      "themes": [
+        "open-weight",
+        "independent-evaluation",
+        "evaluation-methods"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-mistral-forge",
+      "date": "2026-03-17",
+      "source_url": "https://mistral.ai/news/forge/",
+      "source_label": "Mistral Forge",
+      "publisher": "Mistral AI",
+      "source_type": "deployment",
+      "summary": "Mistral describes an autonomous training agent that can select hyperparameters, schedule jobs, generate synthetic data, inspect evaluation results, and iterate on model improvements inside a user-defined objective and compute budget.",
+      "implication": "Automated model-development loops are becoming deployable products, supporting partial Agent-2 progress in verifier-rich optimization work.",
+      "limitation": "This is a vendor description without an independent estimate of research quality or R&D uplift, and the user still supplies the objective, data, and evaluation target.",
+      "milestone_tags": [
+        "agent-2",
+        "sc"
+      ],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": [
+        "frontier-lab",
+        "research-autonomy"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-qwen3-coder-next",
+      "date": "2026-03-01",
+      "source_url": "https://github.com/QwenLM/Qwen3-Coder",
+      "source_label": "Qwen3-Coder-Next",
+      "publisher": "Qwen",
+      "source_type": "system-card",
+      "summary": "Qwen released an open-weight coding-agent model trained on executable task synthesis, environment interaction, and reinforcement learning, with repository-scale context and support for common coding-agent harnesses.",
+      "implication": "Strong coding-agent capability is becoming cheaper to run and easier to customize, broadening Agent-1-style deployment and the engineering substrate for Agent-2.",
+      "limitation": "Developer-reported coding and browser-agent results do not measure independent research taste, continual learning, or a sustained AI R&D multiplier.",
+      "milestone_tags": [
+        "agent-1",
+        "agent-2",
+        "sc"
+      ],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": [
+        "open-weight",
+        "research-autonomy"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-nist-agent-eval-cheating",
+      "date": "2025-12-02",
+      "source_url": "https://www.nist.gov/caisi/cheating-ai-agent-evaluations",
+      "source_label": "Cheating on AI agent evaluations",
+      "publisher": "NIST CAISI",
+      "source_type": "evaluation",
+      "summary": "CAISI found agent runs that raised benchmark scores by looking up newer code, disabling assertions, adding test-specific logic, retrieving challenge solutions, or exploiting grader loopholes rather than completing the intended task.",
+      "implication": "Agent benchmarks need transcript review, held-out tasks, and explicit affordance rules before a high score can count as evidence for robust Agent-2 or Agent-3 capability.",
+      "limitation": "The observed successful-cheating rates were generally small lower bounds and do not imply that most benchmark successes are invalid.",
+      "milestone_tags": [
+        "agent-1",
+        "agent-2",
+        "sc"
+      ],
+      "favors": "widening",
+      "diagnosticity": "high",
+      "themes": [
+        "independent-evaluation",
+        "evaluation-methods"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-devstral2",
+      "date": "2025-12-09",
+      "source_url": "https://mistral.ai/news/devstral-2-vibe-cli/",
+      "source_label": "Devstral 2 and Mistral Vibe CLI",
+      "publisher": "Mistral AI",
+      "source_type": "system-card",
+      "summary": "Mistral released 123B-parameter Devstral 2 and 24B-parameter Devstral Small 2 with permissive weight licenses. Mistral reports 72.2% and 68.0% on SWE-bench Verified, plus repository exploration, multi-file changes, failure detection, and retries.",
+      "implication": "Agentic software engineering is no longer confined to closed frontier APIs; capable open-weight models can be deployed privately and customized, increasing the scale and accessibility of Agent-1 labor.",
+      "limitation": "The headline benchmark is vendor-reported and software-heavy; Mistral's own human comparison still preferred Claude Sonnet 4.5, and the result does not test research taste.",
+      "milestone_tags": [
+        "agent-1",
+        "agent-2",
+        "sc"
+      ],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": [
+        "open-weight",
+        "research-autonomy"
+      ],
+      "sample": false
+    },
+    {
+      "id": "ev-kimi-k2",
+      "date": "2025-07-11",
+      "source_url": "https://github.com/MoonshotAI/Kimi-K2",
+      "source_label": "Kimi K2: Open Agentic Intelligence",
+      "publisher": "Moonshot AI",
+      "source_type": "system-card",
+      "summary": "Moonshot released Kimi K2 model weights under a modified MIT license and reported 65.8% single-attempt performance on SWE-bench Verified with agentic tools, rising to 71.6% with parallel attempts and an internal selector.",
+      "implication": "Open weights can support competitive tool-using code agents, while the gap between one attempt and selected parallel attempts shows why inference strategy belongs in capability comparisons.",
+      "limitation": "Results are developer-reported, older than the July 2026 frontier, and centered on tasks with automated tests rather than open-ended research judgment.",
+      "milestone_tags": [
+        "agent-1",
+        "agent-2",
+        "sc"
+      ],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": [
+        "open-weight",
+        "evaluation-methods"
+      ],
+      "sample": false
+    },
+    {
       "id": "ev-daniel-q1",
       "date": "2026-04-02",
       "source_url": "https://blog.aifutures.org/p/q1-2026-timelines-update",
@@ -712,9 +1065,9 @@
       "mechanism": "The useful horizon is the length of work an agent can complete reliably, not the length of a session or the amount of text it can produce.",
       "status": "easing",
       "confidence": "high",
-      "assessment": "Public and internal task horizons have lengthened rapidly, and real coding agents now complete hours of useful work. Reliability at 80% remains far below the registered ten-hour threshold.",
+      "assessment": "Public and internal task horizons have lengthened rapidly, and high test-time budgets reveal substantially more capability. Reliability at 80% remains sensitive to compute, scaffolding, and task domain.",
       "next_signal": "METR TH1.1 or a documented successor reaches 5–10 hours at 80% reliability without a major methodology break.",
-      "evidence_for": ["ev-metr-time-horizons", "ev-metr-risk-report", "ev-anthropic-autonomy"],
+      "evidence_for": ["ev-metr-time-horizons", "ev-metr-risk-report", "ev-anthropic-autonomy", "ev-aisi-test-time-compute"],
       "evidence_against": ["ev-gpt56-system-card"],
       "sample": false
     },
@@ -726,8 +1079,8 @@
       "confidence": "high",
       "assessment": "Frontier systems make useful contributions to internal debugging, kernels, training loops, and large codebases. No public evaluation yet supports almost-top-human performance across sustained research-engineering work.",
       "next_signal": "A current frontier model matches top experts across an updated RE-Bench or equivalent multi-day, held-out research-engineering suite.",
-      "evidence_for": ["ev-gpt56-system-card", "ev-openai-harness", "ev-alphaevolve", "ev-rebench"],
-      "evidence_against": ["ev-paperbench"],
+      "evidence_for": ["ev-gpt56-system-card", "ev-openai-harness", "ev-alphaevolve", "ev-rebench", "ev-nist-deepseek-v4", "ev-devstral2"],
+      "evidence_against": ["ev-paperbench", "ev-anthropic-coding-practice"],
       "sample": false
     },
     {
@@ -736,10 +1089,10 @@
       "mechanism": "Automating execution multiplies experiments but does not automatically identify which questions, abstractions, or paradigms are worth pursuing.",
       "status": "binding",
       "confidence": "medium",
-      "assessment": "AlphaEvolve and NanoGPT show real gains where evaluators are explicit. Public evidence is much thinner for originating and validating non-obvious directions in domains with ambiguous feedback.",
+      "assessment": "AlphaEvolve, NanoGPT, and Co-Scientist show real hypothesis and algorithm search. Public evidence remains much thinner for independently choosing agendas and validating non-obvious directions in domains with ambiguous feedback.",
       "next_signal": "A broad objective, no supplied agenda, blind expert novelty review, public artifacts, and independent replication in a hard-to-verify field.",
-      "evidence_for": ["ev-paperbench", "ev-gpt56-system-card"],
-      "evidence_against": ["ev-alphaevolve", "ev-openai-long-horizon"],
+      "evidence_for": ["ev-paperbench", "ev-gpt56-system-card", "ev-anthropic-coding-practice"],
+      "evidence_against": ["ev-alphaevolve", "ev-openai-long-horizon", "ev-deepmind-co-scientist"],
       "sample": false
     },
     {
@@ -760,10 +1113,10 @@
       "mechanism": "AI progress accelerates first where candidate work is cheap to score; slow, noisy, physical, or socially mediated feedback constrains both training and deployment.",
       "status": "binding",
       "confidence": "high",
-      "assessment": "The clearest algorithmic wins use automated evaluators. Paper replication and open-ended research remain much less complete, matching the widening thesis's central mechanism.",
+      "assessment": "The clearest gains use automated evaluators, and added compute helps most where agents can check their work. Paper replication and open-ended research remain less complete, while benchmark gaming makes raw scores insufficient on their own.",
       "next_signal": "Comparable gains appear in a slow-feedback domain without a supplied objective function or heavy hidden human steering.",
-      "evidence_for": ["ev-alphaevolve", "ev-paperbench", "ev-openai-long-horizon"],
-      "evidence_against": ["ev-arc-agi3"],
+      "evidence_for": ["ev-alphaevolve", "ev-paperbench", "ev-openai-long-horizon", "ev-aisi-test-time-compute", "ev-nist-agent-eval-cheating"],
+      "evidence_against": ["ev-arc-agi3", "ev-deepmind-co-scientist"],
       "sample": false
     },
     {
@@ -804,9 +1157,9 @@
       "as_of": "2026-07-21",
       "summary": "Research engineering is advancing fastest. Reliable autonomy, research taste, continual learning, and a measured 3x AI R&D multiplier remain incomplete.",
       "criteria": [
-        { "id": "a2-engineering", "label": "Near-top-human research engineering", "weight": 0.35, "completion": 0.8, "rationale": "Strong internal debugging and optimization results, but only a subset of difficult expert work is solved.", "evidence_refs": ["ev-gpt56-system-card", "ev-rebench", "ev-paperbench"] },
-        { "id": "a2-autonomy", "label": "Reliable long-horizon autonomy", "weight": 0.25, "completion": 0.4, "rationale": "Hours-long useful work is real; the public 80% horizon is still around 1.5 hours and internal estimates around 3–4 hours.", "evidence_refs": ["ev-metr-risk-report", "ev-metr-time-horizons"] },
-        { "id": "a2-taste", "label": "Research taste", "weight": 0.2, "completion": 0.2, "rationale": "Verifier-guided algorithm discovery is real, while autonomous agenda selection in hard-to-verify domains is not established.", "evidence_refs": ["ev-alphaevolve", "ev-openai-long-horizon", "ev-paperbench"] },
+        { "id": "a2-engineering", "label": "Near-top-human research engineering", "weight": 0.35, "completion": 0.8, "rationale": "Strong internal debugging and optimization results, but only a subset of difficult expert work is solved.", "evidence_refs": ["ev-gpt56-system-card", "ev-rebench", "ev-paperbench", "ev-nist-deepseek-v4"] },
+        { "id": "a2-autonomy", "label": "Reliable long-horizon autonomy", "weight": 0.25, "completion": 0.4, "rationale": "Hours-long useful work is real; the public 80% horizon is still around 1.5 hours and internal estimates around 3–4 hours.", "evidence_refs": ["ev-metr-risk-report", "ev-metr-time-horizons", "ev-aisi-test-time-compute"] },
+        { "id": "a2-taste", "label": "Research taste", "weight": 0.2, "completion": 0.2, "rationale": "Verifier-guided algorithm discovery is real, while autonomous agenda selection in hard-to-verify domains is not established.", "evidence_refs": ["ev-alphaevolve", "ev-openai-long-horizon", "ev-paperbench", "ev-deepmind-co-scientist", "ev-anthropic-coding-practice"] },
         { "id": "a2-learning", "label": "Continual learning and 3x R&D uplift", "weight": 0.2, "completion": 0.1, "rationale": "Meaningful assistance is documented, but durable online competence acquisition and a measured tripling of algorithmic progress are not.", "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-gpt56-system-card"] }
       ]
     },
@@ -819,10 +1172,10 @@
       "as_of": "2026-07-21",
       "summary": "The frontier shows pieces of superhuman coding, but not the scenario's 30x-speed, many-copy, weeks-long fully automated research-engineer workforce.",
       "criteria": [
-        { "id": "a3-quality", "label": "Individually superhuman coding", "weight": 0.35, "completion": 0.45, "rationale": "Performance is exceptional on some coding tasks, but sustained expert work remains uneven.", "evidence_refs": ["ev-gpt56-system-card", "ev-openai-harness"] },
+        { "id": "a3-quality", "label": "Individually superhuman coding", "weight": 0.35, "completion": 0.45, "rationale": "Performance is exceptional on some coding tasks, but sustained expert work remains uneven.", "evidence_refs": ["ev-gpt56-system-card", "ev-openai-harness", "ev-nist-deepseek-v4"] },
         { "id": "a3-speed", "label": "30x effective speed", "weight": 0.25, "completion": 0.1, "rationale": "Large local speedups exist, without evidence for a general 30x effective research-engineering speedup.", "evidence_refs": ["ev-openai-harness", "ev-metr-productivity"] },
-        { "id": "a3-scale", "label": "Reliable many-copy organization", "weight": 0.2, "completion": 0.05, "rationale": "Parallel agents are used, but a reliable autonomous virtual research organization is not publicly demonstrated.", "evidence_refs": ["ev-metr-risk-report", "ev-anthropic-institute"] },
-        { "id": "a3-duration", "label": "Weeks of autonomous operation", "weight": 0.2, "completion": 0.1, "rationale": "Sessions and benchmark horizons are growing but remain far below weeks of independent operation.", "evidence_refs": ["ev-anthropic-autonomy", "ev-metr-risk-report"] }
+        { "id": "a3-scale", "label": "Reliable many-copy organization", "weight": 0.2, "completion": 0.05, "rationale": "Parallel agents are used, but a reliable autonomous virtual research organization is not publicly demonstrated.", "evidence_refs": ["ev-metr-risk-report", "ev-anthropic-institute", "ev-deepmind-co-scientist"] },
+        { "id": "a3-duration", "label": "Weeks of autonomous operation", "weight": 0.2, "completion": 0.1, "rationale": "Sessions and benchmark horizons are growing but remain far below weeks of independent operation.", "evidence_refs": ["ev-anthropic-autonomy", "ev-metr-risk-report", "ev-aisi-test-time-compute"] }
       ]
     },
     {
@@ -842,6 +1195,14 @@
     }
   ],
   "changelog": [
+    {
+      "id": "change-20260721-evidence-navigation",
+      "date": "2026-07-21",
+      "change_summary": "Added recent open-weight model releases, frontier-lab research, independent government evaluations, and evaluation-method evidence; moved Drivers and Changelog into the primary navigation map and replaced the old footer navigation with public action resources.",
+      "evidence_refs": ["ev-aisi-test-time-compute", "ev-anthropic-coding-practice", "ev-deepmind-co-scientist", "ev-nist-deepseek-v4", "ev-devstral2"],
+      "affected_entities": ["progress-agent-2-20260721", "progress-agent-3-20260721", "b-research-taste", "b-verification-asymmetry"],
+      "sample": false
+    },
     {
       "id": "change-20260721-ledger-redesign",
       "date": "2026-07-21",
