@@ -1,98 +1,48 @@
-import { useMemo } from "react";
-import { ChevronDown, Clock3, FileLock2 } from "lucide-react";
-import { canonical, tracksById } from "../lib/data";
+import { CalendarClock, ChevronDown, FileLock2, Radar } from "lucide-react";
+import { canonical, evidenceById } from "../lib/data";
 import { formatCountdown, formatIsoDate } from "../lib/dates";
-import { DataCard, PageHeader, SampleBadge, StatusBadge } from "../components/Primitives";
+import { PageHeader, StatusBadge } from "../components/Primitives";
 
-const statusOrder = { open: 0, pushed: 1, fired: 2, passed: 3 } as const;
+function TestCard({ id }: { id: string }) {
+  const test = canonical.falsifiers.find((item) => item.id === id)!;
+  return (
+    <details className="group rounded-2xl border border-line bg-panel shadow-instrument">
+      <summary className="cursor-pointer list-none p-5 md:p-6">
+        <div className="flex items-start justify-between gap-5">
+          <div className="min-w-0">
+            <div className="mb-3 flex flex-wrap items-center gap-2"><StatusBadge value={test.status} /><span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">{test.review_label}</span></div>
+            <h2 className="text-xl font-semibold tracking-[-0.03em] text-ink">{test.title}</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">{test.summary}</p>
+          </div>
+          <ChevronDown size={18} className="mt-1 shrink-0 text-muted transition-transform group-open:rotate-180" />
+        </div>
+        {test.deadline ? <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-line pt-4 text-xs"><span className="text-ink">{formatIsoDate(test.deadline)}</span><span className="text-amber">{formatCountdown(test.deadline)}</span></div> : null}
+      </summary>
+      <div className="grid gap-6 border-t border-line bg-raised/30 p-5 md:grid-cols-2 md:p-6">
+        <div><p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cyan">Trigger</p><p className="mt-2 text-sm leading-6 text-ink">{test.statement}</p></div>
+        <div><p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cyan">If observed</p><p className="mt-2 text-sm leading-6 text-ink">{test.consequence}</p></div>
+        <div className="md:col-span-2"><p className="inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em] text-muted"><FileLock2 size={13} /> Resolution protocol</p><p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-muted">{test.resolution_protocol}</p></div>
+        <div className="md:col-span-2 flex flex-wrap gap-2">{test.evidence_refs.map((ref) => { const evidence = evidenceById.get(ref); return evidence ? <a key={ref} href={evidence.source_url} target="_blank" rel="noreferrer" className="rounded-full border border-line bg-panel px-3 py-1.5 text-xs text-cyan hover:text-ink">{evidence.publisher} · {evidence.source_label}</a> : null; })}</div>
+        {test.amendment_history.length ? <div className="md:col-span-2 border-l-2 border-amber pl-4"><p className="font-mono text-[9px] uppercase tracking-[0.16em] text-amber">Amendment history</p>{test.amendment_history.map((item) => <div key={item.lock_date} className="mt-3 space-y-2 text-xs leading-5 text-muted"><p><strong className="text-ink">Original:</strong> {item.original_statement}</p><p><strong className="text-ink">Amended:</strong> {item.amendment}</p><p>{item.rationale}</p><p className="font-mono">Locked {formatIsoDate(item.lock_date)}</p></div>)}</div> : null}
+      </div>
+    </details>
+  );
+}
 
 export function FalsifierBoard() {
-  const falsifiers = useMemo(
-    () =>
-      [...canonical.falsifiers].sort((a, b) => {
-        const statusDelta = statusOrder[a.status] - statusOrder[b.status];
-        return statusDelta || a.deadline.localeCompare(b.deadline);
-      }),
-    [],
-  );
-
+  const dated = canonical.falsifiers.filter((item) => item.kind === "dated-tripwire").sort((a, b) => (a.deadline ?? "9999").localeCompare(b.deadline ?? "9999"));
+  const monitors = canonical.falsifiers.filter((item) => item.kind === "structural-monitor");
   return (
     <div>
       <PageHeader viewId="falsifiers" />
-      <div className="mb-6 flex flex-wrap gap-3">
-        {(["open", "pushed", "fired", "passed"] as const).map((status) => (
-          <div key={status} className="rounded-lg border border-line bg-panel px-4 py-3">
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">{status}</span>
-            <strong className="ml-3 text-lg text-ink">
-              {canonical.falsifiers.filter((item) => item.status === status).length}
-            </strong>
-          </div>
-        ))}
-      </div>
-      <div className="grid gap-5 xl:grid-cols-2">
-        {falsifiers.map((falsifier) => {
-          const track = tracksById.get(falsifier.track);
-          return (
-            <DataCard key={falsifier.id} sample={falsifier.sample} className="flex flex-col">
-              <div className="border-b border-line p-5 md:p-6">
-                <div className="mb-5 flex flex-wrap items-center gap-2">
-                  <StatusBadge value={falsifier.status} />
-                  <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.13em] text-muted">
-                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: track?.color }} />
-                    {track?.short_name}
-                  </span>
-                  {falsifier.sample ? <SampleBadge note={falsifier.sample_note} /> : null}
-                </div>
-                <h2 className="text-xl font-semibold tracking-[-0.025em] text-ink">{falsifier.title}</h2>
-                <p className="mt-3 text-sm leading-6 text-muted">{falsifier.statement}</p>
-              </div>
-              <div className="grid grid-cols-2 border-b border-line">
-                <div className="border-r border-line p-4 md:p-5">
-                  <span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-muted">Deadline</span>
-                  <strong className="text-sm text-ink">{formatIsoDate(falsifier.deadline)}</strong>
-                </div>
-                <div className="p-4 md:p-5">
-                  <span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-muted">Countdown</span>
-                  <strong className="inline-flex items-center gap-2 text-sm text-amber">
-                    <Clock3 size={14} /> {formatCountdown(falsifier.deadline)}
-                  </strong>
-                </div>
-              </div>
-              <div className="flex-1 p-5 md:p-6">
-                <span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.16em] text-cyan">Pre-committed consequence</span>
-                <p className="text-sm leading-6 text-ink">{falsifier.consequence}</p>
-              </div>
-              <details className="group border-t border-line">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-sm font-semibold text-ink md:px-6">
-                  <span className="inline-flex items-center gap-2"><FileLock2 size={15} className="text-cyan" /> Resolution protocol</span>
-                  <ChevronDown size={16} className="text-muted transition-transform group-open:rotate-180" />
-                </summary>
-                <div className="border-t border-line bg-canvas/40 p-5 md:p-6">
-                  <p className="whitespace-pre-wrap text-sm leading-7 text-muted">{falsifier.resolution_protocol}</p>
-                  {falsifier.amendment_history.length ? (
-                    <div className="mt-6 border-l-2 border-amber/50 pl-4">
-                      <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.16em] text-amber">Amendment history</p>
-                      {falsifier.amendment_history.map((amendment) => (
-                        <div key={`${falsifier.id}-${amendment.lock_date}`} className="space-y-3 text-xs leading-5 text-muted">
-                          <p><strong className="text-ink">Original:</strong> {amendment.original_statement}</p>
-                          <p><strong className="text-ink">Amendment:</strong> {amendment.amendment}</p>
-                          <p><strong className="text-ink">Rationale:</strong> {amendment.rationale}</p>
-                          <p className="font-mono text-[10px] text-amber">Locked {formatIsoDate(amendment.lock_date)}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : null}
-                  {falsifier.resolution_record ? (
-                    <div className="mt-6 rounded-lg border border-green/30 bg-green/5 p-4 text-sm text-ink">
-                      {falsifier.resolution_record.outcome}
-                    </div>
-                  ) : null}
-                </div>
-              </details>
-            </DataCard>
-          );
-        })}
-      </div>
+      <section>
+        <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-cyan/10 text-cyan"><CalendarClock size={17} /></span><div><h2 className="text-xl font-semibold text-ink">Dated tripwires</h2><p className="text-sm text-muted">Locked review dates and stated consequences.</p></div></div>
+        <div className="space-y-4">{dated.map((item) => <TestCard key={item.id} id={item.id} />)}</div>
+      </section>
+      <section className="mt-14">
+        <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-violet/10 text-violet"><Radar size={17} /></span><div><h2 className="text-xl font-semibold text-ink">Structural monitors</h2><p className="text-sm text-muted">Important observations without invented quantitative deadlines.</p></div></div>
+        <div className="grid gap-4 lg:grid-cols-2">{monitors.map((item) => <TestCard key={item.id} id={item.id} />)}</div>
+      </section>
     </div>
   );
 }

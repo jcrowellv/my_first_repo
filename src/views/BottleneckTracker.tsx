@@ -1,76 +1,40 @@
+import { ChevronDown } from "lucide-react";
 import { canonical, evidenceById } from "../lib/data";
-import { formatIsoDate } from "../lib/dates";
-import { DataCard, PageHeader, SampleBadge, StatusBadge } from "../components/Primitives";
-import { Markdown } from "../components/Markdown";
+import { PageHeader, StatusBadge } from "../components/Primitives";
 
-const steps = ["not-yet-testable", "holding", "strained", "broken"] as const;
-
-const stepFill: Record<(typeof steps)[number], string> = {
-  "not-yet-testable": "bg-muted",
-  holding: "bg-green",
-  strained: "bg-amber",
-  broken: "bg-rose",
-};
-
-const stepText: Record<(typeof steps)[number], string> = {
-  "not-yet-testable": "text-muted",
-  holding: "text-green",
-  strained: "text-amber",
-  broken: "text-rose",
+const statusNote: Record<string, string> = {
+  easing: "Evidence says this constraint is loosening.",
+  mixed: "The evidence pulls in both directions.",
+  binding: "This remains a live constraint on faster takeoff.",
+  unresolved: "Public evidence cannot yet settle this mechanism.",
 };
 
 export function BottleneckTracker() {
   return (
     <div>
       <PageHeader viewId="bottlenecks" />
-      <div className="grid gap-5 xl:grid-cols-2">
-        {canonical.bottlenecks.map((bottleneck) => {
-          const currentIndex = steps.indexOf(bottleneck.status);
-          return (
-            <DataCard key={bottleneck.id} sample={bottleneck.sample}>
-              <div className="border-b border-line p-5 md:p-6">
-                <div className="mb-4 flex flex-wrap items-center gap-2">
-                  <StatusBadge value={bottleneck.status} />
-                  {bottleneck.sample ? <SampleBadge note={bottleneck.sample_note} /> : null}
-                </div>
-                <h2 className="text-xl font-semibold tracking-[-0.025em] text-ink">{bottleneck.name}</h2>
-                <div className="mt-3 text-sm leading-6 text-muted"><Markdown>{bottleneck.mechanism}</Markdown></div>
+      <div className="mb-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {(["easing", "mixed", "binding", "unresolved"] as const).map((status) => <div key={status} className="rounded-2xl border border-line bg-panel p-4"><StatusBadge value={status} /><p className="mt-3 text-xs leading-5 text-muted">{statusNote[status]}</p></div>)}
+      </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {canonical.bottlenecks.map((driver) => (
+          <details key={driver.id} className="group rounded-2xl border border-line bg-panel shadow-instrument">
+            <summary className="cursor-pointer list-none p-5 md:p-6">
+              <div className="flex items-start justify-between gap-5">
+                <div><div className="mb-3 flex flex-wrap items-center gap-2"><StatusBadge value={driver.status} /><span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">{driver.confidence} confidence</span></div><h2 className="text-xl font-semibold tracking-[-0.03em] text-ink">{driver.name}</h2><p className="mt-2 text-sm leading-6 text-muted">{driver.assessment}</p></div>
+                <ChevronDown size={18} className="mt-1 shrink-0 text-muted transition-transform group-open:rotate-180" />
               </div>
-              <div className="border-b border-line p-5 md:p-6">
-                <p className="mb-5 font-mono text-[9px] uppercase tracking-[0.16em] text-muted">Status ladder</p>
-                <div className="grid grid-cols-4 gap-1">
-                  {steps.map((step, index) => (
-                    <div key={step} className="text-center">
-                      <div
-                        className={`mb-2 h-1.5 rounded-full ${index <= currentIndex ? stepFill[bottleneck.status] : "bg-line"} ${index < currentIndex ? "opacity-40" : ""}`}
-                      />
-                      <span className={`font-mono text-[8px] uppercase tracking-[0.08em] ${index === currentIndex ? stepText[bottleneck.status] : "text-muted"}`}>
-                        {step.replaceAll("-", " ")}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+            </summary>
+            <div className="space-y-6 border-t border-line bg-raised/30 p-5 md:p-6">
+              <div><p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cyan">Mechanism</p><p className="mt-2 text-sm leading-7 text-ink">{driver.mechanism}</p></div>
+              <div><p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cyan">Next signal</p><p className="mt-2 text-sm leading-7 text-ink">{driver.next_signal}</p></div>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div><p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-green">Supporting evidence</p><div className="space-y-2">{driver.evidence_for.map((ref) => { const item = evidenceById.get(ref); return item ? <a key={ref} href={item.source_url} target="_blank" rel="noreferrer" className="block text-xs leading-5 text-cyan hover:text-ink">{item.publisher} · {item.source_label}</a> : null; })}</div></div>
+                <div><p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-rose">Counterevidence</p><div className="space-y-2">{driver.evidence_against.map((ref) => { const item = evidenceById.get(ref); return item ? <a key={ref} href={item.source_url} target="_blank" rel="noreferrer" className="block text-xs leading-5 text-cyan hover:text-ink">{item.publisher} · {item.source_label}</a> : null; })}</div></div>
               </div>
-              <div className="border-b border-line p-5 md:p-6">
-                <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-cyan">Next status-change criterion</p>
-                <p className="text-sm leading-6 text-ink">{bottleneck.status_change_criteria}</p>
-              </div>
-              <div className="p-5 md:p-6">
-                <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.16em] text-muted">History</p>
-                <div className="relative space-y-4 border-l border-line pl-5">
-                  {bottleneck.history.map((entry) => (
-                    <div key={`${bottleneck.id}-${entry.date}`} className="relative">
-                      <span className="absolute -left-[23px] top-1 h-1.5 w-1.5 rounded-full bg-cyan" />
-                      <div className="flex flex-wrap items-center gap-2"><time className="text-xs text-ink">{formatIsoDate(entry.date)}</time><StatusBadge value={entry.status} /></div>
-                      <p className="mt-2 text-xs leading-5 text-muted">{entry.note}</p>
-                      {entry.evidence_refs.map((ref) => <span key={ref} className="mt-2 block font-mono text-[9px] text-cyan">{evidenceById.get(ref)?.source_label}</span>)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </DataCard>
-          );
-        })}
+            </div>
+          </details>
+        ))}
       </div>
     </div>
   );

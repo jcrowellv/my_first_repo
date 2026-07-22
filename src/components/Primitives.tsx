@@ -3,17 +3,17 @@ import { AlertTriangle } from "lucide-react";
 import { canonical } from "../lib/data";
 
 const statusStyles: Record<string, string> = {
-  open: "border-cyan/35 bg-cyan/10 text-cyan",
-  passed: "border-green/35 bg-green/10 text-green",
-  pushed: "border-amber/35 bg-amber/10 text-amber",
-  fired: "border-rose/35 bg-rose/10 text-rose",
+  watching: "border-cyan/25 bg-cyan/10 text-cyan",
+  met: "border-green/25 bg-green/10 text-green",
+  "not-met": "border-rose/25 bg-rose/10 text-rose",
+  inconclusive: "border-amber/25 bg-amber/10 text-amber",
   "not-arrived": "border-line bg-raised text-muted",
   arrived: "border-green/35 bg-green/10 text-green",
   contested: "border-amber/35 bg-amber/10 text-amber",
-  "not-yet-testable": "border-line bg-raised text-muted",
-  holding: "border-green/35 bg-green/10 text-green",
-  strained: "border-amber/35 bg-amber/10 text-amber",
-  broken: "border-rose/35 bg-rose/10 text-rose",
+  easing: "border-green/25 bg-green/10 text-green",
+  mixed: "border-amber/25 bg-amber/10 text-amber",
+  binding: "border-rose/25 bg-rose/10 text-rose",
+  unresolved: "border-line bg-raised text-muted",
   high: "border-cyan/35 bg-cyan/10 text-cyan",
   medium: "border-amber/35 bg-amber/10 text-amber",
   low: "border-line bg-raised text-muted",
@@ -57,14 +57,14 @@ export function PageHeader({ viewId }: { viewId: string }) {
   const view = canonical.meta.views.find((item) => item.id === viewId);
   if (!view) return null;
   return (
-    <header className="mb-8 border-b border-line pb-7">
+    <header className="mb-10 max-w-4xl">
       <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cyan">
         {view.eyebrow}
       </p>
-      <h1 className="max-w-4xl text-balance text-3xl font-semibold tracking-[-0.03em] text-ink md:text-4xl">
+      <h1 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-ink md:text-5xl">
         {view.title}
       </h1>
-      <p className="mt-4 max-w-3xl text-sm leading-6 text-muted md:text-[15px] md:leading-7">
+      <p className="mt-5 max-w-3xl text-base leading-7 text-muted">
         {view.description}
       </p>
     </header>
@@ -82,7 +82,7 @@ export function DataCard({
 }) {
   return (
     <article
-      className={`relative overflow-hidden rounded-xl border border-line bg-panel shadow-instrument ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument ${className}`}
     >
       {sample ? <SampleWatermark>SAMPLE</SampleWatermark> : null}
       {children}

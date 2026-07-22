@@ -1,31 +1,9 @@
 # Missing canonical content
 
-The supplied PDFs and pinned public sources fully cover the four timeline distributions used by the site. No forecast band is sample-filled.
+No shipped forecast, evidence, test, driver, or capability-progress record is sample-filled.
 
-The following non-timeline content was absent or incomplete. Each corresponding record has `"sample": true`, carries an on-screen `SAMPLE` marker, and must be replaced rather than silently treated as evidence.
+The source corpus does not provide quantitative deadlines for the structural monitors covering continual learning, autonomous AI R&D loops, compute-bound plateaus, and broad expert dominance. The site therefore labels them **structural monitors**, gives them no invented deadline, and keeps them separate from the two dated tripwires.
 
-## Falsifiers
+The capability percentages are transparent weighted rubric-completion estimates, not supplied measurements. Their definitions, weights, component scores, rationales, evidence links, confidence labels, and as-of date all live in `data/canonical.json` so they can be contested and revised through the append-only update workflow.
 
-- `f-metr-80-horizon`: complete verbatim wording of the original 100h/50% clause. The amendment date, replacement threshold, bands, and consequence are supplied; the original clause is not.
-- `f-continual-learning`: exact deadline, named data source, quantitative threshold, adjudicator, and edge-case rules.
-- `f-autonomous-rd-loop`: exact deadline, held-out evaluation, minimum algorithmic-gain threshold, human-oversight ceiling, and edge-case rules.
-- `f-compute-plateau`: exact deadline, required labor increase, progress threshold, measurement window, named source, and edge-case rules.
-
-## Evidence ledger
-
-- A real adjudicated continual-learning evidence record replacing `ev-sample-continual`.
-- A real adjudicated hard-to-verify research-direction record replacing `ev-sample-hard-verify`.
-- A real adjudicated compute-economics record replacing `ev-sample-compute`.
-
-`ev-daniel-q1` is source-backed and is not sample content.
-
-## Bottleneck tracker
-
-The mechanisms and status-change criteria are sourced, but no authoritative current statuses or dated status histories were supplied for:
-
-- `b-continual-learning`
-- `b-research-taste`
-- `b-compute-economics`
-- `b-verification-asymmetry`
-
-Their current statuses and initial history entries are therefore sample-marked.
+The three source PDFs do not have public URLs. Their forecast records retain the local filenames as provenance labels. Public evidence records link directly to their originating organizations.

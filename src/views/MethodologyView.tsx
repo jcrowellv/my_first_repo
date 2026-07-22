@@ -1,13 +1,14 @@
-import { ArrowUpRight, Database, FileCheck2, History, Scale } from "lucide-react";
+import { ArrowUpRight, Database, FileCheck2, Gauge, History, Scale } from "lucide-react";
 import { canonical } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
 import { DataCard, PageHeader } from "../components/Primitives";
 
-const iconByIndex = [FileCheck2, Scale, History, Database];
+const iconByIndex = [FileCheck2, Gauge, Scale, History, Database];
 
 export function MethodologyView() {
   const principles = [
     { title: "Public scoring", text: canonical.meta.scoring_convention },
+    { title: "Capability rubric", text: canonical.meta.progress_methodology },
     { title: `${canonical.meta.internal_lag_months}-month internal lag`, text: canonical.meta.internal_lag_explanation },
     { title: "Append-only revisions", text: canonical.meta.update_protocol },
     { title: "Distribution discipline", text: canonical.meta.distribution_warning },
@@ -15,7 +16,7 @@ export function MethodologyView() {
   return (
     <div>
       <PageHeader viewId="methodology" />
-      <div className="mb-6 grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2 xl:grid-cols-5">
         {principles.map((principle, index) => {
           const Icon = iconByIndex[index];
           return (
@@ -68,7 +69,7 @@ export function MethodologyView() {
           <DataCard className="p-5 md:p-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-cyan">Review cadence</p>
             <p className="mt-3 text-2xl font-semibold tracking-[-0.025em] text-ink">{formatIsoDate(canonical.meta.next_review_date)}</p>
-            <p className="mt-3 text-xs leading-5 text-muted">{canonical.meta.sample_warning}</p>
+            <p className="mt-3 text-xs leading-5 text-muted">{canonical.meta.progress_disclaimer}</p>
           </DataCard>
         </div>
       </div>

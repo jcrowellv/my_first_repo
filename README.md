@@ -1,6 +1,6 @@
-# AI Timeline Forecasts
+# The Capability Ledger
 
-A static forecasting instrument comparing four AI capability timelines against pre-committed falsifiers and an append-only evidence record:
+A static forecasting instrument that combines a public-evidence capability rubric, four AI timelines, source-backed tests, an evidence ledger, and an append-only audit record:
 
 - the frozen AI 2027 racing-ending spine;
 - Codex's July 2026 distribution, with a 2032 WSI median;
@@ -27,14 +27,14 @@ Forecasts are append-only. Never replace a forecast record to revise a distribut
 ## Repository structure
 
 ```text
-data/canonical.json          All authored and sample-marked content
+data/canonical.json          All authored content, evidence, scores, and forecasts
 scripts/validate.ts          Schema and cross-reference validator
 scripts/validate.test.ts     Positive and deliberately broken-data tests
 src/schema.ts                Zod schemas and inferred TypeScript types
 src/lib/                     Parsed data and date helpers
 src/components/              Content-agnostic layout primitives
 src/views/                   Six routed views
-MISSING_CONTENT.md           Exact inventory of sample-filled content
+MISSING_CONTENT.md           Explicit inventory of unresolved source limitations
 vercel.json                  Vercel build configuration
 .github/workflows/deploy.yml GitHub Pages fallback deployment
 ```
@@ -68,7 +68,8 @@ The validator checks both schema shape and data integrity, including:
 - valid track, milestone, evidence, falsifier, and changelog references;
 - p10 <= p25 <= p50 <= p75 <= p90;
 - valid supersession and `moved_by` references;
-- valid evidence links in bottleneck histories and resolution records; and
+- valid evidence links in tests, drivers, progress criteria, and resolution records;
+- capability-criterion weights that sum to 100% and scores that match their weighted arithmetic; and
 - valid affected-entity links in the changelog.
 
 Validation errors include the exact JSON path. To demonstrate failure safely, copy the file outside the repo, change one forecast's p10 so it falls after p50, then validate that copy:
@@ -81,28 +82,34 @@ The automated test suite includes this broken-percentile check.
 
 ## Worked content-only update
 
-Suppose falsifier `f-hard-verify-direction` fires and moves Claude's SAR distribution.
+Suppose dated tripwire `f-hard-verify-direction` is met and moves the widening-thesis SAR distribution.
 
-1. Change that falsifier's `status` to `fired` and add its `resolution_record` with an existing evidence ID.
+1. Change that test's `status` to `met` and add its `resolution_record` with an existing evidence ID.
 2. Append a new Claude SAR forecast record. Give it a new ID and the revised quantiles.
 3. Set `claude-sar-20260721.superseded_by` to the new forecast ID.
 4. Set the new forecast's `moved_by` to `f-hard-verify-direction` or to the resolving evidence ID.
 5. Append a changelog entry referencing the old forecast, new forecast, falsifier, and evidence.
 6. Run `npm run validate` and commit the data-file change.
 
-No component change is required. The timeline shows the new band and the superseded band, the inspector exposes the chain, the falsifier board shows the resolution, and the changelog displays the audit entry.
+No component change is required. The forecast lens exposes the current band and its earlier record, the test board shows the resolution, and the changelog displays the audit entry.
+
+## Capability-progress rubric
+
+The four circular percentages are not forecasts or probabilities. Each is the weighted completion of public-evidence criteria derived from an AI 2027 agent definition. `canonical.json` stores the weights, criterion completion values, rationale, evidence references, confidence, and as-of date. Validation recomputes each score and rejects inconsistent arithmetic.
+
+To revise a score, update or append the evidence record, update the affected criterion, and append a changelog record. The UI recalculates its component bars directly from the data.
 
 ## Distribution and provenance conventions
 
-- Timeline bands always show p10-p90 and a p50 marker. p25-p75 is emphasized when supplied.
+- The forecast lens shows one milestone at a time: p10-p90 as the outer range, p25-p75 as the heavier center where supplied, and p50 as the marker.
 - The AI 2027 spine renders as a thin range line with a median tick and a diamond scenario marker. It has no p25-p75 band and is never presented as a full distribution.
-- Superseded records render on their own dashed, dimmed lanes directly above the current record, ordered by commitment date; they never overlap it.
+- Superseded records remain in the canonical data and are disclosed from the current range's expanded provenance panel.
 - Landing-page headline statistics are hand-authored in `meta.headline_stats` and must be re-derived whenever a forecast record changes.
 - The AI 2027 SC band comes from the original time-horizon-extension forecast. Later bands come from the original takeoff forecast conditional on SC in March 2027.
 - Open right bounds such as `>2100` remain explicitly marked as lower bounds.
 - Claude quantiles retain per-cell `registered` or `derived` provenance and effective dates.
 - Daniel's January records remain in the data as superseded history; the April records link to the evidence that moved them.
-- `SAMPLE` records are structurally valid but are never presented as real evidence. Their gaps are catalogued in [`MISSING_CONTENT.md`](MISSING_CONTENT.md).
+- Dated tripwires and structural monitors are deliberately distinct. A monitor never receives an invented deadline merely to look like a falsifier.
 
 ## Deployment
 
@@ -130,6 +137,6 @@ Routing uses URL hashes, so every view works on static hosts without rewrite rul
 
 - Four track IDs are defined in data instead of a hardcoded three-value track enum.
 - Forecast quantiles store source-faithful decimal-year values and display labels together. Chart math uses the numeric value; tooltips use the authored label.
-- The focused timeline derives its endpoint from current closed p90 bounds and renders overflow arrows for open or extreme tails. “Full tails” exposes the complete range without altering data.
+- The forecast lens derives its scale from the selected milestone, avoiding the unreadable all-milestone matrix while preserving full p10-p90 ranges.
 - AI Futures Model SAR/SIAR experiment-selection-skill outputs are mapped to the corresponding site milestones and disclose the mapping in `source_note`.
-- Missing content is represented visibly, never filled with plausible-looking claims.
+- Current driver assessments show supporting evidence, counterevidence, a confidence label, and the next observation that would move the assessment.

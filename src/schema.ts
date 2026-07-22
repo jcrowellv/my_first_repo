@@ -53,6 +53,9 @@ export const MetaSchema = z.object({
   scoring_convention: z.string().min(1),
   internal_lag_explanation: z.string().min(1),
   update_protocol: z.string().min(1),
+  progress_methodology: z.string().min(1),
+  progress_label: z.string().min(1),
+  progress_disclaimer: z.string().min(1),
   distribution_warning: z.string().min(1),
   sample_warning: z.string().min(1),
   last_updated_label: z.string().min(1),
@@ -117,12 +120,7 @@ export const ForecastSchema = SampleFieldsSchema.extend({
   source_note: z.string().min(1),
 });
 
-export const FalsifierStatusSchema = z.enum([
-  "open",
-  "passed",
-  "pushed",
-  "fired",
-]);
+export const FalsifierStatusSchema = z.enum(["watching", "met", "not-met", "inconclusive"]);
 
 export const FalsifierAmendmentSchema = z.object({
   original_statement: z.string().min(1),
@@ -140,15 +138,19 @@ export const ResolutionRecordSchema = z.object({
 
 export const FalsifierSchema = SampleFieldsSchema.extend({
   id: z.string().min(1),
-  track: TrackIdSchema,
+  kind: z.enum(["dated-tripwire", "structural-monitor"]),
   title: z.string().min(1),
+  summary: z.string().min(1),
   statement: z.string().min(1),
-  deadline: IsoDateSchema,
+  deadline: IsoDateSchema.nullable(),
+  review_label: z.string().min(1),
   consequence: z.string().min(1),
   status: FalsifierStatusSchema,
   resolution_protocol: z.string().min(1),
   resolution_record: ResolutionRecordSchema.nullable(),
   amendment_history: z.array(FalsifierAmendmentSchema),
+  affected_milestones: z.array(z.string().min(1)).min(1),
+  evidence_refs: z.array(z.string().min(1)).min(1),
 });
 
 export const EvidenceSchema = SampleFieldsSchema.extend({
@@ -156,33 +158,48 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
   date: IsoDateSchema,
   source_url: z.string().url(),
   source_label: z.string().min(1),
+  publisher: z.string().min(1),
+  source_type: z.enum(["scenario", "forecast", "evaluation", "system-card", "deployment", "research"]),
   summary: z.string().min(1),
+  implication: z.string().min(1),
+  limitation: z.string().min(1),
   milestone_tags: z.array(z.string().min(1)).min(1),
   favors: z.enum(["compression", "widening", "spine", "neutral"]),
   diagnosticity: z.enum(["high", "medium", "low"]),
 });
 
-export const BottleneckStatusSchema = z.enum([
-  "not-yet-testable",
-  "holding",
-  "strained",
-  "broken",
-]);
-
-export const BottleneckHistorySchema = z.object({
-  date: IsoDateSchema,
-  status: BottleneckStatusSchema,
-  note: z.string().min(1),
-  evidence_refs: z.array(z.string().min(1)),
-});
+export const BottleneckStatusSchema = z.enum(["easing", "mixed", "binding", "unresolved"]);
 
 export const BottleneckSchema = SampleFieldsSchema.extend({
   id: z.string().min(1),
   name: z.string().min(1),
   mechanism: z.string().min(1),
   status: BottleneckStatusSchema,
-  status_change_criteria: z.string().min(1),
-  history: z.array(BottleneckHistorySchema),
+  confidence: z.enum(["high", "medium", "low"]),
+  assessment: z.string().min(1),
+  next_signal: z.string().min(1),
+  evidence_for: z.array(z.string().min(1)).min(1),
+  evidence_against: z.array(z.string().min(1)),
+});
+
+export const ProgressCriterionSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  weight: z.number().positive().max(1),
+  completion: z.number().min(0).max(1),
+  rationale: z.string().min(1),
+  evidence_refs: z.array(z.string().min(1)).min(1),
+});
+
+export const CapabilityProgressSchema = z.object({
+  id: z.string().min(1),
+  milestone_id: z.string().min(1),
+  label: z.string().min(1),
+  score: z.number().int().min(0).max(100),
+  confidence: z.enum(["high", "medium", "low"]),
+  as_of: IsoDateSchema,
+  summary: z.string().min(1),
+  criteria: z.array(ProgressCriterionSchema).min(1),
 });
 
 export const ChangelogSchema = SampleFieldsSchema.extend({
@@ -201,6 +218,7 @@ export const CanonicalSchema = z
     falsifiers: z.array(FalsifierSchema).min(1),
     evidence: z.array(EvidenceSchema).min(1),
     bottlenecks: z.array(BottleneckSchema).min(1),
+    capability_progress: z.array(CapabilityProgressSchema).min(1),
     changelog: z.array(ChangelogSchema).min(1),
   })
   .superRefine((data, ctx) => {
@@ -230,6 +248,7 @@ export const CanonicalSchema = z
     const evidenceIds = unique(data.evidence, ["evidence"], "evidence");
     const bottleneckIds = unique(data.bottlenecks, ["bottlenecks"], "bottleneck");
     const changelogIds = unique(data.changelog, ["changelog"], "changelog");
+    const progressIds = unique(data.capability_progress, ["capability_progress"], "capability progress");
 
     const allEntityIds = new Set([
       ...trackIds,
@@ -239,6 +258,7 @@ export const CanonicalSchema = z
       ...evidenceIds,
       ...bottleneckIds,
       ...changelogIds,
+      ...progressIds,
     ]);
 
     data.forecasts.forEach((forecast, index) => {
@@ -292,13 +312,6 @@ export const CanonicalSchema = z
     });
 
     data.falsifiers.forEach((falsifier, index) => {
-      if (!trackIds.has(falsifier.track)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Unknown track id: ${falsifier.track}`,
-          path: ["falsifiers", index, "track"],
-        });
-      }
       const evidenceRef = falsifier.resolution_record?.evidence_ref;
       if (evidenceRef && !evidenceIds.has(evidenceRef)) {
         ctx.addIssue({
@@ -307,6 +320,12 @@ export const CanonicalSchema = z
           path: ["falsifiers", index, "resolution_record", "evidence_ref"],
         });
       }
+      falsifier.affected_milestones.forEach((ref, refIndex) => {
+        if (!milestoneIds.has(ref)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown milestone id: ${ref}`, path: ["falsifiers", index, "affected_milestones", refIndex] });
+      });
+      falsifier.evidence_refs.forEach((ref, refIndex) => {
+        if (!evidenceIds.has(ref)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown evidence id: ${ref}`, path: ["falsifiers", index, "evidence_refs", refIndex] });
+      });
     });
 
     data.evidence.forEach((item, index) => {
@@ -322,17 +341,20 @@ export const CanonicalSchema = z
     });
 
     data.bottlenecks.forEach((bottleneck, index) => {
-      bottleneck.history.forEach((entry, historyIndex) => {
-        entry.evidence_refs.forEach((ref, refIndex) => {
-          if (!evidenceIds.has(ref)) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: `Unknown evidence id: ${ref}`,
-              path: ["bottlenecks", index, "history", historyIndex, "evidence_refs", refIndex],
-            });
-          }
-        });
+      [...bottleneck.evidence_for, ...bottleneck.evidence_against].forEach((ref, refIndex) => {
+        if (!evidenceIds.has(ref)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown evidence id: ${ref}`, path: ["bottlenecks", index, "evidence_refs", refIndex] });
       });
+    });
+
+    data.capability_progress.forEach((progress, index) => {
+      if (!milestoneIds.has(progress.milestone_id)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown milestone id: ${progress.milestone_id}`, path: ["capability_progress", index, "milestone_id"] });
+      const totalWeight = progress.criteria.reduce((sum, criterion) => sum + criterion.weight, 0);
+      if (Math.abs(totalWeight - 1) > 0.001) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Capability progress criterion weights must sum to 1", path: ["capability_progress", index, "criteria"] });
+      const calculated = Math.round(progress.criteria.reduce((sum, criterion) => sum + criterion.weight * criterion.completion, 0) * 100);
+      if (calculated !== progress.score) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Capability progress score must equal weighted criteria (${calculated})`, path: ["capability_progress", index, "score"] });
+      progress.criteria.forEach((criterion, criterionIndex) => criterion.evidence_refs.forEach((ref, refIndex) => {
+        if (!evidenceIds.has(ref)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown evidence id: ${ref}`, path: ["capability_progress", index, "criteria", criterionIndex, "evidence_refs", refIndex] });
+      }));
     });
 
     data.changelog.forEach((entry, index) => {
@@ -365,4 +387,5 @@ export type QuantileDate = z.infer<typeof QuantileDateSchema>;
 export type Falsifier = z.infer<typeof FalsifierSchema>;
 export type Evidence = z.infer<typeof EvidenceSchema>;
 export type Bottleneck = z.infer<typeof BottleneckSchema>;
+export type CapabilityProgress = z.infer<typeof CapabilityProgressSchema>;
 export type ChangelogEntry = z.infer<typeof ChangelogSchema>;

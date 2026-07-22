@@ -13,20 +13,20 @@ const pathByView: Record<string, string> = {
   methodology: "/methodology",
 };
 
+const primaryViews = new Set(["timeline", "evidence", "falsifiers", "methodology"]);
+
 function Navigation({ close }: { close?: () => void }) {
   return (
-    <nav aria-label="Primary navigation" className="flex flex-col gap-1 lg:flex-row">
-      {canonical.meta.views.map((view) => (
+    <nav aria-label="Primary navigation" className="flex flex-col gap-1 lg:flex-row lg:items-center">
+      {canonical.meta.views.filter((view) => primaryViews.has(view.id)).map((view) => (
         <NavLink
           key={view.id}
           to={pathByView[view.id]}
           end={view.id === "timeline"}
           onClick={close}
           className={({ isActive }) =>
-            `rounded-md px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-              isActive
-                ? "bg-cyan/10 text-cyan"
-                : "text-muted hover:bg-raised hover:text-ink"
+            `rounded-full px-4 py-2 text-sm transition-colors ${
+              isActive ? "bg-ink text-panel" : "text-muted hover:bg-raised hover:text-ink"
             }`
           }
         >
@@ -42,28 +42,22 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <HashRouter>
       <div className="min-h-screen bg-canvas text-ink">
-        <header className="sticky top-0 z-50 border-b border-line/80 bg-canvas/95 backdrop-blur-sm">
-          <div className="mx-auto flex min-h-16 max-w-[1500px] items-center justify-between gap-5 px-4 md:px-6">
+        <header className="sticky top-0 z-50 border-b border-line/80 bg-canvas/90 backdrop-blur-xl">
+          <div className="mx-auto flex min-h-[72px] max-w-[1240px] items-center justify-between gap-6 px-5 md:px-8">
             <NavLink to="/" className="min-w-0">
-              <span className="block truncate text-sm font-semibold tracking-[-0.01em] text-ink">
+              <span className="block truncate text-base font-semibold tracking-[-0.025em] text-ink">
                 {canonical.meta.site_title}
               </span>
-              <span className="hidden font-mono text-[9px] uppercase tracking-[0.17em] text-muted sm:block">
-                {canonical.meta.site_subtitle}
-              </span>
+              <span className="hidden text-[11px] text-muted sm:block">{canonical.meta.site_subtitle}</span>
             </NavLink>
-            <div className="hidden lg:block">
-              <Navigation />
-            </div>
-            <div className="hidden text-right xl:block">
-              <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-muted">
-                {canonical.meta.last_updated_label}
-              </span>
+            <div className="hidden lg:block"><Navigation /></div>
+            <div className="hidden border-l border-line pl-5 text-right xl:block">
+              <span className="block font-mono text-[9px] uppercase tracking-[0.15em] text-muted">{canonical.meta.last_updated_label}</span>
               <span className="text-xs text-ink">{formatIsoDate(newestChangelogDate)}</span>
             </div>
             <button
               type="button"
-              className="rounded-md border border-line p-2 text-muted lg:hidden"
+              className="rounded-full border border-line bg-panel p-2.5 text-muted lg:hidden"
               aria-label={menuOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((value) => !value)}
@@ -71,19 +65,20 @@ export function AppShell({ children }: { children: ReactNode }) {
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
-          {menuOpen ? (
-            <div className="border-t border-line bg-panel p-4 lg:hidden">
-              <Navigation close={() => setMenuOpen(false)} />
-            </div>
-          ) : null}
+          {menuOpen ? <div className="border-t border-line bg-panel px-5 py-4 lg:hidden"><Navigation close={() => setMenuOpen(false)} /></div> : null}
         </header>
-        <main className="mx-auto max-w-[1500px] px-4 py-8 md:px-6 md:py-12">{children}</main>
-        <footer className="border-t border-line">
-          <div className="mx-auto grid max-w-[1500px] gap-4 px-4 py-8 text-xs text-muted md:grid-cols-[1fr_auto] md:px-6">
-            <p>{canonical.meta.scoring_convention}</p>
-            <p className="font-mono uppercase tracking-[0.12em]">
-              {canonical.meta.next_review_label}: {formatIsoDate(canonical.meta.next_review_date)}
-            </p>
+        <main className="mx-auto max-w-[1240px] px-5 py-9 md:px-8 md:py-14">{children}</main>
+        <footer className="mt-16 border-t border-line bg-panel/60">
+          <div className="mx-auto grid max-w-[1240px] gap-8 px-5 py-10 md:grid-cols-[1fr_auto] md:px-8">
+            <div className="max-w-2xl">
+              <p className="text-sm font-medium text-ink">{canonical.meta.site_title}</p>
+              <p className="mt-2 text-xs leading-5 text-muted">{canonical.meta.scoring_convention}</p>
+            </div>
+            <div className="flex flex-wrap items-start gap-x-5 gap-y-3 text-xs">
+              <NavLink className="text-muted hover:text-ink" to="/bottlenecks">{canonical.meta.views.find((v) => v.id === "bottlenecks")?.label}</NavLink>
+              <NavLink className="text-muted hover:text-ink" to="/changelog">{canonical.meta.views.find((v) => v.id === "changelog")?.label}</NavLink>
+              <span className="text-muted">{canonical.meta.next_review_label}: {formatIsoDate(canonical.meta.next_review_date)}</span>
+            </div>
           </div>
         </footer>
       </div>
