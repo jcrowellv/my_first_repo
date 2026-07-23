@@ -9,6 +9,35 @@ import { PageHeader, StatusBadge } from "../components/Primitives";
 const ACCENT = "#167f92";
 const TODAY = 2026 + 202 / 365;
 
+/* ---------- State of play ---------- */
+
+function HeadlineStrip() {
+  const stats = canonical.meta.headline_stats;
+  if (!stats?.length) return null;
+
+  return (
+    <section
+      aria-label="Current state of play"
+      className="mb-14 overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument"
+    >
+      <div className="grid sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map((stat, index) => (
+          <article
+            key={stat.label}
+            className={`p-5 md:p-6 ${
+              index > 0 ? "border-t border-line sm:border-l sm:border-t-0" : ""
+            } ${index === 2 ? "sm:border-l-0 xl:border-l" : ""} ${index >= 2 ? "sm:border-t xl:border-t-0" : ""}`}
+          >
+            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">{stat.label}</p>
+            <p className="mt-2 font-serif text-2xl font-semibold tracking-[-0.015em] text-ink">{stat.value}</p>
+            {stat.detail ? <p className="mt-2 text-xs leading-5 text-muted">{stat.detail}</p> : null}
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /* ---------- Capability progress ---------- */
 
 function ProgressRing({ value }: { value: number }) {
@@ -542,7 +571,7 @@ function ForecastExplorer() {
 
 function SignalsSection() {
   const latestEvidence = useMemo(
-    () => [...canonical.evidence].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3),
+    () => [...canonical.evidence].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5),
     [],
   );
   const datedTest = canonical.falsifiers.find(
@@ -613,6 +642,7 @@ export function TimelineView() {
   return (
     <div>
       <PageHeader viewId="timeline" />
+      <HeadlineStrip />
       <CapabilitySection />
       <ForecastExplorer />
       <SignalsSection />

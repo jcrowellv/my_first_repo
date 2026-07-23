@@ -192,6 +192,9 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
     "independent-evaluation",
     "research-autonomy",
     "evaluation-methods",
+    "cybersecurity",
+    "alignment-control",
+    "scientific-discovery",
   ])).optional(),
 });
 

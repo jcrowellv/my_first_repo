@@ -83,6 +83,7 @@ export function EvidenceLedger() {
   const [milestone, setMilestone] = useState("all");
   const [diagnosticity, setDiagnosticity] = useState("all");
   const [sourceType, setSourceType] = useState("all");
+  const [theme, setTheme] = useState("all");
 
   const evidence = useMemo(
     () =>
@@ -90,8 +91,9 @@ export function EvidenceLedger() {
         .filter((item) => milestone === "all" || item.milestone_tags.includes(milestone))
         .filter((item) => diagnosticity === "all" || item.diagnosticity === diagnosticity)
         .filter((item) => sourceType === "all" || item.source_type === sourceType)
+        .filter((item) => theme === "all" || item.themes?.includes(theme as NonNullable<Evidence["themes"]>[number]))
         .sort((a, b) => b.date.localeCompare(a.date)),
-    [milestone, diagnosticity, sourceType],
+    [milestone, diagnosticity, sourceType, theme],
   );
 
   const groups = useMemo(() => {
@@ -122,6 +124,12 @@ export function EvidenceLedger() {
           <option value="all">All source types</option>
           {[...new Set(canonical.evidence.map((item) => item.source_type))].map((type) => (
             <option key={type} value={type}>{type.replaceAll("-", " ")}</option>
+          ))}
+        </select>
+        <select aria-label="Filter by evidence theme" className={selectClass} value={theme} onChange={(event) => setTheme(event.target.value)}>
+          <option value="all">All themes</option>
+          {[...new Set(canonical.evidence.flatMap((item) => item.themes ?? []))].sort().map((itemTheme) => (
+            <option key={itemTheme} value={itemTheme}>{itemTheme.replaceAll("-", " ")}</option>
           ))}
         </select>
         <select aria-label="Filter by signal strength" className={selectClass} value={diagnosticity} onChange={(event) => setDiagnosticity(event.target.value)}>
