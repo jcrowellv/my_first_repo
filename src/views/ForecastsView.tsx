@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { canonical, evidenceById, milestonesById, tracksById } from "../lib/data";
-import { displayQuantileLabel, formatIsoDate } from "../lib/dates";
+import { displayQuantileLabel, formatDecimalYear, formatIsoDate } from "../lib/dates";
 import { PageHeader, StatusBadge } from "../components/Primitives";
 import { ForecastExplorer } from "./TimelineView";
 
@@ -21,6 +22,13 @@ const PLOT_START = 170;
 const PLOT_END = 1100;
 const ROW_HEIGHT = 112;
 const AXIS_HEIGHT = 46;
+
+const ladderToday = (() => {
+  const now = new Date();
+  const start = Date.UTC(now.getUTCFullYear(), 0, 1);
+  const end = Date.UTC(now.getUTCFullYear() + 1, 0, 1);
+  return now.getUTCFullYear() + (now.getTime() - start) / (end - start);
+})();
 
 function ForecastLadder() {
   const current = ladderForecasts;
@@ -87,6 +95,14 @@ function ForecastLadder() {
                 </text>
               </g>
             ))}
+            {ladderToday >= MIN_YEAR && ladderToday <= MAX_YEAR ? (
+              <g>
+                <line x1={x(ladderToday)} x2={x(ladderToday)} y1={31} y2={height - 8} stroke="#132336" strokeWidth={1} opacity={0.4} />
+                <text x={x(ladderToday) + 5} y={40} fontSize={9} fill="#132336" opacity={0.55} fontFamily="JetBrains Mono Variable">
+                  TODAY
+                </text>
+              </g>
+            ) : null}
             {milestones.map((milestone, milestoneIndex) => {
               const forecasts = canonical.meta.tracks
                 .map((track) =>
@@ -174,6 +190,156 @@ function ForecastLadder() {
         </div>
       </div>
       <p className="mt-3 text-xs leading-5 text-muted">{canonical.meta.distribution_warning}</p>
+    </section>
+  );
+}
+
+const gapAnchors = [
+  { id: "ac", label: "AC → ASI", detail: "From coding automation to superintelligence" },
+  { id: "sc", label: "SC → ASI", detail: "From superhuman coding to superintelligence" },
+] as const;
+
+function TakeoffGapSection() {
+  const [anchor, setAnchor] = useState<"ac" | "sc">("ac");
+  const current = canonical.forecasts.filter((forecast) => forecast.superseded_by === null);
+  const findMedian = (trackId: string, milestoneId: string) =>
+    current.find((forecast) => forecast.track === trackId && forecast.milestone_id === milestoneId)
+      ?.distribution.p50;
+
+  const rows = canonical.meta.tracks
+    .map((track) => {
+      const from = findMedian(track.id, anchor);
+      const to = findMedian(track.id, "asi");
+      return from && to ? { track, from, to, gap: to.value - from.value } : null;
+    })
+    .filter((row): row is NonNullable<typeof row> => Boolean(row));
+
+  if (!rows.length) return null;
+
+  const min = Math.floor(Math.min(...rows.map((row) => row.from.value)));
+  const max = Math.ceil(Math.max(...rows.map((row) => row.to.value)));
+  const width = 1080;
+  const plotStart = 168;
+  const plotEnd = width - 76;
+  const rowHeight = 64;
+  const axis = 36;
+  const height = axis + rows.length * rowHeight + 8;
+  const x = (value: number) => plotStart + ((value - min) / (max - min)) * (plotEnd - plotStart);
+  const years: number[] = [];
+  for (let year = min; year <= max; year += 1) years.push(year);
+  const fromMilestone = milestonesById.get(anchor);
+
+  return (
+    <section id="takeoff" className="scroll-mt-28">
+      <div className="mb-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Takeoff speed</p>
+          <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">
+            The live disagreement is the gap, not the start
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
+            The tracks nearly agree on when {fromMilestone?.name} arrives. They disagree by years on how long
+            the run from there to superintelligence takes — which is where most of the decision-relevant
+            uncertainty lives.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          {gapAnchors.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              title={option.detail}
+              onClick={() => setAnchor(option.id)}
+              className={`rounded-full border px-3.5 py-2 text-xs font-medium transition-colors ${
+                anchor === option.id
+                  ? "border-ink bg-ink text-panel"
+                  : "border-line bg-panel text-muted hover:text-ink"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument">
+        <div className="overflow-x-auto p-2 md:p-4">
+          <svg
+            viewBox={`0 0 ${width} ${height}`}
+            className="min-w-[760px] w-full"
+            role="img"
+            aria-label={`Median gap from ${fromMilestone?.name} to Artificial Superintelligence for each track`}
+          >
+            {years.map((year) => (
+              <g key={year}>
+                <line x1={x(year)} x2={x(year)} y1={axis - 10} y2={height - 8} stroke="#e3ddd0" />
+                <text x={x(year)} y={axis - 18} textAnchor="middle" fontFamily="JetBrains Mono Variable" fontSize={11} fill="#66717d">
+                  {year}
+                </text>
+              </g>
+            ))}
+            {rows.map((row, index) => {
+              const centerY = axis + index * rowHeight + rowHeight / 2;
+              const startX = x(row.from.value);
+              const endX = x(row.to.value);
+              const spine = row.track.kind === "frozen-spine";
+              return (
+                <g key={row.track.id}>
+                  <title>
+                    {`${row.track.name}: ${displayQuantileLabel(row.from)} → ${displayQuantileLabel(row.to)} (${row.gap.toFixed(1)} years)`}
+                  </title>
+                  {index > 0 ? (
+                    <line x1={16} x2={width - 16} y1={centerY - rowHeight / 2} y2={centerY - rowHeight / 2} stroke="#ece7db" />
+                  ) : null}
+                  <text x={16} y={centerY - 2} fontSize={13} fontWeight={600} fill="#132336">
+                    {row.track.short_name}
+                  </text>
+                  <text x={16} y={centerY + 14} fontSize={10} fill="#66717d">
+                    {spine ? "frozen scenario medians" : "current medians"}
+                  </text>
+                  <line
+                    x1={startX}
+                    x2={endX}
+                    y1={centerY}
+                    y2={centerY}
+                    stroke={row.track.color}
+                    strokeWidth={7}
+                    strokeLinecap="round"
+                    opacity={spine ? 0.55 : 0.85}
+                    strokeDasharray={spine ? "2 7" : undefined}
+                  />
+                  <circle cx={startX} cy={centerY} r={5} fill="#fffdf8" stroke={row.track.color} strokeWidth={2.5} />
+                  <circle cx={endX} cy={centerY} r={5} fill={row.track.color} stroke="#fffdf8" strokeWidth={2.5} />
+                  <text x={startX} y={centerY + 24} textAnchor="middle" fontSize={10} fontFamily="JetBrains Mono Variable" fill="#66717d">
+                    {formatDecimalYear(row.from.value)}
+                  </text>
+                  <text x={endX} y={centerY + 24} textAnchor="middle" fontSize={10} fontFamily="JetBrains Mono Variable" fill="#66717d">
+                    {formatDecimalYear(row.to.value)}
+                  </text>
+                  <text
+                    x={width - 16}
+                    y={centerY + 4}
+                    textAnchor="end"
+                    fontSize={14}
+                    fontWeight={650}
+                    fontFamily="JetBrains Mono Variable"
+                    fill="#132336"
+                  >
+                    {row.gap.toFixed(1)} y
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+        <p className="border-t border-line px-5 py-4 text-xs leading-5 text-muted md:px-6">
+          Each bar connects two medians from the same track's marginal forecasts; it is not a sampled scenario
+          path. Open circles mark {fromMilestone?.code} medians, filled circles mark ASI medians.{" "}
+          <Link to="/glossary#g-takeoff-gap" className="text-cyan hover:text-ink">
+            Takeoff gap, defined
+          </Link>
+          .
+        </p>
+      </div>
     </section>
   );
 }
@@ -322,6 +488,9 @@ export function ForecastsView() {
       <TrackTheses />
       <div className="mt-16">
         <ForecastLadder />
+      </div>
+      <div className="mt-16">
+        <TakeoffGapSection />
       </div>
       <div className="my-20 border-y border-line py-16">
         <ForecastExplorer />

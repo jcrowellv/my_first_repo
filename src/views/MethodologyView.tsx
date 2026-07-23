@@ -104,6 +104,9 @@ export function MethodologyView() {
               <Link to="/changelog" className="inline-flex items-center rounded-full border border-line px-4 py-2 text-xs font-medium text-ink hover:border-cyan/40">
                 Audit changelog
               </Link>
+              <Link to="/glossary" className="inline-flex items-center rounded-full border border-line px-4 py-2 text-xs font-medium text-ink hover:border-cyan/40">
+                Glossary
+              </Link>
             </div>
           </DataCard>
         </div>

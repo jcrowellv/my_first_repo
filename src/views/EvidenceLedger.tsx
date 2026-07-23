@@ -172,6 +172,18 @@ function EvidenceRow({ item }: { item: Evidence }) {
               ))}
             </div>
           </div>
+          {item.themes?.length ? (
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">Themes</p>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {item.themes.map((tag) => (
+                  <span key={tag} className="rounded-full bg-panel px-2.5 py-1 font-mono text-[9px] text-muted ring-1 ring-line">
+                    {tag.replaceAll("-", " ")}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
           <a href={item.source_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-medium text-cyan hover:text-ink">
             Open primary source <ArrowUpRight size={12} />
           </a>
@@ -187,6 +199,8 @@ export function EvidenceLedger() {
   const [milestone, setMilestone] = useState("all");
   const [diagnosticity, setDiagnosticity] = useState("all");
   const [sourceType, setSourceType] = useState("all");
+  const [favors, setFavors] = useState("all");
+  const [theme, setTheme] = useState("all");
   const [sort, setSort] = useState<"diagnosticity" | "date">("diagnosticity");
 
   const evidence = useMemo(() => {
@@ -209,6 +223,8 @@ export function EvidenceLedger() {
       .filter((item) => milestone === "all" || item.milestone_tags.includes(milestone))
       .filter((item) => diagnosticity === "all" || item.diagnosticity === diagnosticity)
       .filter((item) => sourceType === "all" || item.source_type === sourceType)
+      .filter((item) => favors === "all" || item.favors === favors)
+      .filter((item) => theme === "all" || item.themes?.includes(theme as NonNullable<Evidence["themes"]>[number]))
       .sort((a, b) => {
         if (sort === "diagnosticity") {
           const rank = diagnosticityRank[b.diagnosticity] - diagnosticityRank[a.diagnosticity];
@@ -216,7 +232,12 @@ export function EvidenceLedger() {
         }
         return b.date.localeCompare(a.date);
       });
-  }, [diagnosticity, lens, milestone, sort, sourceType]);
+  }, [diagnosticity, favors, lens, milestone, sort, sourceType, theme]);
+
+  const themeOptions = useMemo(
+    () => [...new Set(canonical.evidence.flatMap((item) => item.themes ?? []))].sort(),
+    [],
+  );
 
   const selectClass = "rounded-full border border-line bg-panel px-4 py-2.5 text-xs text-ink";
   const lensItems = [
@@ -281,6 +302,19 @@ export function EvidenceLedger() {
             <option value="high">High diagnosticity</option>
             <option value="medium">Medium diagnosticity</option>
             <option value="low">Low diagnosticity</option>
+          </select>
+          <select aria-label="Filter by forecast direction" className={selectClass} value={favors} onChange={(event) => setFavors(event.target.value)}>
+            <option value="all">All directions</option>
+            <option value="compression">Favors faster timelines</option>
+            <option value="widening">Favors slower timelines</option>
+            <option value="spine">Matches the frozen scenario</option>
+            <option value="neutral">Framework or neutral</option>
+          </select>
+          <select aria-label="Filter by theme" className={selectClass} value={theme} onChange={(event) => setTheme(event.target.value)}>
+            <option value="all">All themes</option>
+            {themeOptions.map((item) => (
+              <option key={item} value={item}>{item.replaceAll("-", " ")}</option>
+            ))}
           </select>
           <select aria-label="Sort evidence" className={selectClass} value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}>
             <option value="diagnosticity">Strongest signal first</option>

@@ -47,7 +47,7 @@ function DesktopNavigation() {
             onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
             className={({ isActive }) => {
               const groupedActive =
-                item.id === "method" && ["/methodology", "/bottlenecks", "/changelog"].includes(pathname);
+                item.id === "method" && ["/methodology", "/bottlenecks", "/glossary", "/changelog"].includes(pathname);
               return (
               `inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm transition-colors ${
                 isActive || groupedActive
