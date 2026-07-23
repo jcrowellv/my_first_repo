@@ -26,6 +26,7 @@ export const TrackSchema = SampleFieldsSchema.extend({
 export const ViewMetaSchema = z.object({
   id: z.enum([
     "timeline",
+    "forecasts",
     "falsifiers",
     "evidence",
     "bottlenecks",
@@ -36,6 +37,19 @@ export const ViewMetaSchema = z.object({
   eyebrow: z.string().min(1),
   title: z.string().min(1),
   description: z.string().min(1),
+});
+
+export const NavigationChildSchema = z.object({
+  label: z.string().min(1),
+  description: z.string().min(1),
+  path: z.string().min(1),
+});
+
+export const NavigationItemSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  path: z.string().min(1),
+  children: z.array(NavigationChildSchema).min(1),
 });
 
 export const HeadlineStatSchema = z.object({
@@ -63,10 +77,33 @@ export const ActionCenterSchema = z.object({
   groups: z.array(ActionGroupSchema).min(1),
 });
 
+export const BriefingLensSchema = z.object({
+  id: z.enum(["capability", "control", "diffusion"]),
+  label: z.string().min(1),
+  value: z.string().min(1),
+  status: z.enum(["met", "watching", "strained", "mixed"]),
+  detail: z.string().min(1),
+  path: z.string().min(1),
+});
+
+export const BriefingSchema = z.object({
+  as_of: IsoDateSchema,
+  eyebrow: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  pace_label: z.string().min(1),
+  pace_value: z.string().min(1),
+  pace_detail: z.string().min(1),
+  pace_source_label: z.string().min(1),
+  pace_source_url: z.string().url(),
+  lenses: z.array(BriefingLensSchema).length(3),
+});
+
 export const MetaSchema = z.object({
   site_title: z.string().min(1),
   site_subtitle: z.string().min(1),
   site_description: z.string().min(1),
+  site_url: z.string().url(),
   internal_lag_months: z.number().int().nonnegative(),
   next_review_date: IsoDateSchema,
   scoring_convention: z.string().min(1),
@@ -80,9 +117,11 @@ export const MetaSchema = z.object({
   last_updated_label: z.string().min(1),
   next_review_label: z.string().min(1),
   headline_stats: z.array(HeadlineStatSchema).max(4).optional(),
+  briefing: BriefingSchema,
   action_center: ActionCenterSchema,
   tracks: z.array(TrackSchema).min(1),
-  views: z.array(ViewMetaSchema).length(6),
+  views: z.array(ViewMetaSchema).length(7),
+  navigation: z.array(NavigationItemSchema).length(5),
 });
 
 export const MilestoneStatusSchema = z.enum([
@@ -179,7 +218,17 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
   source_url: z.string().url(),
   source_label: z.string().min(1),
   publisher: z.string().min(1),
-  source_type: z.enum(["scenario", "forecast", "evaluation", "system-card", "deployment", "research"]),
+  source_type: z.enum([
+    "scenario",
+    "forecast",
+    "evaluation",
+    "system-card",
+    "deployment",
+    "research",
+    "framework",
+    "survey",
+    "incident",
+  ]),
   summary: z.string().min(1),
   implication: z.string().min(1),
   limitation: z.string().min(1),
@@ -195,7 +244,20 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
     "cybersecurity",
     "alignment-control",
     "scientific-discovery",
+    "forecasting",
+    "transparency",
+    "open-science",
+    "scaling",
   ])).optional(),
+  independence: z.enum(["first-party", "independent", "mixed"]).optional(),
+  verification: z.enum([
+    "documented",
+    "reported",
+    "independently-evaluated",
+    "reproduced",
+    "preliminary",
+  ]).optional(),
+  evaluation_context: z.string().min(1).optional(),
 });
 
 export const BottleneckStatusSchema = z.enum(["easing", "mixed", "binding", "unresolved"]);
@@ -232,6 +294,64 @@ export const CapabilityProgressSchema = z.object({
   criteria: z.array(ProgressCriterionSchema).min(1),
 });
 
+export const OutsideViewSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  short_name: z.string().min(1),
+  as_of: IsoDateSchema,
+  population: z.string().min(1),
+  definition: z.string().min(1),
+  conditional: z.boolean(),
+  probability_before_2100: z.number().min(0).max(1).optional(),
+  p25_year: z.number().int().min(2020).max(2300).optional(),
+  p50_year: z.number().int().min(2020).max(2300),
+  p75_year: z.number().int().min(2020).max(2300).optional(),
+  headline: z.string().min(1),
+  comparison_note: z.string().min(1),
+  source_label: z.string().min(1),
+  source_url: z.string().url(),
+  evidence_ref: z.string().min(1),
+});
+
+export const DriverTrackPositionSchema = z.object({
+  track_id: TrackIdSchema,
+  direction: z.enum(["shortens", "mixed", "lengthens", "reference"]),
+  label: z.string().min(1),
+  note: z.string().min(1),
+});
+
+export const ForecastDriverSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  question: z.string().min(1),
+  phase: z.enum(["pre-ac", "takeoff", "both"]),
+  importance: z.enum(["high", "medium", "low"]),
+  assessment: z.string().min(1),
+  evidence_refs: z.array(z.string().min(1)).min(1),
+  track_positions: z.array(DriverTrackPositionSchema).length(4),
+});
+
+export const SafetyReadinessSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  status: z.enum(["documented", "developing", "strained", "unknown"]),
+  summary: z.string().min(1),
+  next_signal: z.string().min(1),
+  evidence_refs: z.array(z.string().min(1)).min(1),
+});
+
+export const OpenWeightIndicatorSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  value: z.string().min(1),
+  status: z.enum(["narrowing", "partial", "strong", "unknown"]),
+  as_of: IsoDateSchema,
+  detail: z.string().min(1),
+  source_label: z.string().min(1),
+  source_url: z.string().url(),
+  evidence_refs: z.array(z.string().min(1)).min(1),
+});
+
 export const ChangelogSchema = SampleFieldsSchema.extend({
   id: z.string().min(1),
   date: IsoDateSchema,
@@ -249,6 +369,10 @@ export const CanonicalSchema = z
     evidence: z.array(EvidenceSchema).min(1),
     bottlenecks: z.array(BottleneckSchema).min(1),
     capability_progress: z.array(CapabilityProgressSchema).min(1),
+    outside_views: z.array(OutsideViewSchema).min(1),
+    forecast_drivers: z.array(ForecastDriverSchema).min(1),
+    safety_readiness: z.array(SafetyReadinessSchema).min(1),
+    open_weight_indicators: z.array(OpenWeightIndicatorSchema).min(1),
     changelog: z.array(ChangelogSchema).min(1),
   })
   .superRefine((data, ctx) => {
@@ -279,6 +403,10 @@ export const CanonicalSchema = z
     const bottleneckIds = unique(data.bottlenecks, ["bottlenecks"], "bottleneck");
     const changelogIds = unique(data.changelog, ["changelog"], "changelog");
     const progressIds = unique(data.capability_progress, ["capability_progress"], "capability progress");
+    const outsideViewIds = unique(data.outside_views, ["outside_views"], "outside view");
+    const driverIds = unique(data.forecast_drivers, ["forecast_drivers"], "forecast driver");
+    const safetyIds = unique(data.safety_readiness, ["safety_readiness"], "safety readiness");
+    const openWeightIds = unique(data.open_weight_indicators, ["open_weight_indicators"], "open-weight indicator");
 
     const allEntityIds = new Set([
       ...trackIds,
@@ -289,6 +417,10 @@ export const CanonicalSchema = z
       ...bottleneckIds,
       ...changelogIds,
       ...progressIds,
+      ...outsideViewIds,
+      ...driverIds,
+      ...safetyIds,
+      ...openWeightIds,
     ]);
 
     data.forecasts.forEach((forecast, index) => {
@@ -387,6 +519,83 @@ export const CanonicalSchema = z
       }));
     });
 
+    data.outside_views.forEach((view, index) => {
+      if (!evidenceIds.has(view.evidence_ref)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Unknown evidence id: ${view.evidence_ref}`,
+          path: ["outside_views", index, "evidence_ref"],
+        });
+      }
+      const ordered = [view.p25_year, view.p50_year, view.p75_year].filter(
+        (value): value is number => value !== undefined,
+      );
+      for (let cursor = 1; cursor < ordered.length; cursor += 1) {
+        if (ordered[cursor] < ordered[cursor - 1]) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Outside-view percentiles must be ordered p25 <= p50 <= p75",
+            path: ["outside_views", index],
+          });
+          break;
+        }
+      }
+    });
+
+    data.forecast_drivers.forEach((driver, index) => {
+      driver.evidence_refs.forEach((ref, refIndex) => {
+        if (!evidenceIds.has(ref)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown evidence id: ${ref}`,
+            path: ["forecast_drivers", index, "evidence_refs", refIndex],
+          });
+        }
+      });
+      const seenTracks = new Set<string>();
+      driver.track_positions.forEach((position, positionIndex) => {
+        if (!trackIds.has(position.track_id)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown track id: ${position.track_id}`,
+            path: ["forecast_drivers", index, "track_positions", positionIndex, "track_id"],
+          });
+        }
+        if (seenTracks.has(position.track_id)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Duplicate track position: ${position.track_id}`,
+            path: ["forecast_drivers", index, "track_positions", positionIndex, "track_id"],
+          });
+        }
+        seenTracks.add(position.track_id);
+      });
+    });
+
+    data.safety_readiness.forEach((item, index) => {
+      item.evidence_refs.forEach((ref, refIndex) => {
+        if (!evidenceIds.has(ref)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown evidence id: ${ref}`,
+            path: ["safety_readiness", index, "evidence_refs", refIndex],
+          });
+        }
+      });
+    });
+
+    data.open_weight_indicators.forEach((item, index) => {
+      item.evidence_refs.forEach((ref, refIndex) => {
+        if (!evidenceIds.has(ref)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown evidence id: ${ref}`,
+            path: ["open_weight_indicators", index, "evidence_refs", refIndex],
+          });
+        }
+      });
+    });
+
     data.changelog.forEach((entry, index) => {
       entry.evidence_refs.forEach((ref, refIndex) => {
         if (!evidenceIds.has(ref)) {
@@ -418,4 +627,8 @@ export type Falsifier = z.infer<typeof FalsifierSchema>;
 export type Evidence = z.infer<typeof EvidenceSchema>;
 export type Bottleneck = z.infer<typeof BottleneckSchema>;
 export type CapabilityProgress = z.infer<typeof CapabilityProgressSchema>;
+export type OutsideView = z.infer<typeof OutsideViewSchema>;
+export type ForecastDriver = z.infer<typeof ForecastDriverSchema>;
+export type SafetyReadiness = z.infer<typeof SafetyReadinessSchema>;
+export type OpenWeightIndicator = z.infer<typeof OpenWeightIndicatorSchema>;
 export type ChangelogEntry = z.infer<typeof ChangelogSchema>;

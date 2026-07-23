@@ -1,13 +1,13 @@
 # The Capability Ledger
 
-A static forecasting instrument that combines a public-evidence capability rubric, four AI timelines, source-backed tests, an evidence ledger, and an append-only audit record:
+A static forecasting instrument that combines a public-evidence capability rubric, four AI timelines, definition-separated outside views, source-backed tests, safety and open-weight lenses, an evidence ledger, and an append-only audit record:
 
 - the frozen AI 2027 racing-ending spine;
 - Codex's July 2026 distribution, with a 2032 WSI median;
 - Claude's widening-thesis distribution, with a 2035 WSI median; and
 - Daniel Kokotajlo's pinned April 2, 2026 AI Futures Model update.
 
-The site is built with Vite, React, TypeScript, Zod, D3, and Tailwind. It has no backend, database, authentication, CMS, or runtime data fetches.
+The site is built with Vite, React, TypeScript, Zod, native SVG, and Tailwind. It has no backend, database, authentication, CMS, or runtime data fetches.
 
 ## Canonical-data rule
 
@@ -33,7 +33,8 @@ scripts/validate.test.ts     Positive and deliberately broken-data tests
 src/schema.ts                Zod schemas and inferred TypeScript types
 src/lib/                     Parsed data and date helpers
 src/components/              Content-agnostic layout primitives
-src/views/                   Six routed views
+src/views/                   Seven routed views
+public/og.png                Generated 1200x630 social preview
 MISSING_CONTENT.md           Explicit inventory of unresolved source limitations
 vercel.json                  Vercel build configuration
 .github/workflows/deploy.yml GitHub Pages fallback deployment
@@ -69,6 +70,7 @@ The validator checks both schema shape and data integrity, including:
 - p10 <= p25 <= p50 <= p75 <= p90;
 - valid supersession and `moved_by` references;
 - valid evidence links in tests, drivers, progress criteria, and resolution records;
+- valid evidence links in outside views, forecast drivers, safety-readiness states, and open-weight indicators;
 - capability-criterion weights that sum to 100% and scores that match their weighted arithmetic; and
 - valid affected-entity links in the changelog.
 
@@ -98,6 +100,16 @@ No component change is required. The forecast lens exposes the current band and 
 The four circular percentages are not forecasts or probabilities. Each is the weighted completion of public-evidence criteria derived from an AI 2027 agent definition. `canonical.json` stores the weights, criterion completion values, rationale, evidence references, confidence, and as-of date. Validation recomputes each score and rejects inconsistent arithmetic.
 
 To revise a score, update or append the evidence record, update the affected criterion, and append a changelog record. The UI recalculates its component bars directly from the data.
+
+## Information architecture
+
+The site exposes one canonical record at three reading depths:
+
+- **Brief:** the overview gives the current capability, control-readiness, open-weight, and scenario-pace read without requiring chart interpretation.
+- **Explore:** the forecast workbench compares the full ladder, one threshold at a time, the mechanism assumptions behind each track, and outside views whose definitions differ.
+- **Audit:** the evidence ledger, locked tests, methodology, driver map, and changelog retain source limitations, provenance, superseded records, and resolution protocols.
+
+Outside views never become an extra house track. Their exact resolution definitions and conditioning remain attached to their dates. Capability progress, safety readiness, and open-weight diffusion are separate lenses and are never combined into a single score.
 
 ## Distribution and provenance conventions
 
@@ -140,3 +152,4 @@ Routing uses URL hashes, so every view works on static hosts without rewrite rul
 - The forecast lens derives its scale from the selected milestone, avoiding the unreadable all-milestone matrix while preserving full p10-p90 ranges.
 - AI Futures Model SAR/SIAR experiment-selection-skill outputs are mapped to the corresponding site milestones and disclose the mapping in `source_note`.
 - Current driver assessments show supporting evidence, counterevidence, a confidence label, and the next observation that would move the assessment.
+- Evaluation records may carry independence, verification, and evaluation-context fields so first-party results, independent tests, and preliminary incident evidence remain visibly distinct.

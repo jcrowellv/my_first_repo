@@ -1,4 +1,5 @@
-import { ArrowUpRight, Database, FileCheck2, Gauge, History, Scale } from "lucide-react";
+import { ArrowUpRight, Database, Download, FileCheck2, Gauge, History, Scale } from "lucide-react";
+import { Link } from "react-router-dom";
 import { canonical } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
 import { DataCard, PageHeader } from "../components/Primitives";
@@ -16,13 +17,13 @@ export function MethodologyView() {
   return (
     <div>
       <PageHeader viewId="methodology" />
-      <div className="mb-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2 lg:grid-cols-6">
+      <div className="mb-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2">
         {principles.map((principle, index) => {
           const Icon = iconByIndex[index];
           return (
             <div
               key={principle.title}
-              className={`bg-panel p-5 md:p-6 ${index < 2 ? "lg:col-span-3" : "lg:col-span-2"} ${index === 4 ? "md:col-span-2 lg:col-span-2" : ""}`}
+              className={`bg-panel p-5 md:p-7 ${index === 0 ? "md:col-span-2" : ""}`}
             >
               <Icon size={18} className="mb-5 text-cyan" />
               <h2 className="text-sm font-semibold text-ink">{principle.title}</h2>
@@ -57,6 +58,25 @@ export function MethodologyView() {
         </DataCard>
         <div className="space-y-6">
           <DataCard className="p-5 md:p-6">
+            <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-cyan">Evidence hierarchy</p>
+            <ol className="mt-5 space-y-4">
+              {[
+                ["01", "Independent, reproducible evaluation", "Full setup, human baseline, rerun fields, and external access."],
+                ["02", "Documented first-party evaluation", "Useful when methods and limitations are complete."],
+                ["03", "Deployment or incident evidence", "Ecologically valid, often causally messy."],
+                ["04", "Demonstration or announcement", "A signal to investigate, not a threshold by itself."],
+              ].map(([number, title, text]) => (
+                <li key={number} className="grid grid-cols-[28px_1fr] gap-3">
+                  <span className="font-mono text-[9px] text-cyan">{number}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-ink">{title}</p>
+                    <p className="mt-1 text-xs leading-5 text-muted">{text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </DataCard>
+          <DataCard className="p-5 md:p-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-cyan">Milestone ladder</p>
             <div className="mt-5 space-y-5">
               {canonical.milestones.map((milestone, index) => (
@@ -73,6 +93,18 @@ export function MethodologyView() {
             <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-cyan">Review cadence</p>
             <p className="mt-3 text-2xl font-semibold tracking-[-0.025em] text-ink">{formatIsoDate(canonical.meta.next_review_date)}</p>
             <p className="mt-3 text-xs leading-5 text-muted">{canonical.meta.progress_disclaimer}</p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <a
+                href="data/canonical.json"
+                download
+                className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-medium text-panel hover:bg-cyan"
+              >
+                <Download size={13} /> Download canonical data
+              </a>
+              <Link to="/changelog" className="inline-flex items-center rounded-full border border-line px-4 py-2 text-xs font-medium text-ink hover:border-cyan/40">
+                Audit changelog
+              </Link>
+            </div>
           </DataCard>
         </div>
       </div>

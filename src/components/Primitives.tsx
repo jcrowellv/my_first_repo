@@ -17,6 +17,13 @@ const statusStyles: Record<string, string> = {
   high: "border-cyan/35 bg-cyan/10 text-cyan",
   medium: "border-amber/35 bg-amber/10 text-amber",
   low: "border-line bg-raised text-muted",
+  documented: "border-green/25 bg-green/10 text-green",
+  developing: "border-cyan/25 bg-cyan/10 text-cyan",
+  strained: "border-rose/25 bg-rose/10 text-rose",
+  unknown: "border-line bg-raised text-muted",
+  narrowing: "border-green/25 bg-green/10 text-green",
+  partial: "border-amber/25 bg-amber/10 text-amber",
+  strong: "border-green/25 bg-green/10 text-green",
 };
 
 export function StatusBadge({ value }: { value: string }) {

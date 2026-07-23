@@ -90,7 +90,7 @@ export function FalsifierBoard() {
   return (
     <div>
       <PageHeader viewId="falsifiers" />
-      <section>
+      <section id="dated" className="scroll-mt-28">
         <div className="mb-5 flex items-center gap-3">
           <span className="grid h-9 w-9 place-items-center rounded-full bg-cyan/10 text-cyan"><CalendarClock size={17} /></span>
           <div>
@@ -102,7 +102,7 @@ export function FalsifierBoard() {
           {dated.map((item) => <TestCard key={item.id} test={item} />)}
         </div>
       </section>
-      <section className="mt-14">
+      <section id="monitors" className="mt-14 scroll-mt-28">
         <div className="mb-5 flex items-center gap-3">
           <span className="grid h-9 w-9 place-items-center rounded-full bg-violet/10 text-violet"><Radar size={17} /></span>
           <div>

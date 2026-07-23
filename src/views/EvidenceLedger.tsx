@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
-import { ArrowUpRight, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Database, ShieldCheck, SlidersHorizontal, Waves } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import type { Evidence } from "../schema";
-import { canonical, milestonesById } from "../lib/data";
+import { canonical, evidenceById, milestonesById } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
 import { PageHeader, StatusBadge } from "../components/Primitives";
 
@@ -12,9 +13,95 @@ const favorsLabel: Record<Evidence["favors"], string> = {
   neutral: "Framework or neutral",
 };
 
-function quarterOf(date: string) {
-  const [year, month] = date.split("-").map(Number);
-  return `Q${Math.ceil(month / 3)} ${year}`;
+const diagnosticityRank: Record<Evidence["diagnosticity"], number> = {
+  high: 3,
+  medium: 2,
+  low: 1,
+};
+
+type Lens = "capability" | "safety" | "open-weight";
+
+function SourceLinks({ refs }: { refs: string[] }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {refs.map((ref) => {
+        const item = evidenceById.get(ref);
+        return item ? (
+          <a
+            key={ref}
+            href={item.source_url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 rounded-full border border-line bg-panel px-3 py-1.5 text-[11px] text-cyan hover:text-ink"
+          >
+            {item.publisher} · {item.source_label}<ArrowUpRight size={10} />
+          </a>
+        ) : null;
+      })}
+    </div>
+  );
+}
+
+function SafetyReadinessPanel() {
+  return (
+    <section id="safety" className="scroll-mt-28">
+      <div className="mb-6 max-w-3xl">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Separate control lens</p>
+        <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">Safety readiness</h2>
+        <p className="mt-3 text-sm leading-6 text-muted">
+          A capability score does not imply a control score. These states track the public evidence for evaluation, monitoring, safeguards, and independent access.
+        </p>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        {canonical.safety_readiness.map((item) => (
+          <article key={item.id} className="rounded-2xl border border-line bg-panel p-5 shadow-instrument md:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <h3 className="text-base font-semibold text-ink">{item.name}</h3>
+              <StatusBadge value={item.status} />
+            </div>
+            <p className="mt-4 text-sm leading-6 text-muted">{item.summary}</p>
+            <details className="group mt-5 border-t border-line pt-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-semibold text-ink">
+                Evidence and next signal
+                <ChevronDown size={14} className="text-muted transition-transform group-open:rotate-180" />
+              </summary>
+              <p className="mt-3 text-xs leading-5 text-muted"><strong className="text-ink">Next:</strong> {item.next_signal}</p>
+              <div className="mt-3"><SourceLinks refs={item.evidence_refs} /></div>
+            </details>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function OpenWeightPanel() {
+  return (
+    <section id="open-weight" className="scroll-mt-28">
+      <div className="mb-6 max-w-3xl">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Capability, access, transparency</p>
+        <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">Open-weight diffusion</h2>
+        <p className="mt-3 text-sm leading-6 text-muted">
+          Weight access changes who can deploy a capability. Full openness additionally requires legible data, code, training, and evaluation provenance.
+        </p>
+      </div>
+      <div className="grid gap-4 lg:grid-cols-3">
+        {canonical.open_weight_indicators.map((item) => (
+          <article key={item.id} className="rounded-2xl border border-line bg-panel p-5 shadow-instrument md:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">{item.label}</span>
+              <StatusBadge value={item.status} />
+            </div>
+            <p className="mt-5 font-serif text-3xl font-semibold tracking-[-0.03em] text-ink">{item.value}</p>
+            <p className="mt-3 text-xs leading-5 text-muted">{item.detail}</p>
+            <a href={item.source_url} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-xs font-medium text-cyan hover:text-ink">
+              {item.source_label}<ArrowUpRight size={11} />
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function EvidenceRow({ item }: { item: Evidence }) {
@@ -31,9 +118,11 @@ function EvidenceRow({ item }: { item: Evidence }) {
             <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted">{item.implication}</p>
           </div>
           <div className="flex items-center gap-2.5 md:justify-end">
-            <span className="hidden font-mono text-[9px] uppercase tracking-[0.13em] text-muted lg:inline">
-              {item.source_type.replaceAll("-", " ")}
-            </span>
+            {item.independence ? (
+              <span className="hidden font-mono text-[8px] uppercase tracking-[0.12em] text-muted xl:inline">
+                {item.independence.replaceAll("-", " ")}
+              </span>
+            ) : null}
             <StatusBadge value={item.diagnosticity} />
             <ChevronDown size={15} className="text-muted transition-transform group-open:rotate-180" />
           </div>
@@ -49,11 +138,29 @@ function EvidenceRow({ item }: { item: Evidence }) {
             <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-amber">Limit</p>
             <p className="mt-2 text-sm leading-6 text-muted">{item.limitation}</p>
           </div>
+          {item.evaluation_context ? (
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">Evaluation context</p>
+              <p className="mt-2 text-xs leading-5 text-muted">{item.evaluation_context}</p>
+            </div>
+          ) : null}
         </div>
         <div className="space-y-4 text-xs">
           <div>
             <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">Reading</p>
             <p className="mt-1.5 text-ink">{favorsLabel[item.favors]}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">Source</p>
+              <p className="mt-1.5 text-ink">{item.source_type.replaceAll("-", " ")}</p>
+            </div>
+            {item.verification ? (
+              <div>
+                <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">Verification</p>
+                <p className="mt-1.5 text-ink">{item.verification.replaceAll("-", " ")}</p>
+              </div>
+            ) : null}
           </div>
           <div>
             <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">Bears on</p>
@@ -65,13 +172,8 @@ function EvidenceRow({ item }: { item: Evidence }) {
               ))}
             </div>
           </div>
-          <a
-            href={item.source_url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1 font-medium text-cyan hover:text-ink"
-          >
-            Open source <ArrowUpRight size={12} />
+          <a href={item.source_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-medium text-cyan hover:text-ink">
+            Open primary source <ArrowUpRight size={12} />
           </a>
         </div>
       </div>
@@ -80,86 +182,121 @@ function EvidenceRow({ item }: { item: Evidence }) {
 }
 
 export function EvidenceLedger() {
+  const { hash } = useLocation();
+  const lens: Lens = hash === "#safety" ? "safety" : hash === "#open-weight" ? "open-weight" : "capability";
   const [milestone, setMilestone] = useState("all");
   const [diagnosticity, setDiagnosticity] = useState("all");
   const [sourceType, setSourceType] = useState("all");
-  const [theme, setTheme] = useState("all");
+  const [sort, setSort] = useState<"diagnosticity" | "date">("diagnosticity");
 
-  const evidence = useMemo(
-    () =>
-      [...canonical.evidence]
-        .filter((item) => milestone === "all" || item.milestone_tags.includes(milestone))
-        .filter((item) => diagnosticity === "all" || item.diagnosticity === diagnosticity)
-        .filter((item) => sourceType === "all" || item.source_type === sourceType)
-        .filter((item) => theme === "all" || item.themes?.includes(theme as NonNullable<Evidence["themes"]>[number]))
-        .sort((a, b) => b.date.localeCompare(a.date)),
-    [milestone, diagnosticity, sourceType, theme],
-  );
+  const evidence = useMemo(() => {
+    const lensFilter = (item: Evidence) => {
+      if (lens === "safety") {
+        return item.themes?.some((theme) =>
+          ["alignment-control", "cybersecurity", "evaluation-methods"].includes(theme),
+        );
+      }
+      if (lens === "open-weight") {
+        return item.themes?.some((theme) =>
+          ["open-weight", "open-science", "transparency"].includes(theme),
+        );
+      }
+      return true;
+    };
 
-  const groups = useMemo(() => {
-    const map = new Map<string, Evidence[]>();
-    evidence.forEach((item) => {
-      const key = quarterOf(item.date);
-      map.set(key, [...(map.get(key) ?? []), item]);
-    });
-    return [...map.entries()];
-  }, [evidence]);
+    return [...canonical.evidence]
+      .filter(lensFilter)
+      .filter((item) => milestone === "all" || item.milestone_tags.includes(milestone))
+      .filter((item) => diagnosticity === "all" || item.diagnosticity === diagnosticity)
+      .filter((item) => sourceType === "all" || item.source_type === sourceType)
+      .sort((a, b) => {
+        if (sort === "diagnosticity") {
+          const rank = diagnosticityRank[b.diagnosticity] - diagnosticityRank[a.diagnosticity];
+          if (rank !== 0) return rank;
+        }
+        return b.date.localeCompare(a.date);
+      });
+  }, [diagnosticity, lens, milestone, sort, sourceType]);
 
   const selectClass = "rounded-full border border-line bg-panel px-4 py-2.5 text-xs text-ink";
+  const lensItems = [
+    { id: "capability", label: "Capability evidence", detail: "All milestone-moving records", path: "/evidence", icon: Database },
+    { id: "safety", label: "Safety & control", detail: "Containment, monitors, safeguards", path: "/evidence#safety", icon: ShieldCheck },
+    { id: "open-weight", label: "Open-weight", detail: "Diffusion, openness, transparency", path: "/evidence#open-weight", icon: Waves },
+  ] as const;
 
   return (
     <div>
       <PageHeader viewId="evidence" />
-      <div className="mb-8 flex flex-wrap items-center gap-3">
-        <span className="inline-flex items-center gap-2 text-xs text-muted">
-          <SlidersHorizontal size={14} /> {evidence.length} of {canonical.evidence.length} records
-        </span>
-        <select aria-label="Filter by capability level" className={selectClass} value={milestone} onChange={(event) => setMilestone(event.target.value)}>
-          <option value="all">All capability levels</option>
-          {canonical.milestones.map((item) => (
-            <option key={item.id} value={item.id}>{item.code} · {item.name}</option>
-          ))}
-        </select>
-        <select aria-label="Filter by source type" className={selectClass} value={sourceType} onChange={(event) => setSourceType(event.target.value)}>
-          <option value="all">All source types</option>
-          {[...new Set(canonical.evidence.map((item) => item.source_type))].map((type) => (
-            <option key={type} value={type}>{type.replaceAll("-", " ")}</option>
-          ))}
-        </select>
-        <select aria-label="Filter by evidence theme" className={selectClass} value={theme} onChange={(event) => setTheme(event.target.value)}>
-          <option value="all">All themes</option>
-          {[...new Set(canonical.evidence.flatMap((item) => item.themes ?? []))].sort().map((itemTheme) => (
-            <option key={itemTheme} value={itemTheme}>{itemTheme.replaceAll("-", " ")}</option>
-          ))}
-        </select>
-        <select aria-label="Filter by signal strength" className={selectClass} value={diagnosticity} onChange={(event) => setDiagnosticity(event.target.value)}>
-          <option value="all">All signal strengths</option>
-          <option value="high">High diagnosticity</option>
-          <option value="medium">Medium diagnosticity</option>
-          <option value="low">Low diagnosticity</option>
-        </select>
+      <div className="mb-14 grid gap-3 md:grid-cols-3">
+        {lensItems.map((item) => {
+          const Icon = item.icon;
+          const active = lens === item.id;
+          return (
+            <Link
+              key={item.id}
+              to={item.path}
+              className={`rounded-2xl border p-5 transition-colors ${
+                active ? "border-cyan/45 bg-panel shadow-instrument ring-1 ring-cyan/20" : "border-line bg-panel hover:border-cyan/30"
+              }`}
+            >
+              <Icon size={18} className={active ? "text-cyan" : "text-muted"} />
+              <span className="mt-4 block text-sm font-semibold text-ink">{item.label}</span>
+              <span className="mt-1 block text-xs text-muted">{item.detail}</span>
+            </Link>
+          );
+        })}
       </div>
-      {groups.length ? (
-        <div className="space-y-8">
-          {groups.map(([quarter, items]) => (
-            <section key={quarter} aria-label={quarter}>
-              <div className="mb-3 flex items-baseline gap-3">
-                <h2 className="font-serif text-xl font-semibold text-ink">{quarter}</h2>
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                  {items.length} {items.length === 1 ? "record" : "records"}
-                </span>
-              </div>
-              <div className="overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument">
-                {items.map((item) => <EvidenceRow key={item.id} item={item} />)}
-              </div>
-            </section>
-          ))}
+
+      {lens === "safety" ? <SafetyReadinessPanel /> : null}
+      {lens === "open-weight" ? <OpenWeightPanel /> : null}
+
+      <section className={lens === "capability" ? "" : "mt-16"} aria-labelledby="ledger-title">
+        <div className="mb-6">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">
+            {lens === "capability" ? "Source ledger" : `${lens.replaceAll("-", " ")} sources`}
+          </p>
+          <h2 id="ledger-title" className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">
+            Inspect the record
+          </h2>
         </div>
-      ) : (
-        <p className="rounded-2xl border border-line bg-panel p-10 text-center text-sm text-muted">
-          No evidence matches these filters.
-        </p>
-      )}
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          <span className="inline-flex items-center gap-2 text-xs text-muted">
+            <SlidersHorizontal size={14} /> {evidence.length} of {canonical.evidence.length} records
+          </span>
+          <select aria-label="Filter by capability level" className={selectClass} value={milestone} onChange={(event) => setMilestone(event.target.value)}>
+            <option value="all">All capability levels</option>
+            {canonical.milestones.map((item) => (
+              <option key={item.id} value={item.id}>{item.code} · {item.name}</option>
+            ))}
+          </select>
+          <select aria-label="Filter by source type" className={selectClass} value={sourceType} onChange={(event) => setSourceType(event.target.value)}>
+            <option value="all">All source types</option>
+            {[...new Set(canonical.evidence.map((item) => item.source_type))].sort().map((type) => (
+              <option key={type} value={type}>{type.replaceAll("-", " ")}</option>
+            ))}
+          </select>
+          <select aria-label="Filter by signal strength" className={selectClass} value={diagnosticity} onChange={(event) => setDiagnosticity(event.target.value)}>
+            <option value="all">All signal strengths</option>
+            <option value="high">High diagnosticity</option>
+            <option value="medium">Medium diagnosticity</option>
+            <option value="low">Low diagnosticity</option>
+          </select>
+          <select aria-label="Sort evidence" className={selectClass} value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}>
+            <option value="diagnosticity">Strongest signal first</option>
+            <option value="date">Newest first</option>
+          </select>
+        </div>
+        {evidence.length ? (
+          <div className="overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument">
+            {evidence.map((item) => <EvidenceRow key={item.id} item={item} />)}
+          </div>
+        ) : (
+          <p className="rounded-2xl border border-line bg-panel p-10 text-center text-sm text-muted">
+            No evidence matches these filters.
+          </p>
+        )}
+      </section>
     </div>
   );
 }

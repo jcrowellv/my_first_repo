@@ -1,38 +1,94 @@
 import { useMemo, useState } from "react";
-import { ArrowRight, ArrowUpRight, CircleHelp, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CircleHelp, Clock3, ShieldCheck, Waves, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { CapabilityProgress, Forecast, QuantileDate } from "../schema";
 import { canonical, evidenceById, milestonesById, tracksById } from "../lib/data";
 import { displayQuantileLabel, formatIsoDate } from "../lib/dates";
-import { PageHeader, StatusBadge } from "../components/Primitives";
+import { StatusBadge } from "../components/Primitives";
 
 const ACCENT = "#167f92";
-const TODAY = 2026 + 202 / 365;
+const todayDate = new Date();
+const startOfYear = new Date(todayDate.getFullYear(), 0, 1);
+const startOfNextYear = new Date(todayDate.getFullYear() + 1, 0, 1);
+const TODAY =
+  todayDate.getFullYear() +
+  (todayDate.getTime() - startOfYear.getTime()) /
+    (startOfNextYear.getTime() - startOfYear.getTime());
 
 /* ---------- State of play ---------- */
 
-function HeadlineStrip() {
-  const stats = canonical.meta.headline_stats;
-  if (!stats?.length) return null;
+const briefingIcon = {
+  capability: Clock3,
+  control: ShieldCheck,
+  diffusion: Waves,
+};
+
+function BriefingHero() {
+  const briefing = canonical.meta.briefing;
 
   return (
-    <section
-      aria-label="Current state of play"
-      className="mb-14 overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument"
-    >
-      <div className="grid sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((stat, index) => (
-          <article
-            key={stat.label}
-            className={`p-5 md:p-6 ${
-              index > 0 ? "border-t border-line sm:border-l sm:border-t-0" : ""
-            } ${index === 2 ? "sm:border-l-0 xl:border-l" : ""} ${index >= 2 ? "sm:border-t xl:border-t-0" : ""}`}
-          >
-            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">{stat.label}</p>
-            <p className="mt-2 font-serif text-2xl font-semibold tracking-[-0.015em] text-ink">{stat.value}</p>
-            {stat.detail ? <p className="mt-2 text-xs leading-5 text-muted">{stat.detail}</p> : null}
-          </article>
-        ))}
+    <section id="state" className="scroll-mt-28 overflow-hidden rounded-[28px] border border-line bg-panel shadow-instrument">
+      <div className="grid lg:grid-cols-[1.2fr_.8fr]">
+        <div className="relative overflow-hidden p-6 md:p-9 lg:p-11">
+          <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full border-[46px] border-cyan/[0.06]" aria-hidden="true" />
+          <p className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-cyan">
+            {briefing.eyebrow} · {formatIsoDate(briefing.as_of)}
+          </p>
+          <h1 className="relative mt-5 max-w-3xl text-balance font-serif text-[42px] font-semibold leading-[1.02] tracking-[-0.025em] text-ink md:text-[60px]">
+            {briefing.title}
+          </h1>
+          <p className="relative mt-6 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
+            {briefing.description}
+          </p>
+          <div className="relative mt-8 flex flex-wrap gap-3">
+            <Link to="/forecasts" className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-medium text-panel transition-colors hover:bg-cyan">
+              Explore four forecasts <ArrowRight size={15} />
+            </Link>
+            <Link to="/evidence" className="inline-flex items-center gap-2 rounded-full border border-line bg-canvas px-5 py-3 text-sm font-medium text-ink transition-colors hover:border-cyan/40">
+              Audit the evidence
+            </Link>
+          </div>
+        </div>
+        <aside className="border-t border-line bg-ink p-6 text-panel md:p-8 lg:border-l lg:border-t-0 lg:p-9">
+          <p className="font-mono text-[9px] uppercase tracking-[0.19em] text-canvas/50">{briefing.pace_label}</p>
+          <div className="mt-3 flex items-end justify-between gap-4">
+            <span className="font-serif text-6xl font-semibold tracking-[-0.05em] text-panel">{briefing.pace_value}</span>
+            <span className="mb-2 rounded-full border border-canvas/15 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-canvas/55">
+              preliminary
+            </span>
+          </div>
+          <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-canvas/15" aria-hidden="true">
+            <div className="h-full w-3/4 rounded-full bg-cyan" />
+          </div>
+          <p className="mt-5 text-sm leading-6 text-canvas/65">{briefing.pace_detail}</p>
+          <a href={briefing.pace_source_url} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1.5 text-xs font-medium text-cyan hover:text-panel">
+            {briefing.pace_source_label} <ArrowUpRight size={12} />
+          </a>
+        </aside>
+      </div>
+      <div className="grid border-t border-line md:grid-cols-3">
+        {briefing.lenses.map((lens, index) => {
+          const Icon = briefingIcon[lens.id];
+          return (
+            <Link
+              key={lens.id}
+              to={lens.path}
+              className={`group p-5 transition-colors hover:bg-raised/45 md:p-6 ${
+                index > 0 ? "border-t border-line md:border-l md:border-t-0" : ""
+              }`}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-cyan/10 text-cyan">
+                  <Icon size={17} />
+                </span>
+                <ArrowRight size={15} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-cyan" />
+              </div>
+              <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.17em] text-muted">{lens.label}</p>
+              <p className="mt-1.5 text-lg font-semibold tracking-[-0.02em] text-ink">{lens.value}</p>
+              <p className="mt-2 text-xs leading-5 text-muted">{lens.detail}</p>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
@@ -133,7 +189,7 @@ function CapabilitySection() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = canonical.capability_progress.find((item) => item.id === selectedId) ?? null;
   return (
-    <section aria-labelledby="progress-title">
+    <section id="capability" aria-labelledby="progress-title" className="scroll-mt-28">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 id="progress-title" className="font-serif text-3xl font-semibold tracking-[-0.015em] text-ink">
@@ -466,7 +522,7 @@ function ForecastChart({
   );
 }
 
-function ForecastExplorer() {
+export function ForecastExplorer() {
   const current = canonical.forecasts.filter((forecast) => forecast.superseded_by === null);
   const milestoneIds = canonical.milestones
     .filter((milestone) => current.some((forecast) => forecast.milestone_id === milestone.id))
@@ -497,7 +553,7 @@ function ForecastExplorer() {
   );
 
   return (
-    <section aria-labelledby="forecast-lens-title" className="mt-20">
+    <section id="explorer" aria-labelledby="forecast-lens-title" className="scroll-mt-28">
       <div className="mb-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Four forecasts</p>
@@ -579,7 +635,7 @@ function SignalsSection() {
   );
   const bindingDrivers = canonical.bottlenecks.filter((item) => item.status === "binding").slice(0, 2);
   return (
-    <section className="mt-20 grid gap-5 lg:grid-cols-[1.3fr_.7fr]">
+    <section id="signals" className="scroll-mt-28 grid gap-5 lg:grid-cols-[1.3fr_.7fr]">
       <div className="rounded-2xl border border-line bg-panel p-6 shadow-instrument md:p-7">
         <div className="mb-5 flex items-center justify-between gap-4">
           <div>
@@ -641,10 +697,26 @@ function SignalsSection() {
 export function TimelineView() {
   return (
     <div>
-      <PageHeader viewId="timeline" />
-      <HeadlineStrip />
-      <CapabilitySection />
-      <ForecastExplorer />
+      <BriefingHero />
+      <div className="mt-20">
+        <CapabilitySection />
+      </div>
+      <section className="my-20 overflow-hidden rounded-2xl border border-line bg-ink text-panel shadow-instrument">
+        <div className="grid items-center lg:grid-cols-[1fr_auto]">
+          <div className="p-6 md:p-8">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Forecast workbench</p>
+            <h2 className="mt-3 max-w-2xl font-serif text-3xl font-semibold tracking-[-0.02em]">
+              Compare the whole ladder before debating one date.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-canvas/65">
+              Four committed distributions, every available quantile, explicit supersession history, and the assumptions that pull each timeline earlier or later.
+            </p>
+          </div>
+          <Link to="/forecasts" className="m-6 inline-flex items-center justify-center gap-2 rounded-full bg-panel px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-cyan hover:text-panel md:m-8">
+            Open forecasts <ArrowRight size={15} />
+          </Link>
+        </div>
+      </section>
       <SignalsSection />
     </div>
   );

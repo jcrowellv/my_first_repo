@@ -6,6 +6,9 @@ import { TimelineView } from "./views/TimelineView";
 const FalsifierBoard = lazy(() =>
   import("./views/FalsifierBoard").then((module) => ({ default: module.FalsifierBoard })),
 );
+const ForecastsView = lazy(() =>
+  import("./views/ForecastsView").then((module) => ({ default: module.ForecastsView })),
+);
 const EvidenceLedger = lazy(() =>
   import("./views/EvidenceLedger").then((module) => ({ default: module.EvidenceLedger })),
 );
@@ -25,6 +28,7 @@ export default function App() {
       <Suspense fallback={<div className="min-h-[35vh] animate-pulse rounded-xl border border-line bg-panel" />}>
         <Routes>
           <Route path="/" element={<TimelineView />} />
+          <Route path="/forecasts" element={<ForecastsView />} />
           <Route path="/falsifiers" element={<FalsifierBoard />} />
           <Route path="/evidence" element={<EvidenceLedger />} />
           <Route path="/bottlenecks" element={<BottleneckTracker />} />
