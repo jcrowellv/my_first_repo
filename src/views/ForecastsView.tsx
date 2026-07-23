@@ -4,7 +4,17 @@ import { Link } from "react-router-dom";
 import { canonical, evidenceById, milestonesById, tracksById } from "../lib/data";
 import { displayQuantileLabel, formatDecimalYear, formatIsoDate } from "../lib/dates";
 import { PageHeader, StatusBadge } from "../components/Primitives";
+import { ChartScroller, SectionNav } from "../components/NavigationPrimitives";
 import { ForecastExplorer } from "./TimelineView";
+
+const forecastSections = [
+  { id: "tracks", label: "Four positions" },
+  { id: "ladder", label: "Capability ladder" },
+  { id: "takeoff", label: "Takeoff gaps" },
+  { id: "explorer", label: "Threshold explorer" },
+  { id: "drivers", label: "Drivers" },
+  { id: "outside", label: "Outside views" },
+];
 
 const ladderForecasts = canonical.forecasts.filter((forecast) => forecast.superseded_by === null);
 const MIN_YEAR = Math.floor(
@@ -17,8 +27,8 @@ const MAX_YEAR = Math.ceil(
       .map((forecast) => forecast.distribution.p90.value),
   ),
 );
-const LABEL_WIDTH = 150;
-const PLOT_START = 170;
+const LABEL_WIDTH = 230;
+const PLOT_START = 250;
 const PLOT_END = 1100;
 const ROW_HEIGHT = 112;
 const AXIS_HEIGHT = 46;
@@ -52,7 +62,7 @@ function ForecastLadder() {
   const height = AXIS_HEIGHT + milestones.length * ROW_HEIGHT + 12;
 
   return (
-    <section id="ladder" className="scroll-mt-28">
+    <section id="ladder" className="scroll-mt-36">
       <div className="mb-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">All current records</p>
@@ -73,7 +83,7 @@ function ForecastLadder() {
             </span>
           ))}
         </div>
-        <div className="overflow-x-auto p-2 md:p-4">
+        <ChartScroller label="capability ladder chart" className="p-2 md:p-4">
           <svg
             viewBox={`0 0 1130 ${height}`}
             className="min-w-[850px] w-full"
@@ -187,7 +197,7 @@ function ForecastLadder() {
               );
             })}
           </svg>
-        </div>
+        </ChartScroller>
       </div>
       <p className="mt-3 text-xs leading-5 text-muted">{canonical.meta.distribution_warning}</p>
     </section>
@@ -230,7 +240,7 @@ function TakeoffGapSection() {
   const fromMilestone = milestonesById.get(anchor);
 
   return (
-    <section id="takeoff" className="scroll-mt-28">
+    <section id="takeoff" className="scroll-mt-36">
       <div className="mb-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Takeoff speed</p>
@@ -249,8 +259,9 @@ function TakeoffGapSection() {
               key={option.id}
               type="button"
               title={option.detail}
+              aria-pressed={anchor === option.id}
               onClick={() => setAnchor(option.id)}
-              className={`rounded-full border px-3.5 py-2 text-xs font-medium transition-colors ${
+              className={`min-h-11 rounded-full border px-3.5 py-2 text-xs font-medium transition-colors ${
                 anchor === option.id
                   ? "border-ink bg-ink text-panel"
                   : "border-line bg-panel text-muted hover:text-ink"
@@ -262,7 +273,7 @@ function TakeoffGapSection() {
         </div>
       </div>
       <div className="overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument">
-        <div className="overflow-x-auto p-2 md:p-4">
+        <ChartScroller label={`${fromMilestone?.name ?? "capability"} to ASI comparison chart`} className="p-2 md:p-4">
           <svg
             viewBox={`0 0 ${width} ${height}`}
             className="min-w-[760px] w-full"
@@ -330,7 +341,7 @@ function TakeoffGapSection() {
               );
             })}
           </svg>
-        </div>
+        </ChartScroller>
         <p className="border-t border-line px-5 py-4 text-xs leading-5 text-muted md:px-6">
           Each bar connects two medians from the same track's marginal forecasts; it is not a sampled scenario
           path. Open circles mark {fromMilestone?.code} medians, filled circles mark ASI medians.{" "}
@@ -353,7 +364,7 @@ const directionStyles: Record<string, string> = {
 
 function DriverMatrix() {
   return (
-    <section id="drivers" className="scroll-mt-28">
+    <section id="drivers" className="scroll-mt-36">
       <div className="mb-6 max-w-3xl">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Assumption map</p>
         <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">
@@ -427,7 +438,7 @@ function DriverMatrix() {
 
 function OutsideViews() {
   return (
-    <section id="outside" className="scroll-mt-28">
+    <section id="outside" className="scroll-mt-36">
       <div className="mb-6 max-w-3xl">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Definition-separated context</p>
         <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">Outside views</h2>
@@ -464,7 +475,7 @@ function OutsideViews() {
 
 function TrackTheses() {
   return (
-    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <section id="tracks" className="scroll-mt-36 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {canonical.meta.tracks.map((track) => (
         <article key={track.id} className="rounded-2xl border border-line bg-panel p-5">
           <div className="flex items-center gap-2">
@@ -472,7 +483,7 @@ function TrackTheses() {
             <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">{track.thesis}</span>
           </div>
           <h2 className="mt-4 text-base font-semibold text-ink">{track.name}</h2>
-          <p className="mt-2 text-xs leading-5 text-muted">{track.description}</p>
+          <p className="mt-2 text-[13px] leading-6 text-muted">{track.description}</p>
         </article>
       ))}
     </section>
@@ -485,6 +496,7 @@ export function ForecastsView() {
   return (
     <div>
       <PageHeader viewId="forecasts" />
+      <SectionNav items={forecastSections} label="Forecast sections" />
       <TrackTheses />
       <div className="mt-16">
         <ForecastLadder />

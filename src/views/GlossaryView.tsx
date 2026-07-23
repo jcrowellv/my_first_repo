@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, BookOpenText } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { GlossaryEntry } from "../schema";
 import { canonical } from "../lib/data";
 import { PageHeader } from "../components/Primitives";
+import { SectionNav } from "../components/NavigationPrimitives";
 
 const categoryOrder: Array<{ id: GlossaryEntry["category"]; label: string; detail: string }> = [
   {
@@ -72,26 +73,18 @@ export function GlossaryView() {
         .filter((category) => category.entries.length > 0),
     [],
   );
+  const sectionItems = useMemo(
+    () => grouped.map((category) => ({ id: `section-${category.id}`, label: `${category.label} · ${category.entries.length}` })),
+    [grouped],
+  );
 
   return (
     <div>
       <PageHeader viewId="glossary" />
-      <nav aria-label="Glossary sections" className="mb-12 flex flex-wrap gap-2">
-        {grouped.map((category) => (
-          <Link
-            key={category.id}
-            to={`/glossary#section-${category.id}`}
-            className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-4 py-2 text-xs font-medium text-muted transition-colors hover:border-cyan/40 hover:text-ink"
-          >
-            <BookOpenText size={13} className="text-cyan" />
-            {category.label}
-            <span className="font-mono text-[10px] text-muted">{category.entries.length}</span>
-          </Link>
-        ))}
-      </nav>
+      <SectionNav items={sectionItems} label="Glossary sections" />
       <div className="space-y-14">
         {grouped.map((category) => (
-          <section key={category.id} id={`section-${category.id}`} className="scroll-mt-28">
+          <section key={category.id} id={`section-${category.id}`} className="scroll-mt-36">
             <div className="mb-5 max-w-3xl">
               <h2 className="font-serif text-2xl font-semibold tracking-[-0.015em] text-ink">{category.label}</h2>
               <p className="mt-1.5 text-sm leading-6 text-muted">{category.detail}</p>

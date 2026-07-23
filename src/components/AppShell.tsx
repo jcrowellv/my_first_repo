@@ -8,27 +8,42 @@ function RouteScrollManager() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    let frame = 0;
-    let attempts = 0;
-
-    const settle = () => {
-      if (!hash) {
-        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-        return;
-      }
-
-      const target = document.getElementById(decodeURIComponent(hash.slice(1)));
-      if (target) {
-        target.scrollIntoView({ block: "start", behavior: "auto" });
-        return;
-      }
-
-      attempts += 1;
-      if (attempts < 12) frame = window.requestAnimationFrame(settle);
+    const jumpWithoutAnimation = (action: () => void) => {
+      const root = document.documentElement;
+      const priorBehavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      action();
+      root.style.scrollBehavior = priorBehavior;
     };
 
-    frame = window.requestAnimationFrame(settle);
-    return () => window.cancelAnimationFrame(frame);
+    if (!hash) {
+      jumpWithoutAnimation(() => window.scrollTo({ top: 0, left: 0 }));
+      return;
+    }
+
+    let followupFrame = 0;
+    const settle = () => {
+      const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+      if (!target) return false;
+      jumpWithoutAnimation(() => target.scrollIntoView({ block: "start" }));
+      followupFrame = window.requestAnimationFrame(() => {
+        jumpWithoutAnimation(() => target.scrollIntoView({ block: "start" }));
+      });
+      return true;
+    };
+
+    const observer = new MutationObserver(() => {
+      if (settle()) observer.disconnect();
+    });
+    observer.observe(document.getElementById("root") ?? document.body, { childList: true, subtree: true });
+    if (settle()) observer.disconnect();
+
+    const timeout = window.setTimeout(() => observer.disconnect(), 4_000);
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(timeout);
+      window.cancelAnimationFrame(followupFrame);
+    };
   }, [pathname, hash]);
 
   return null;
@@ -81,39 +96,54 @@ function DesktopNavigation() {
 }
 
 function MobileNavigation({ close }: { close: () => void }) {
+  const { pathname } = useLocation();
+
   return (
     <nav aria-label="Primary navigation" className="divide-y divide-line">
-      {canonical.meta.navigation.map((item) => (
-        <details key={item.id} className="group py-2">
-          <summary className="flex cursor-pointer list-none items-center justify-between rounded-xl px-3 py-3 text-base font-semibold text-ink">
-            {item.label}
-            <ChevronDown size={16} className="text-muted transition-transform group-open:rotate-180" />
-          </summary>
-          <div className="pb-2 pl-3">
-            <Link
-              to={item.path}
-              onClick={() => {
-                window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-                close();
-              }}
-              className="block rounded-xl px-3 py-2 text-sm font-medium text-cyan"
-            >
-              Open {item.label}
-            </Link>
-            {item.children.map((child) => (
+      {canonical.meta.navigation.map((item) => {
+        const active =
+          pathname === item.path ||
+          (item.id === "method" && ["/methodology", "/bottlenecks", "/glossary", "/changelog"].includes(pathname));
+        return (
+          <details key={item.id} className="group py-2" open={active}>
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-xl px-3 py-2.5 text-base font-semibold text-ink">
+              <span className="flex items-center gap-2.5">
+                {item.label}
+                {active ? (
+                  <span className="rounded-full bg-cyan/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-cyan">
+                    Current
+                  </span>
+                ) : null}
+              </span>
+              <ChevronDown size={16} className="text-muted transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="pb-2 pl-3">
               <Link
-                key={child.path}
-                to={child.path}
-                onClick={close}
-                className="block rounded-xl px-3 py-2.5 hover:bg-raised"
+                to={item.path}
+                aria-current={pathname === item.path ? "page" : undefined}
+                onClick={() => {
+                  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+                  close();
+                }}
+                className="block min-h-10 rounded-xl px-3 py-2.5 text-sm font-medium text-cyan"
               >
-                <span className="block text-sm font-medium text-ink">{child.label}</span>
-                <span className="mt-0.5 block text-xs leading-5 text-muted">{child.description}</span>
+                Open {item.label}
               </Link>
-            ))}
-          </div>
-        </details>
-      ))}
+              {item.children.map((child) => (
+                <Link
+                  key={child.path}
+                  to={child.path}
+                  onClick={close}
+                  className="block rounded-xl px-3 py-2.5 hover:bg-raised"
+                >
+                  <span className="block text-sm font-medium text-ink">{child.label}</span>
+                  <span className="mt-0.5 block text-[13px] leading-5 text-muted">{child.description}</span>
+                </Link>
+              ))}
+            </div>
+          </details>
+        );
+      })}
     </nav>
   );
 }
@@ -148,7 +178,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
             <button
               type="button"
-              className="rounded-full border border-line bg-panel p-2.5 text-muted lg:hidden"
+              className="rounded-full border border-line bg-panel p-3 text-muted lg:hidden"
               aria-label={menuOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((value) => !value)}
@@ -163,7 +193,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           ) : null}
         </header>
 
-        <main className="mx-auto max-w-[1240px] px-5 py-9 md:px-8 md:py-14">{children}</main>
+        <main id="main-content" className="mx-auto max-w-[1240px] px-5 py-9 md:px-8 md:py-14">{children}</main>
 
         <footer className="mt-20 bg-ink text-panel">
           <div className="mx-auto max-w-[1240px] px-5 py-12 md:px-8 md:py-16">
@@ -191,7 +221,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                           <span className="inline-flex items-center gap-1.5 text-sm font-medium text-panel transition-colors group-hover/link:text-cyan">
                             {item.label}<ArrowUpRight size={12} aria-hidden="true" />
                           </span>
-                          <span className="mt-1.5 block text-xs leading-5 text-canvas/55">{item.description}</span>
+                          <span className="mt-1.5 block text-[13px] leading-5 text-canvas/60">{item.description}</span>
                         </a>
                       ))}
                     </div>

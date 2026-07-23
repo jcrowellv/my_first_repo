@@ -3,6 +3,7 @@ import type { Falsifier } from "../schema";
 import { canonical, evidenceById, milestonesById } from "../lib/data";
 import { formatCountdown, formatIsoDate } from "../lib/dates";
 import { PageHeader, StatusBadge } from "../components/Primitives";
+import { ChartScroller } from "../components/NavigationPrimitives";
 
 function toDecimalYear(iso: string) {
   const date = new Date(`${iso}T00:00:00Z`);
@@ -30,7 +31,7 @@ function DeadlineStrip() {
 
   return (
     <section aria-label="Upcoming review deadlines" className="mb-10 overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument">
-      <div className="overflow-x-auto px-2 pt-2">
+      <ChartScroller label="locked review deadline timeline" className="px-2 pt-2">
         <svg viewBox={`0 0 ${width} 148`} className="min-w-[720px] w-full" role="img" aria-label="Timeline of locked review deadlines">
           {years.map((year) => (
             <g key={year}>
@@ -78,7 +79,7 @@ function DeadlineStrip() {
             );
           })}
         </svg>
-      </div>
+      </ChartScroller>
       <p className="border-t border-line px-5 py-3.5 text-xs leading-5 text-muted md:px-6">
         Squares are dated tripwires with locked consequences; the round marker is a monitor's review checkpoint.
         Monitors without a supplied deadline are deliberately absent from this axis.
