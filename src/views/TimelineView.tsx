@@ -50,20 +50,54 @@ function BriefingHero() {
           </div>
         </div>
         <aside className="border-t border-line bg-ink p-6 text-panel md:p-8 lg:border-l lg:border-t-0 lg:p-9">
-          <p className="font-mono text-[9px] uppercase tracking-[0.19em] text-canvas/50">{briefing.pace_label}</p>
-          <div className="mt-3 flex items-end justify-between gap-4">
-            <span className="font-serif text-6xl font-semibold tracking-[-0.05em] text-panel">{briefing.pace_value}</span>
-            <span className="mb-2 rounded-full border border-canvas/15 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-canvas/55">
-              preliminary
-            </span>
+          <p className="font-mono text-[9px] uppercase tracking-[0.19em] text-canvas/50">
+            Frozen-scenario pace · two gradings
+          </p>
+          <div className="mt-4">
+            <div className="flex items-end justify-between gap-4">
+              <span className="font-serif text-5xl font-semibold tracking-[-0.05em] text-panel">{briefing.pace_value}</span>
+              <span className="mb-1.5 rounded-full border border-canvas/15 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-canvas/55">
+                preliminary
+              </span>
+            </div>
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-canvas/15" aria-hidden="true">
+              <div
+                className="h-full rounded-full bg-cyan"
+                style={{ width: `${(briefing.pace_fraction ?? 0) * 100}%` }}
+              />
+            </div>
+            <p className="mt-3 text-xs leading-5 text-canvas/65">
+              <span className="font-semibold text-canvas/90">{briefing.pace_label}.</span> {briefing.pace_detail}
+            </p>
+            <a href={briefing.pace_source_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-cyan hover:text-panel">
+              {briefing.pace_source_label} <ArrowUpRight size={12} />
+            </a>
           </div>
-          <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-canvas/15" aria-hidden="true">
-            <div className="h-full w-3/4 rounded-full bg-cyan" />
-          </div>
-          <p className="mt-5 text-sm leading-6 text-canvas/65">{briefing.pace_detail}</p>
-          <a href={briefing.pace_source_url} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1.5 text-xs font-medium text-cyan hover:text-panel">
-            {briefing.pace_source_label} <ArrowUpRight size={12} />
-          </a>
+          {briefing.pace_secondary ? (
+            <div className="mt-6 border-t border-canvas/15 pt-5">
+              <span className="font-serif text-3xl font-semibold tracking-[-0.04em] text-panel">
+                {briefing.pace_secondary.value}
+              </span>
+              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-canvas/15" aria-hidden="true">
+                <div
+                  className="h-full rounded-full bg-violet"
+                  style={{ width: `${briefing.pace_secondary.fraction * 100}%` }}
+                />
+              </div>
+              <p className="mt-3 text-xs leading-5 text-canvas/65">
+                <span className="font-semibold text-canvas/90">{briefing.pace_secondary.label}.</span>{" "}
+                {briefing.pace_secondary.detail}
+              </p>
+              <a
+                href={briefing.pace_secondary.source_url}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-cyan hover:text-panel"
+              >
+                {briefing.pace_secondary.source_label} <ArrowUpRight size={12} />
+              </a>
+            </div>
+          ) : null}
         </aside>
       </div>
       <div className="grid border-t border-line md:grid-cols-3">
@@ -89,6 +123,65 @@ function BriefingHero() {
             </Link>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+function HeadlineStats() {
+  const stats = canonical.meta.headline_stats;
+  if (!stats?.length) return null;
+  return (
+    <section aria-label="Headline statistics" className="mt-5 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
+      {stats.map((stat) => (
+        <div key={stat.label} className="bg-panel p-5">
+          <p className="font-mono text-[9px] uppercase tracking-[0.17em] text-muted">{stat.label}</p>
+          <p className="mt-2 text-xl font-semibold tracking-[-0.02em] text-ink">{stat.value}</p>
+          {stat.detail ? <p className="mt-2 text-xs leading-5 text-muted">{stat.detail}</p> : null}
+        </div>
+      ))}
+    </section>
+  );
+}
+
+function ReadingPaths() {
+  const paths = canonical.meta.reading_paths;
+  if (!paths?.length) return null;
+  return (
+    <section id="paths" aria-labelledby="paths-title" className="scroll-mt-28">
+      <div className="mb-6 max-w-3xl">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Three depths, one record</p>
+        <h2 id="paths-title" className="mt-2 font-serif text-3xl font-semibold tracking-[-0.015em] text-ink">
+          Choose how far in you want to go
+        </h2>
+      </div>
+      <div className="grid gap-4 lg:grid-cols-3">
+        {paths.map((path, index) => (
+          <article key={path.id} className="flex flex-col rounded-2xl border border-line bg-panel p-5 shadow-instrument md:p-6">
+            <div className="flex items-baseline justify-between gap-4">
+              <span className="font-mono text-[10px] text-cyan">{String(index + 1).padStart(2, "0")}</span>
+              <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">{path.duration}</span>
+            </div>
+            <h3 className="mt-3 font-serif text-xl font-semibold text-ink">{path.label}</h3>
+            <p className="mt-2 text-sm leading-6 text-muted">{path.description}</p>
+            <ol className="mt-5 space-y-1 border-t border-line pt-4">
+              {path.steps.map((step, stepIndex) => (
+                <li key={step.path}>
+                  <Link
+                    to={step.path}
+                    className="group flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-sm text-ink transition-colors hover:bg-raised"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <span className="font-mono text-[10px] text-muted">{stepIndex + 1}</span>
+                      {step.label}
+                    </span>
+                    <ArrowRight size={13} className="text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-cyan" />
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </article>
+        ))}
       </div>
     </section>
   );
@@ -206,7 +299,7 @@ function CapabilitySection() {
           <CircleHelp size={14} /> {canonical.meta.progress_label}
         </Link>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" role="tablist" aria-label="Capability levels">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Capability levels">
         {canonical.capability_progress.map((item) => {
           const milestone = milestonesById.get(item.milestone_id);
           const isSelected = selectedId === item.id;
@@ -214,8 +307,7 @@ function CapabilitySection() {
             <button
               key={item.id}
               type="button"
-              role="tab"
-              aria-selected={isSelected}
+              aria-expanded={isSelected}
               onClick={() => setSelectedId(isSelected ? null : item.id)}
               className={`rounded-2xl border p-5 text-left shadow-instrument transition-colors ${
                 isSelected ? "border-cyan/60 bg-panel ring-1 ring-cyan/30" : "border-line bg-panel hover:border-cyan/35"
@@ -698,6 +790,7 @@ export function TimelineView() {
   return (
     <div>
       <BriefingHero />
+      <HeadlineStats />
       <div className="mt-20">
         <CapabilitySection />
       </div>
@@ -718,6 +811,9 @@ export function TimelineView() {
         </div>
       </section>
       <SignalsSection />
+      <div className="mt-20">
+        <ReadingPaths />
+      </div>
     </div>
   );
 }

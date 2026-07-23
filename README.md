@@ -33,7 +33,7 @@ scripts/validate.test.ts     Positive and deliberately broken-data tests
 src/schema.ts                Zod schemas and inferred TypeScript types
 src/lib/                     Parsed data and date helpers
 src/components/              Content-agnostic layout primitives
-src/views/                   Seven routed views
+src/views/                   Eight routed views
 public/og.png                Generated 1200x630 social preview
 MISSING_CONTENT.md           Explicit inventory of unresolved source limitations
 vercel.json                  Vercel build configuration
@@ -71,7 +71,8 @@ The validator checks both schema shape and data integrity, including:
 - valid supersession and `moved_by` references;
 - valid evidence links in tests, drivers, progress criteria, and resolution records;
 - valid evidence links in outside views, forecast drivers, safety-readiness states, and open-weight indicators;
-- capability-criterion weights that sum to 100% and scores that match their weighted arithmetic; and
+- capability-criterion weights that sum to 100% and scores that match their weighted arithmetic;
+- valid related-term references inside the glossary; and
 - valid affected-entity links in the changelog.
 
 Validation errors include the exact JSON path. To demonstrate failure safely, copy the file outside the repo, change one forecast's p10 so it falls after p50, then validate that copy:
@@ -103,11 +104,13 @@ To revise a score, update or append the evidence record, update the affected cri
 
 ## Information architecture
 
-The site exposes one canonical record at three reading depths:
+The site exposes one canonical record at three reading depths, and renders the three depths as explicit reading paths on the overview:
 
-- **Brief:** the overview gives the current capability, control-readiness, open-weight, and scenario-pace read without requiring chart interpretation.
-- **Explore:** the forecast workbench compares the full ladder, one threshold at a time, the mechanism assumptions behind each track, and outside views whose definitions differ.
-- **Audit:** the evidence ledger, locked tests, methodology, driver map, and changelog retain source limitations, provenance, superseded records, and resolution protocols.
+- **Brief:** the overview gives the current capability, control-readiness, open-weight, and scenario-pace read without requiring chart interpretation. Scenario pace shows two gradings side by side: the authors' preliminary quantitative estimate and an independent tracker's percent-on-track figure.
+- **Explore:** the forecast workbench compares the full ladder, the takeoff-gap disagreement between milestone medians, one threshold at a time, the mechanism assumptions behind each track, and outside views whose definitions differ.
+- **Audit:** the evidence ledger, locked tests, methodology, glossary, driver map, and changelog retain source limitations, provenance, superseded records, and resolution protocols.
+
+A glossary view defines every recurring term (milestone codes, percentile bands, provenance letters, diagnosticity, tripwires versus monitors, rubric completion) with cross-references, so definitions stay attached to dates everywhere else on the site.
 
 Outside views never become an extra house track. Their exact resolution definitions and conditioning remain attached to their dates. Capability progress, safety readiness, and open-weight diffusion are separate lenses and are never combined into a single score.
 

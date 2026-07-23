@@ -32,6 +32,7 @@ export const ViewMetaSchema = z.object({
     "bottlenecks",
     "changelog",
     "methodology",
+    "glossary",
   ]),
   label: z.string().min(1),
   eyebrow: z.string().min(1),
@@ -86,6 +87,15 @@ export const BriefingLensSchema = z.object({
   path: z.string().min(1),
 });
 
+export const PaceSourceSchema = z.object({
+  label: z.string().min(1),
+  value: z.string().min(1),
+  fraction: z.number().min(0).max(1),
+  detail: z.string().min(1),
+  source_label: z.string().min(1),
+  source_url: z.string().url(),
+});
+
 export const BriefingSchema = z.object({
   as_of: IsoDateSchema,
   eyebrow: z.string().min(1),
@@ -93,10 +103,25 @@ export const BriefingSchema = z.object({
   description: z.string().min(1),
   pace_label: z.string().min(1),
   pace_value: z.string().min(1),
+  pace_fraction: z.number().min(0).max(1).optional(),
   pace_detail: z.string().min(1),
   pace_source_label: z.string().min(1),
   pace_source_url: z.string().url(),
+  pace_secondary: PaceSourceSchema.optional(),
   lenses: z.array(BriefingLensSchema).length(3),
+});
+
+export const ReadingPathStepSchema = z.object({
+  label: z.string().min(1),
+  path: z.string().min(1),
+});
+
+export const ReadingPathSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  duration: z.string().min(1),
+  description: z.string().min(1),
+  steps: z.array(ReadingPathStepSchema).min(1),
 });
 
 export const MetaSchema = z.object({
@@ -119,8 +144,9 @@ export const MetaSchema = z.object({
   headline_stats: z.array(HeadlineStatSchema).max(4).optional(),
   briefing: BriefingSchema,
   action_center: ActionCenterSchema,
+  reading_paths: z.array(ReadingPathSchema).min(1).optional(),
   tracks: z.array(TrackSchema).min(1),
-  views: z.array(ViewMetaSchema).length(7),
+  views: z.array(ViewMetaSchema).length(8),
   navigation: z.array(NavigationItemSchema).length(5),
 });
 
@@ -352,6 +378,20 @@ export const OpenWeightIndicatorSchema = z.object({
   evidence_refs: z.array(z.string().min(1)).min(1),
 });
 
+export const GlossaryEntrySchema = z.object({
+  id: z.string().min(1),
+  term: z.string().min(1),
+  category: z.enum([
+    "milestones",
+    "distributions",
+    "evidence",
+    "tests",
+    "method",
+  ]),
+  definition: z.string().min(1),
+  related: z.array(z.string().min(1)).optional(),
+});
+
 export const ChangelogSchema = SampleFieldsSchema.extend({
   id: z.string().min(1),
   date: IsoDateSchema,
@@ -373,6 +413,7 @@ export const CanonicalSchema = z
     forecast_drivers: z.array(ForecastDriverSchema).min(1),
     safety_readiness: z.array(SafetyReadinessSchema).min(1),
     open_weight_indicators: z.array(OpenWeightIndicatorSchema).min(1),
+    glossary: z.array(GlossaryEntrySchema).min(1),
     changelog: z.array(ChangelogSchema).min(1),
   })
   .superRefine((data, ctx) => {
@@ -407,6 +448,19 @@ export const CanonicalSchema = z
     const driverIds = unique(data.forecast_drivers, ["forecast_drivers"], "forecast driver");
     const safetyIds = unique(data.safety_readiness, ["safety_readiness"], "safety readiness");
     const openWeightIds = unique(data.open_weight_indicators, ["open_weight_indicators"], "open-weight indicator");
+    const glossaryIds = unique(data.glossary, ["glossary"], "glossary entry");
+
+    data.glossary.forEach((entry, index) => {
+      entry.related?.forEach((ref, refIndex) => {
+        if (!glossaryIds.has(ref)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown related glossary id: ${ref}`,
+            path: ["glossary", index, "related", refIndex],
+          });
+        }
+      });
+    });
 
     const allEntityIds = new Set([
       ...trackIds,
@@ -631,4 +685,7 @@ export type OutsideView = z.infer<typeof OutsideViewSchema>;
 export type ForecastDriver = z.infer<typeof ForecastDriverSchema>;
 export type SafetyReadiness = z.infer<typeof SafetyReadinessSchema>;
 export type OpenWeightIndicator = z.infer<typeof OpenWeightIndicatorSchema>;
+export type GlossaryEntry = z.infer<typeof GlossaryEntrySchema>;
+export type ReadingPath = z.infer<typeof ReadingPathSchema>;
+export type PaceSource = z.infer<typeof PaceSourceSchema>;
 export type ChangelogEntry = z.infer<typeof ChangelogSchema>;

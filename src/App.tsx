@@ -21,6 +21,9 @@ const ChangelogView = lazy(() =>
 const MethodologyView = lazy(() =>
   import("./views/MethodologyView").then((module) => ({ default: module.MethodologyView })),
 );
+const GlossaryView = lazy(() =>
+  import("./views/GlossaryView").then((module) => ({ default: module.GlossaryView })),
+);
 
 export default function App() {
   return (
@@ -34,6 +37,7 @@ export default function App() {
           <Route path="/bottlenecks" element={<BottleneckTracker />} />
           <Route path="/changelog" element={<ChangelogView />} />
           <Route path="/methodology" element={<MethodologyView />} />
+          <Route path="/glossary" element={<GlossaryView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

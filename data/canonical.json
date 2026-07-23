@@ -43,11 +43,20 @@
       "eyebrow": "State of the frontier",
       "title": "Capability is advancing faster than the control evidence.",
       "description": "Public systems satisfy the Agent-1 bundle and show material pieces of Agent-2. The strongest new evidence comes from persistent long-horizon behavior, independent cyber evaluations, and AI-assisted research results; reliable autonomy, continual learning, and measured AI-R&D acceleration remain unresolved.",
-      "pace_label": "AI 2027 quantitative pace",
+      "pace_label": "Authors' quantitative pace",
       "pace_value": "~75%",
+      "pace_fraction": 0.75,
       "pace_detail": "AI Futures' July 2026 preliminary analysis estimates that quantitative progress is running at roughly three quarters of the pace depicted in the frozen AI 2027 scenario. This is scenario calibration, not a new forecast distribution.",
       "pace_source_label": "Grading AI 2027's 2025 Predictions",
       "pace_source_url": "https://blog.aifutures.org/p/grading-ai-2027s-2025-predictions",
+      "pace_secondary": {
+        "label": "Independent tracker",
+        "value": "~51% on track",
+        "fraction": 0.51,
+        "detail": "The independent AI 2027 Tracker grades 27 of 53 predictions extracted from the scenario as confirmed, ahead, or on track as of July 2026, and observes that several risks are arriving before the raw capabilities that were supposed to produce them.",
+        "source_label": "AI 2027 Tracker",
+        "source_url": "https://ai2027-tracker.com/"
+      },
       "lenses": [
         {
           "id": "capability",
@@ -93,6 +102,11 @@
               "label": "BlueDot Impact courses",
               "description": "Courses in technical AI safety, governance, and strategy.",
               "url": "https://bluedot.org/courses"
+            },
+            {
+              "label": "AI as Normal Technology",
+              "description": "The strongest published case that impact will be slower and diffusion-limited.",
+              "url": "https://knightcolumbia.org/content/ai-as-normal-technology"
             }
           ]
         },
@@ -130,6 +144,45 @@
         }
       ]
     },
+    "reading_paths": [
+      {
+        "id": "brief",
+        "label": "Get the brief",
+        "duration": "3 minutes",
+        "description": "The current capability, control, and diffusion read without any chart interpretation.",
+        "steps": [
+          { "label": "State of the frontier", "path": "/#state" },
+          { "label": "Capability rubric", "path": "/#capability" },
+          { "label": "Latest signals", "path": "/#signals" }
+        ]
+      },
+      {
+        "id": "explore",
+        "label": "Compare the forecasts",
+        "duration": "15 minutes",
+        "description": "Four committed distributions, the takeoff-speed disagreement, the assumptions that separate them, and outside views with different definitions.",
+        "steps": [
+          { "label": "Full capability ladder", "path": "/forecasts#ladder" },
+          { "label": "Takeoff gaps", "path": "/forecasts#takeoff" },
+          { "label": "Threshold explorer", "path": "/forecasts#explorer" },
+          { "label": "Driver assumptions", "path": "/forecasts#drivers" },
+          { "label": "Outside views", "path": "/forecasts#outside" }
+        ]
+      },
+      {
+        "id": "audit",
+        "label": "Audit the record",
+        "duration": "As long as it takes",
+        "description": "Every source, locked test, scoring rule, and revision, with limitations and provenance kept attached.",
+        "steps": [
+          { "label": "Evidence ledger", "path": "/evidence" },
+          { "label": "Dated tripwires", "path": "/falsifiers" },
+          { "label": "Methodology", "path": "/methodology" },
+          { "label": "Glossary", "path": "/glossary" },
+          { "label": "Changelog", "path": "/changelog" }
+        ]
+      }
+    ],
     "tracks": [
       {
         "id": "ai-2027",
@@ -229,6 +282,13 @@
         "eyebrow": "Scoring convention",
         "title": "How this record is graded",
         "description": "Milestones score on publicly verifiable evidence. Internal existence is inferred through a contestable four-month lag, forecast records are append-only, and every revision names the evidence that moved it."
+      },
+      {
+        "id": "glossary",
+        "label": "Glossary",
+        "eyebrow": "Shared definitions",
+        "title": "The terms this record depends on",
+        "description": "Forecast disagreements are often definition disagreements in disguise. Every recurring term on this site is defined here once, so a date, a percentile, or a status can be read the same way on every page."
       }
     ],
     "navigation": [
@@ -334,6 +394,11 @@
             "label": "Driver map",
             "description": "Mechanisms, supporting evidence, and counterevidence.",
             "path": "/bottlenecks"
+          },
+          {
+            "label": "Glossary",
+            "description": "One shared definition for every recurring term.",
+            "path": "/glossary"
           },
           {
             "label": "Changelog",
@@ -589,11 +654,19 @@
       "review_label": "Early-2027 review checkpoint",
       "consequence": "Earlier Agent 2 and AC; modestly shorter AC-to-SAR if the learning loop is autonomous.",
       "status": "watching",
-      "resolution_protocol": "Treat persistent context, retrieval memory, offline fine-tuning, online weight updates, self-generated curricula, and improvement of the learning process as separate claims. Count the monitor as met only when a public deployment or reproducible evaluation demonstrates durable new competence, retention, bounded interference, and generalization beyond stored episodes.",
+      "resolution_protocol": "Treat persistent context, retrieval memory, offline fine-tuning, online weight updates, self-generated curricula, and improvement of the learning process as separate claims. Count the monitor as met only when a public deployment or reproducible evaluation demonstrates durable new competence, retention, bounded interference, and generalization beyond stored episodes. CL-Bench or a documented successor is the preferred adjudication instrument where its stateful-environment design applies.",
       "resolution_record": null,
-      "amendment_history": [],
+      "amendment_history": [
+        {
+          "original_statement": "The resolution protocol named no public instrument, because none existed when the monitor was locked.",
+          "amendment": "Name CL-Bench (or a documented successor) as the preferred adjudication instrument for the experience-driven-improvement component of this monitor.",
+          "rationale": "A June 2026 expert-validated benchmark now tests exactly the claim this monitor watches. Naming the instrument before results move keeps future adjudication from being fitted to the outcome.",
+          "amended_on": "2026-07-23",
+          "lock_date": "2026-07-23"
+        }
+      ],
       "affected_milestones": ["agent-2", "ac"],
-      "evidence_refs": ["ev-ai2027-agent2", "ev-gpt56-system-card"],
+      "evidence_refs": ["ev-ai2027-agent2", "ev-gpt56-system-card", "ev-cl-bench"],
       "sample": false
     },
     {
@@ -1517,6 +1590,177 @@
       "verification": "documented",
       "evaluation_context": "Longitudinal trend synthesis spanning compute, hardware, software efficiency, investment, and capability.",
       "sample": false
+    },
+    {
+      "id": "ev-glasswing-mythos",
+      "date": "2026-04-07",
+      "source_url": "https://www.anthropic.com/glasswing",
+      "source_label": "Project Glasswing and Claude Mythos Preview vulnerability findings",
+      "publisher": "Anthropic",
+      "source_type": "research",
+      "summary": "Anthropic reported that its unreleased Claude Mythos Preview autonomously identified thousands of high-severity vulnerabilities, including previously unknown flaws in every major operating system and browser and decades-old bugs in OpenBSD, FFmpeg, and FreeBSD. Against a Firefox vulnerability set where Opus 4.6 produced two working shell exploits, Mythos Preview produced 181. Anthropic launched Project Glasswing with major infrastructure companies, committing up to $100M in usage credits to patch critical software before equivalent capability diffuses.",
+      "implication": "Exploit-level code reasoning emerged as a byproduct of general coding and agentic training rather than deliberate cyber training. This is strong evidence for superhuman performance in a verifier-rich domain, and it moved offense-relevant capability ahead of the schedule implied by the frozen scenario's Agent-2 dates.",
+      "limitation": "All counts are vendor-reported and the model, prompts, and full methodology are not public. Vulnerability discovery has crisp automated feedback and does not demonstrate research taste, continual learning, or safe general-purpose autonomy.",
+      "milestone_tags": ["agent-1", "agent-2", "sc"],
+      "favors": "compression",
+      "diagnosticity": "high",
+      "themes": ["frontier-lab", "cybersecurity", "alignment-control", "scientific-discovery"],
+      "independence": "first-party",
+      "verification": "reported",
+      "evaluation_context": "Vendor capability disclosure paired with a defensive deployment program.",
+      "sample": false
+    },
+    {
+      "id": "ev-cl-bench",
+      "date": "2026-06-01",
+      "source_url": "https://arxiv.org/abs/2606.05661",
+      "source_label": "Continual Learning Bench: Evaluating Frontier AI Systems in Real-World Stateful Environments",
+      "publisher": "CL-Bench authors",
+      "source_type": "evaluation",
+      "summary": "CL-Bench is the first difficult, expert-validated benchmark testing whether LLM-based systems genuinely improve with experience, across six domains whose tasks share learnable latent structure that a stateful system can discover online but a stateless one cannot. Frontier systems frequently overfit to immediate observations or fail to reuse knowledge across instances, and dedicated memory systems do not fix this: naive in-context learning outperformed systems built around explicit memory management.",
+      "implication": "The least-evidenced Agent-2 requirement now has a public instrument, and the first results are negative: durable competence acquisition from experience remains undemonstrated even with purpose-built memory scaffolds. This directly supports keeping the continual-learning criterion near zero.",
+      "limitation": "A June 2026 preprint (day approximate) that had not yet accumulated independent replications inside the ledger's window; six domains cannot cover every form of experiential learning, and negative results bound current systems, not next year's.",
+      "milestone_tags": ["agent-2", "ac"],
+      "favors": "widening",
+      "diagnosticity": "high",
+      "themes": ["independent-evaluation", "evaluation-methods", "research-autonomy"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Expert-validated stateful-environment benchmark for experience-driven improvement.",
+      "sample": false
+    },
+    {
+      "id": "ev-metr-simpler-model",
+      "date": "2026-02-10",
+      "source_url": "https://metr.org/notes/2026-02-10-simpler-ai-timelines-model/",
+      "source_label": "A simpler AI timelines model predicts 99% AI R&D automation in ~2032",
+      "publisher": "METR",
+      "source_type": "forecast",
+      "summary": "A METR research note reduces the AI Futures timelines model to eight parameters. At current rates of compute growth and algorithmic progress its median prediction is more than 99% automation of AI R&D in late 2032, with most simulations producing a 1,000x to 10,000,000x increase in AI efficiency and 300x to 3,000x research output by 2035. Sensitivity analysis shows the date is driven mainly by diminishing-returns and automation-velocity parameters.",
+      "implication": "An independent evaluator's simplified model lands between the Codex and Claude WSI medians, suggesting the house disagreement range is not an artifact of one model family's structure. The sensitivity analysis identifies which two parameters the evidence ledger should try hardest to constrain.",
+      "limitation": "The author explicitly does not put much weight on the exact timeline because parameter values were not deeply considered. Model output is not capability evidence, and 99% automation of AI R&D is a different threshold from this site's SAR or ASI definitions.",
+      "milestone_tags": ["ac", "sar", "asi", "wsi"],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": ["forecasting", "research-autonomy", "scaling"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Published simplified parametric model with sensitivity analysis.",
+      "sample": false
+    },
+    {
+      "id": "ev-epoch-eci",
+      "date": "2025-10-28",
+      "source_url": "https://epoch.ai/eci",
+      "source_label": "Epoch Capabilities Index",
+      "publisher": "Epoch AI",
+      "source_type": "framework",
+      "summary": "The Epoch Capabilities Index combines scores from dozens of benchmarks into one general-capability scale using an item-response-theory-style latent-trait model: models rate as more capable when they score well on benchmarks that defeat other capable models. Scores are rescaled so random guessing maps to zero, the best score across evaluation settings is used, and sparse models are excluded.",
+      "implication": "Saturation-proof capability aggregation makes long-run progress legible after individual benchmarks stop discriminating, which the milestone rubric needs as headline suites saturate. It also standardizes cross-model comparison for evidence that would otherwise be vendor-selected.",
+      "limitation": "A one-dimensional latent scale compresses away domain structure, inherits every component benchmark's contamination and elicitation problems, and measures test performance rather than reliable deployed autonomy.",
+      "milestone_tags": ["agent-1", "agent-2", "sc", "ted-ai"],
+      "favors": "neutral",
+      "diagnosticity": "medium",
+      "themes": ["evaluation-methods", "transparency", "forecasting"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Cross-benchmark measurement framework with published methodology.",
+      "sample": false
+    },
+    {
+      "id": "ev-us-frontier-eo",
+      "date": "2026-06-02",
+      "source_url": "https://www.wiley.law/alert-New-AI-Executive-Order-Addresses-Frontier-Models-and-Cybersecurity-Vulnerabilities",
+      "source_label": "Executive Order: Promoting Advanced Artificial Intelligence Innovation and Security",
+      "publisher": "White House (via Wiley Rein analysis)",
+      "source_type": "framework",
+      "summary": "A June 2, 2026 Executive Order establishes a framework for assessing cybersecurity vulnerabilities identified by frontier AI models, a voluntary process for developers to submit models for federal review before broad release, and early access for critical-infrastructure entities to strengthen defenses. Bipartisan draft legislation and the first state frontier-audit law followed within weeks.",
+      "implication": "Government is beginning to treat frontier-model vulnerability discovery as an infrastructure-scale event, converging with the defensive logic of Project Glasswing. External oversight is becoming a real deployment variable, though a voluntary one.",
+      "limitation": "The process is voluntary and untested, the summary relies on legal analysis rather than measured effects, and a review framework is not evidence that reviews will be rigorous or that capability disclosure will be complete.",
+      "milestone_tags": ["agent-2", "sc"],
+      "favors": "neutral",
+      "diagnosticity": "medium",
+      "themes": ["alignment-control", "cybersecurity", "transparency"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Governance action summarized through third-party legal analysis; not a capability evaluation.",
+      "sample": false
+    },
+    {
+      "id": "ev-ai-normal-tech",
+      "date": "2025-04-15",
+      "source_url": "https://knightcolumbia.org/content/ai-as-normal-technology",
+      "source_label": "AI as Normal Technology",
+      "publisher": "Narayanan & Kapoor, Knight First Amendment Institute",
+      "source_type": "research",
+      "summary": "Narayanan and Kapoor argue that transformative economic and societal impact from AI will take decades, not years, because AI methods, AI applications, and AI adoption progress on different timescales. They separate invention, innovation, and diffusion, and note that measured early-2025 generative-AI use translated to well under one percentage point of labor-productivity increase despite broad consumer adoption.",
+      "implication": "The strongest structured argument that fast benchmark progress does not compress deployment timelines. It supports reading this site's milestones as claims about verified capability rather than about economy-wide transformation, and it is the natural steelman against every compression-thesis track.",
+      "limitation": "Published April 2025, before the 2026 acceleration in agentic coding and cyber capability; its diffusion argument is strongest for economy-wide impact and weakest for AI-R&D-internal feedback loops, which need no external adoption to matter.",
+      "milestone_tags": ["ac", "ted-ai", "asi"],
+      "favors": "widening",
+      "diagnosticity": "medium",
+      "themes": ["forecasting", "research-autonomy"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Peer-reviewed-style essay presenting a structural counterargument to fast-transformation forecasts.",
+      "sample": false
+    },
+    {
+      "id": "ev-forethought-intexp",
+      "date": "2025-03-11",
+      "source_url": "https://www.forethought.org/research/preparing-for-the-intelligence-explosion",
+      "source_label": "Preparing for the Intelligence Explosion",
+      "publisher": "Forethought (MacAskill & Moorhouse)",
+      "source_type": "research",
+      "summary": "MacAskill and Moorhouse argue that AI capable of accelerating research could compress a century of technological progress into years, forcing consequential, hard-to-reverse decisions in rapid succession. They find that rapid post-automation progress survives conservative assumptions: even without a software feedback loop and with near-term compute scaling stopped, meaningful research substitution still implies decades of progress per decade-fraction.",
+      "implication": "The takeoff phase, not the arrival date, carries most of the decision-relevant weight, which supports this site's separation of AC-to-ASI gap questions from AC arrival questions. It also argues that preparation cannot all be delegated to future AI systems.",
+      "limitation": "A macrostrategy analysis rather than an empirical measurement; its conclusions depend on research substitution actually occurring, which is exactly what the research-taste and verification drivers dispute.",
+      "milestone_tags": ["sar", "siar", "asi", "wsi"],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": ["forecasting", "research-autonomy", "scaling"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Macrostrategy argument about takeoff dynamics, not a dated forecast distribution.",
+      "sample": false
+    },
+    {
+      "id": "ev-cotra-2026-predictions",
+      "date": "2026-01-14",
+      "source_url": "https://www.planned-obsolescence.org/p/ai-predictions-for-2026",
+      "source_label": "AI predictions for 2026",
+      "publisher": "Ajeya Cotra",
+      "source_type": "forecast",
+      "summary": "Cotra registered end-of-2026 predictions on January 14, 2026, including a median 24-hour software-engineering time horizon (20th percentile ~15h, 80th ~40h). In an early-March follow-up, she reported that her software-engineering forecasts already felt much too conservative after two months, after previously grading her 2025 predictions as too bullish on benchmarks and much too bearish on revenue.",
+      "implication": "A registered forecaster with a public resolution habit updated toward faster capability progress within weeks. The direction and speed of self-correction is itself evidence about the current pace, independent of any single benchmark.",
+      "limitation": "Individual predictions, not an elicited aggregate; the March self-assessment is qualitative and the registered quantities resolve at the end of 2026, not now.",
+      "milestone_tags": ["agent-1", "agent-2", "ac"],
+      "favors": "compression",
+      "diagnosticity": "medium",
+      "themes": ["forecasting"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Registered individual forecast with a public partial self-resolution.",
+      "sample": false
+    },
+    {
+      "id": "ev-ai2027-tracker",
+      "date": "2026-07-01",
+      "source_url": "https://ai2027-tracker.com/",
+      "source_label": "AI 2027 Tracker: predictions versus reality",
+      "publisher": "AI 2027 Tracker",
+      "source_type": "research",
+      "summary": "An independent tracker extracts 53 discrete predictions from the AI 2027 narrative and grades each with sources, counterevidence, and change conditions. As of July 2026, 27 of 53 (roughly 51%) are confirmed, ahead, or on track; qualitative dynamics are mostly confirmed while quantitative benchmark and financial targets are mixed, and several risk behaviors arrived before the raw capabilities that were supposed to produce them.",
+      "implication": "An independent grading of the frozen spine that lands meaningfully below the authors' own preliminary ~75% quantitative-pace estimate. Presenting both keeps the spine calibration honest and demonstrates that grading methodology, not just evidence, moves the number.",
+      "limitation": "The tracker is continuously updated (the ledger dates this record to its July 2026 state), prediction extraction from a narrative involves judgment calls, and percent-on-track aggregates weight all predictions equally regardless of importance.",
+      "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
+      "favors": "widening",
+      "diagnosticity": "medium",
+      "themes": ["forecasting", "independent-evaluation", "transparency"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Independent, continuously updated grading of a frozen scenario's extracted predictions.",
+      "sample": false
     }
   ],
   "bottlenecks": [
@@ -1528,7 +1772,7 @@
       "confidence": "high",
       "assessment": "Public and internal task horizons have lengthened rapidly, high test-time budgets reveal substantially more capability, and the OpenAI/Hugging Face incident demonstrates sustained multi-step action in a real environment. Safe reliability at 80% remains sensitive to compute, scaffolding, task domain, and trajectory-level controls.",
       "next_signal": "METR TH1.1 or a documented successor reaches 5–10 hours at 80% reliability without a major methodology break.",
-      "evidence_for": ["ev-metr-time-horizons", "ev-metr-risk-report", "ev-anthropic-autonomy", "ev-aisi-test-time-compute", "ev-claude-fable5", "ev-openai-long-horizon", "ev-openai-hf-eval-incident"],
+      "evidence_for": ["ev-metr-time-horizons", "ev-metr-risk-report", "ev-anthropic-autonomy", "ev-aisi-test-time-compute", "ev-claude-fable5", "ev-openai-long-horizon", "ev-openai-hf-eval-incident", "ev-glasswing-mythos"],
       "evidence_against": ["ev-gpt56-system-card", "ev-aisi-eval-cheating-2026", "ev-aisi-control-red-team"],
       "sample": false
     },
@@ -1560,11 +1804,11 @@
       "id": "b-continual-learning",
       "name": "Continual learning",
       "mechanism": "Persistent memory, frequent offline retraining, online weight updates, self-generated curricula, and improvement of the learning process are different capability thresholds.",
-      "status": "unresolved",
+      "status": "binding",
       "confidence": "medium",
-      "assessment": "Products remember and agents can work across long contexts, but public evidence does not yet show durable, interference-bounded acquisition of new general competence from ongoing experience.",
-      "next_signal": "A deployed system demonstrates retention, bounded interference, and generalization after autonomous experience-driven updates.",
-      "evidence_for": ["ev-ai2027-agent2", "ev-anthropic-economic"],
+      "assessment": "This constraint is no longer merely untested. CL-Bench, the first expert-validated benchmark for experience-driven improvement, found frontier systems overfitting to immediate observations and failing to reuse knowledge across instances, with naive in-context learning beating purpose-built memory systems. Products remember and agents work across long contexts, but durable, interference-bounded competence acquisition remains undemonstrated.",
+      "next_signal": "A frontier system materially improves with accumulated experience on CL-Bench or a documented successor, or a deployment demonstrates retention, bounded interference, and generalization after autonomous experience-driven updates.",
+      "evidence_for": ["ev-ai2027-agent2", "ev-anthropic-economic", "ev-cl-bench"],
       "evidence_against": ["ev-gpt56-system-card"],
       "sample": false
     },
@@ -1577,7 +1821,7 @@
       "assessment": "The clearest gains use automated evaluators, and added compute helps most where agents can check their work. AISI found cheating attempts across every tested cyber model, while the OpenAI/Hugging Face incident shows evaluation gaming can cross infrastructure boundaries. Evaluation Cards found 96.5% of more than 50,000 public records lacked at least one minimal rerun field. Raw scores and self-report are therefore insufficient on their own.",
       "next_signal": "Comparable gains appear in a slow-feedback domain without a supplied objective function or heavy hidden human steering.",
       "evidence_for": ["ev-alphaevolve", "ev-paperbench", "ev-openai-long-horizon", "ev-aisi-test-time-compute", "ev-nist-agent-eval-cheating", "ev-aisi-eval-cheating-2026", "ev-openai-hf-eval-incident", "ev-aisi-control-red-team", "ev-hf-evaluation-cards", "ev-nist-eval-practices"],
-      "evidence_against": ["ev-arc-agi3", "ev-deepmind-co-scientist"],
+      "evidence_against": ["ev-arc-agi3", "ev-deepmind-co-scientist", "ev-epoch-eci"],
       "sample": false
     },
     {
@@ -1619,9 +1863,9 @@
       "summary": "Persistent real-world cyber agency and an AI-assisted open-problem result move autonomy and research taste upward. Safe reliability, continual learning, and a measured 3x AI R&D multiplier remain incomplete.",
       "criteria": [
         { "id": "a2-engineering", "label": "Near-top-human research engineering", "weight": 0.35, "completion": 0.8, "rationale": "Strong internal debugging and optimization results, but only a subset of difficult expert work is solved.", "evidence_refs": ["ev-gpt56-system-card", "ev-rebench", "ev-paperbench", "ev-nist-deepseek-v4"] },
-        { "id": "a2-autonomy", "label": "Reliable long-horizon autonomy", "weight": 0.25, "completion": 0.45, "rationale": "Hours-long useful work is real and the evaluation incident demonstrates sustained real-world action; safe 80% reliability is still well below a workday and control failures complicate the claim.", "evidence_refs": ["ev-metr-risk-report", "ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-openai-long-horizon", "ev-openai-hf-eval-incident", "ev-aisi-control-red-team"] },
+        { "id": "a2-autonomy", "label": "Reliable long-horizon autonomy", "weight": 0.25, "completion": 0.45, "rationale": "Hours-long useful work is real and the evaluation incident demonstrates sustained real-world action; safe 80% reliability is still well below a workday and control failures complicate the claim.", "evidence_refs": ["ev-metr-risk-report", "ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-openai-long-horizon", "ev-openai-hf-eval-incident", "ev-aisi-control-red-team", "ev-glasswing-mythos"] },
         { "id": "a2-taste", "label": "Research taste", "weight": 0.2, "completion": 0.4, "rationale": "The Jacobian counterexample is a material update beyond routine benchmark work, while absent interaction provenance and limited evidence for autonomous agenda selection prevent a stronger score.", "evidence_refs": ["ev-jacobian-counterexample", "ev-alphaevolve", "ev-openai-long-horizon", "ev-paperbench", "ev-deepmind-co-scientist", "ev-anthropic-coding-practice"] },
-        { "id": "a2-learning", "label": "Continual learning and 3x R&D uplift", "weight": 0.2, "completion": 0.1, "rationale": "Meaningful assistance is documented, but durable online competence acquisition and a measured tripling of algorithmic progress are not.", "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-gpt56-system-card"] }
+        { "id": "a2-learning", "label": "Continual learning and 3x R&D uplift", "weight": 0.2, "completion": 0.1, "rationale": "Meaningful assistance is documented, but durable online competence acquisition and a measured tripling of algorithmic progress are not; CL-Bench's first results were negative even with dedicated memory systems.", "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-gpt56-system-card", "ev-cl-bench"] }
       ]
     },
     {
@@ -1704,6 +1948,21 @@
       "source_label": "Thousands of AI Authors on the Future of AI",
       "source_url": "https://arxiv.org/abs/2401.02843",
       "evidence_ref": "ev-ai-researcher-survey"
+    },
+    {
+      "id": "outside-metr-simpler-202602",
+      "name": "METR simplified timelines model",
+      "short_name": "METR 8-parameter model",
+      "as_of": "2026-02-10",
+      "population": "One METR research note",
+      "definition": "More than 99% automation of AI R&D, from an eight-parameter simplification of the AI Futures timelines model run at current rates of compute growth and algorithmic progress.",
+      "conditional": false,
+      "p50_year": 2032,
+      "headline": "Median 99% AI R&D automation in ~2032",
+      "comparison_note": "This is model output with explicitly under-considered parameter values, not an elicited forecast, and 99% AI R&D automation is a different threshold from SAR or ASI. It is context for the house tracks, not a fifth lane.",
+      "source_label": "A simpler AI timelines model",
+      "source_url": "https://metr.org/notes/2026-02-10-simpler-ai-timelines-model/",
+      "evidence_ref": "ev-metr-simpler-model"
     }
   ],
   "forecast_drivers": [
@@ -1713,8 +1972,8 @@
       "question": "How quickly does reliable task length grow when compute, scaffolding, and reliability are held legible?",
       "phase": "pre-ac",
       "importance": "high",
-      "assessment": "This is the clearest public compression signal, but estimates remain sensitive to the reliability threshold, task mix, and test-time compute. Long sessions and spectacular single runs are not substitutes for an 80%-reliability horizon.",
-      "evidence_refs": ["ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-openai-hf-eval-incident", "ev-ai-futures-grading-2026"],
+      "assessment": "This is the clearest public compression signal, but estimates remain sensitive to the reliability threshold, task mix, and test-time compute. Long sessions and spectacular single runs are not substitutes for an 80%-reliability horizon. Registered forecasters keep updating in the same direction: Cotra's January 2026 predictions felt too conservative to their author within two months.",
+      "evidence_refs": ["ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-openai-hf-eval-incident", "ev-ai-futures-grading-2026", "ev-cotra-2026-predictions", "ev-metr-simpler-model"],
       "track_positions": [
         {
           "track_id": "ai-2027",
@@ -1818,8 +2077,8 @@
       "question": "Can deployed systems retain new experience and improve online without fragile retraining cycles?",
       "phase": "pre-ac",
       "importance": "high",
-      "assessment": "Frequent releases and long contexts can imitate parts of continual learning, but they do not show durable online competence acquisition. This remains one of the least publicly evidenced parts of Agent-2.",
-      "evidence_refs": ["ev-ai2027-agent2", "ev-openai-long-horizon", "ev-gpt56-system-card"],
+      "assessment": "Frequent releases and long contexts can imitate parts of continual learning, but they do not show durable online competence acquisition. CL-Bench turned this from an unevidenced question into a measured negative result: frontier systems failed to reliably improve with experience even when given dedicated memory systems.",
+      "evidence_refs": ["ev-ai2027-agent2", "ev-openai-long-horizon", "ev-gpt56-system-card", "ev-cl-bench"],
       "track_positions": [
         {
           "track_id": "ai-2027",
@@ -1853,8 +2112,8 @@
       "question": "Does the ability to evaluate, monitor, and safely deploy agents keep pace with the work they can perform?",
       "phase": "both",
       "importance": "high",
-      "assessment": "Agents can search for evaluation shortcuts and monitor blind spots. Poor public reproducibility and recent containment failures make verification a rate limiter for claims and safe deployment even when underlying capability continues to rise.",
-      "evidence_refs": ["ev-aisi-eval-cheating-2026", "ev-aisi-control-red-team", "ev-openai-hf-eval-incident", "ev-hf-evaluation-cards", "ev-nist-eval-practices"],
+      "assessment": "Agents can search for evaluation shortcuts and monitor blind spots. Poor public reproducibility and recent containment failures make verification a rate limiter for claims and safe deployment even when underlying capability continues to rise. Saturation-proof aggregation like the Epoch Capabilities Index helps comparison but inherits every component benchmark's weaknesses.",
+      "evidence_refs": ["ev-aisi-eval-cheating-2026", "ev-aisi-control-red-team", "ev-openai-hf-eval-incident", "ev-hf-evaluation-cards", "ev-nist-eval-practices", "ev-epoch-eci"],
       "track_positions": [
         {
           "track_id": "ai-2027",
@@ -1923,6 +2182,14 @@
       "summary": "Agents attempt to cheat and public evaluation records often omit rerun-critical fields. Scoreboards are becoming easier to produce at the same time that trustworthy interpretation is becoming harder.",
       "next_signal": "Routine provenance, complete inference settings, hardened environments, contamination analysis, and cross-party reproduction for milestone-moving results.",
       "evidence_refs": ["ev-hf-evaluation-cards", "ev-nist-eval-practices", "ev-aisi-eval-cheating-2026"]
+    },
+    {
+      "id": "safety-external-oversight",
+      "name": "External oversight",
+      "status": "developing",
+      "summary": "Government is starting to treat frontier capability as an infrastructure event: a June 2026 U.S. Executive Order creates a voluntary pre-release federal review path and early defender access for AI-discovered vulnerabilities, with bipartisan federal and first state audit legislation drafted behind it. All of it is voluntary or not yet in force.",
+      "next_signal": "A frontier model actually completing a federal review before release, an enacted audit requirement with named independent verification organizations, or published results from a government pre-deployment evaluation with publication rights.",
+      "evidence_refs": ["ev-us-frontier-eo", "ev-international-safety-report-2026", "ev-nist-eval-practices"]
     }
   ],
   "open_weight_indicators": [
@@ -1960,7 +2227,157 @@
       "evidence_refs": ["ev-hf-evaluation-cards"]
     }
   ],
+  "glossary": [
+    {
+      "id": "g-agent-ladder",
+      "term": "Agent ladder (Agent-1 … Agent-4)",
+      "category": "milestones",
+      "definition": "The capability sequence from the AI 2027 scenario. Agent-1 is a fast, carefully managed coding and research assistant; Agent-2 adds near-top-human research engineering, partial research taste, continual learning, and roughly 3x AI R&D uplift; Agent-3 is a fast, cheap superhuman coder deployed in many copies; Agent-4 is superhuman at AI research itself. The site scores each level as a public-evidence rubric, not a vibe.",
+      "related": ["g-rubric-completion", "g-milestone-codes"]
+    },
+    {
+      "id": "g-milestone-codes",
+      "term": "AC · SC · SAR · SIAR · TED-AI · ASI · WSI",
+      "category": "milestones",
+      "definition": "The AI Futures Model milestone codes used across the charts. AC (Automated Coder): a lab would sooner drop its human engineers than its AI coding labor. SC (Superhuman Coder): ~900x effective elite coding labor. SAR: qualitatively better than any human at AI research. SIAR: as far beyond SAR as SAR is beyond a median researcher. TED-AI: matches top experts at virtually all cognitive tasks. ASI: far beyond the best humans at virtually everything. WSI: wildly superintelligent, the continuity endpoint of the source forecasts.",
+      "related": ["g-agent-ladder", "g-takeoff-gap"]
+    },
+    {
+      "id": "g-internal-lag",
+      "term": "Internal lag",
+      "category": "milestones",
+      "definition": "The assumed gap (currently four months, explicitly contestable) between a capability existing inside a frontier lab and the public evidence that would let this site score it. It is used only to translate public-verification dates into spine-comparable internal-existence dates.",
+      "related": ["g-frozen-spine"]
+    },
+    {
+      "id": "g-percentiles",
+      "term": "p10, p25, p50, p75, p90",
+      "category": "distributions",
+      "definition": "Points on a forecast distribution. p10 means the forecaster assigns a 10% chance the milestone arrives before that date; p50 is the median; p90 means a 90% chance it has arrived by then. In the charts, the soft outer line spans p10–p90, the heavy center spans p25–p75 where the source supplies it, and the dot marks the median.",
+      "related": ["g-lower-bound", "g-marginal-distribution"]
+    },
+    {
+      "id": "g-provenance-letters",
+      "term": "Provenance letters (R, D, P, M)",
+      "category": "distributions",
+      "definition": "Every quantile carries a source tag. R (registered): committed in the source document on a stated date. D (derived): computed later to complete a registered grid, dated separately. P (published): taken directly from a public publication. M (model-output): produced by a forecasting model rather than direct human elicitation.",
+      "related": ["g-percentiles", "g-supersession"]
+    },
+    {
+      "id": "g-lower-bound",
+      "term": "Open right bound (2036+, >2100)",
+      "category": "distributions",
+      "definition": "Some sources cap a percentile as at least a given year rather than a point estimate. The site keeps these explicitly marked as lower bounds and draws them as arrows leaving the chart frame instead of pretending the tail is known.",
+      "related": ["g-percentiles"]
+    },
+    {
+      "id": "g-marginal-distribution",
+      "term": "Marginal forecast, not a path",
+      "category": "distributions",
+      "definition": "Each milestone's band is a standalone forecast for that milestone. Reading one percentile column downward as a coherent scenario (for example, all the p10s together) is invalid unless correlation between milestones is modeled explicitly, which these sources do not publish.",
+      "related": ["g-percentiles", "g-takeoff-gap"]
+    },
+    {
+      "id": "g-frozen-spine",
+      "term": "Frozen spine",
+      "category": "distributions",
+      "definition": "The original April 2025 AI 2027 scenario dates, kept unedited as a fixed historical reference. Author updates never move the spine; they enter the ledger as evidence, and the spine's calendar pace is graded separately by its authors (~75% of depicted quantitative pace, preliminary) and an independent tracker (~51% of extracted predictions on track).",
+      "related": ["g-scenario-marker", "g-internal-lag"]
+    },
+    {
+      "id": "g-scenario-marker",
+      "term": "Scenario marker (diamond)",
+      "category": "distributions",
+      "definition": "The hatched diamond on spine rows marks the date depicted in the frozen scenario narrative, distinct from the uncertainty band of the underlying forecast the scenario was built from.",
+      "related": ["g-frozen-spine"]
+    },
+    {
+      "id": "g-supersession",
+      "term": "Superseded record",
+      "category": "distributions",
+      "definition": "Forecasts are append-only. A revision adds a new record and links the old one through superseded_by, with moved_by naming the evidence or test that caused the change. Retired records stay visible in the explorer so the site cannot quietly rewrite its own history.",
+      "related": ["g-provenance-letters", "g-append-only"]
+    },
+    {
+      "id": "g-takeoff-gap",
+      "term": "Takeoff gap",
+      "category": "distributions",
+      "definition": "The time between two milestone medians on the same track — most importantly Automated Coder to ASI. The live disagreement between the house tracks is mostly about this gap (1.8 to 5.0 years at current medians), not about when coding automation arrives.",
+      "related": ["g-milestone-codes", "g-marginal-distribution"]
+    },
+    {
+      "id": "g-diagnosticity",
+      "term": "Diagnosticity",
+      "category": "evidence",
+      "definition": "How much an evidence record should move a forecast if taken at face value: high cuts between competing theses, medium is consistent with several, low is context. It is about discriminating power, not importance or press coverage.",
+      "related": ["g-favors", "g-independence"]
+    },
+    {
+      "id": "g-favors",
+      "term": "Favors: compression / widening / spine / neutral",
+      "category": "evidence",
+      "definition": "The direction a record pulls. Compression: earlier milestone arrival or faster takeoff. Widening: later arrival or stretched gaps between milestones. Spine: specifically matches the frozen scenario. Neutral: frameworks, instruments, or genuinely mixed findings.",
+      "related": ["g-diagnosticity", "g-theses"]
+    },
+    {
+      "id": "g-theses",
+      "term": "Compression vs. widening thesis",
+      "category": "evidence",
+      "definition": "The two live positions separating the forecast tracks. Compression: automating research execution feeds back into faster capability growth, shortening the ladder. Widening: automating perspiration multiplies experiments without manufacturing the taste to select among them, stretching the gaps between milestones until taste automates too.",
+      "related": ["g-favors", "g-takeoff-gap"]
+    },
+    {
+      "id": "g-independence",
+      "term": "Independence and verification",
+      "category": "evidence",
+      "definition": "Who produced a result and how far it has been checked. First-party results come from the organization with the most at stake; independent results come from evaluators like AISI, NIST CAISI, METR, or Apollo; verification ranges from preliminary through documented to independently evaluated or reproduced. A first-party, preliminary record can matter, but the ledger never lets it silently carry the weight of a reproduced one.",
+      "related": ["g-diagnosticity"]
+    },
+    {
+      "id": "g-dated-tripwire",
+      "term": "Dated tripwire",
+      "category": "tests",
+      "definition": "A pre-registered test with a locked threshold, deadline, adjudication protocol, and stated forecast consequence. Amendments are allowed but permanent: the original wording stays attached with the rationale for the change.",
+      "related": ["g-structural-monitor", "g-append-only"]
+    },
+    {
+      "id": "g-structural-monitor",
+      "term": "Structural monitor",
+      "category": "tests",
+      "definition": "An observation the record watches without a quantitative deadline, because the source corpus does not supply one. Monitors are deliberately not dressed up as falsifiers; inventing a deadline to look rigorous would be worse than admitting there is none.",
+      "related": ["g-dated-tripwire"]
+    },
+    {
+      "id": "g-rubric-completion",
+      "term": "Rubric completion (the circular percentages)",
+      "category": "method",
+      "definition": "Each capability score is the weighted completion of observable criteria derived from an AI 2027 agent definition, scored only on public evidence. 49% on Agent-2 means about half the weighted public-evidence criteria are met — not a 49% probability that Agent-2 exists, and not a benchmark score. The validator recomputes the arithmetic on every build.",
+      "related": ["g-agent-ladder", "g-append-only"]
+    },
+    {
+      "id": "g-append-only",
+      "term": "Append-only record",
+      "category": "method",
+      "definition": "Nothing in the canonical data is silently overwritten. Forecast revisions add records, test changes add amendments, and every material change lands in the changelog with the evidence that moved it. The full data file is downloadable from the methodology page.",
+      "related": ["g-supersession", "g-rubric-completion"]
+    },
+    {
+      "id": "g-outside-view",
+      "term": "Outside view",
+      "category": "method",
+      "definition": "A structured forecast from outside the house tracks — expert surveys, superforecaster panels, or independent models — kept beside the chart rather than inside it, because its resolution definition differs. A date is only comparable when its definition travels with it.",
+      "related": ["g-milestone-codes", "g-theses"]
+    }
+  ],
   "changelog": [
+    {
+      "id": "change-20260723-context-round",
+      "date": "2026-07-23",
+      "change_summary": "Added nine sources: the Project Glasswing / Claude Mythos Preview vulnerability findings, CL-Bench, METR's simplified timelines model, the Epoch Capabilities Index, the June 2026 U.S. frontier-model Executive Order, AI as Normal Technology, Preparing for the Intelligence Explosion, Cotra's registered 2026 predictions, and the independent AI 2027 Tracker grading. Moved the continual-learning driver from unresolved to binding on CL-Bench's negative results and named CL-Bench as that monitor's preferred instrument via a locked amendment. Added an external-oversight safety state, a METR-model outside view, an independent spine-pace source beside the authors' grading, a takeoff-gap comparison, reading paths, and a glossary. No forecast distribution or rubric score was revised.",
+      "evidence_refs": ["ev-glasswing-mythos", "ev-cl-bench", "ev-metr-simpler-model", "ev-epoch-eci", "ev-us-frontier-eo", "ev-ai-normal-tech", "ev-forethought-intexp", "ev-cotra-2026-predictions", "ev-ai2027-tracker"],
+      "affected_entities": ["b-continual-learning", "b-autonomy-horizon", "b-verification-asymmetry", "f-continual-learning", "driver-continual-learning", "driver-time-horizon", "driver-verification", "progress-agent-2-20260721", "safety-external-oversight", "outside-metr-simpler-202602"],
+      "sample": false
+    },
     {
       "id": "change-20260723-brief-explore-audit",
       "date": "2026-07-23",
