@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { HashRouter, NavLink } from "react-router-dom";
+import { useLayoutEffect, useState, type ReactNode } from "react";
+import { HashRouter, NavLink, useLocation } from "react-router-dom";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { canonical, newestChangelogDate } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
@@ -12,6 +12,16 @@ const pathByView: Record<string, string> = {
   changelog: "/changelog",
   methodology: "/methodology",
 };
+
+function RouteScrollManager() {
+  const { pathname } = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+
+  return null;
+}
 
 function Navigation({ close }: { close?: () => void }) {
   return (
@@ -44,6 +54,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
     <HashRouter>
+      <RouteScrollManager />
       <div className="min-h-screen bg-canvas text-ink">
         <header className="sticky top-0 z-50 border-b border-line/80 bg-canvas/95 backdrop-blur-sm">
           <div className="mx-auto flex min-h-[76px] max-w-[1320px] items-center justify-between gap-6 px-5 md:px-8">
