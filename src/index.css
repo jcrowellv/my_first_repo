@@ -12,7 +12,7 @@
 
 * { box-sizing: border-box; }
 html { background: #f3f0e8; scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: #f3f0e8; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #f3f0e8; line-height: 1.5; }
 button, input, select { font: inherit; }
 button, summary, a { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible {

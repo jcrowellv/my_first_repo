@@ -20,7 +20,7 @@ export default defineConfig({
           .replaceAll("%SITE_TITLE%", canonical.meta.site_title)
           .replaceAll("%SITE_DESCRIPTION%", canonical.meta.site_description)
           .replaceAll("%SITE_URL%", canonical.meta.site_url)
-          .replaceAll("%OG_IMAGE%", new URL("og.png", canonical.meta.site_url).href);
+          .replaceAll("%OG_IMAGE%", new URL("og-v2.png", canonical.meta.site_url).href);
       },
     },
     {

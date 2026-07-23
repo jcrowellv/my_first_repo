@@ -5,6 +5,7 @@ import type { CapabilityProgress, Forecast, QuantileDate } from "../schema";
 import { canonical, evidenceById, milestonesById, tracksById } from "../lib/data";
 import { displayQuantileLabel, formatIsoDate } from "../lib/dates";
 import { StatusBadge } from "../components/Primitives";
+import { ChartScroller } from "../components/NavigationPrimitives";
 
 const ACCENT = "#167f92";
 const todayDate = new Date();
@@ -50,13 +51,13 @@ function BriefingHero() {
           </div>
         </div>
         <aside className="border-t border-line bg-ink p-6 text-panel md:p-8 lg:border-l lg:border-t-0 lg:p-9">
-          <p className="font-mono text-[9px] uppercase tracking-[0.19em] text-canvas/50">
+          <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-canvas/60">
             Frozen-scenario pace · two gradings
           </p>
           <div className="mt-4">
             <div className="flex items-end justify-between gap-4">
               <span className="font-serif text-5xl font-semibold tracking-[-0.05em] text-panel">{briefing.pace_value}</span>
-              <span className="mb-1.5 rounded-full border border-canvas/15 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-canvas/55">
+              <span className="mb-1.5 rounded-full border border-canvas/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.13em] text-canvas/65">
                 preliminary
               </span>
             </div>
@@ -66,10 +67,10 @@ function BriefingHero() {
                 style={{ width: `${(briefing.pace_fraction ?? 0) * 100}%` }}
               />
             </div>
-            <p className="mt-3 text-xs leading-5 text-canvas/65">
+            <p className="mt-3 text-[13px] leading-6 text-canvas/70">
               <span className="font-semibold text-canvas/90">{briefing.pace_label}.</span> {briefing.pace_detail}
             </p>
-            <a href={briefing.pace_source_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-cyan hover:text-panel">
+            <a href={briefing.pace_source_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-cyan hover:text-panel">
               {briefing.pace_source_label} <ArrowUpRight size={12} />
             </a>
           </div>
@@ -84,7 +85,7 @@ function BriefingHero() {
                   style={{ width: `${briefing.pace_secondary.fraction * 100}%` }}
                 />
               </div>
-              <p className="mt-3 text-xs leading-5 text-canvas/65">
+              <p className="mt-3 text-[13px] leading-6 text-canvas/70">
                 <span className="font-semibold text-canvas/90">{briefing.pace_secondary.label}.</span>{" "}
                 {briefing.pace_secondary.detail}
               </p>
@@ -92,7 +93,7 @@ function BriefingHero() {
                 href={briefing.pace_secondary.source_url}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-cyan hover:text-panel"
+                className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-cyan hover:text-panel"
               >
                 {briefing.pace_secondary.source_label} <ArrowUpRight size={12} />
               </a>
@@ -117,9 +118,9 @@ function BriefingHero() {
                 </span>
                 <ArrowRight size={15} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-cyan" />
               </div>
-              <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.17em] text-muted">{lens.label}</p>
+              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">{lens.label}</p>
               <p className="mt-1.5 text-lg font-semibold tracking-[-0.02em] text-ink">{lens.value}</p>
-              <p className="mt-2 text-xs leading-5 text-muted">{lens.detail}</p>
+              <p className="mt-2 text-[13px] leading-5 text-muted">{lens.detail}</p>
             </Link>
           );
         })}
@@ -135,9 +136,9 @@ function HeadlineStats() {
     <section aria-label="Headline statistics" className="mt-5 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
       {stats.map((stat) => (
         <div key={stat.label} className="bg-panel p-5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.17em] text-muted">{stat.label}</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">{stat.label}</p>
           <p className="mt-2 text-xl font-semibold tracking-[-0.02em] text-ink">{stat.value}</p>
-          {stat.detail ? <p className="mt-2 text-xs leading-5 text-muted">{stat.detail}</p> : null}
+          {stat.detail ? <p className="mt-2 text-[13px] leading-5 text-muted">{stat.detail}</p> : null}
         </div>
       ))}
     </section>
@@ -516,6 +517,7 @@ function ForecastChart({
             key={forecast.id}
             role="button"
             tabIndex={0}
+            aria-pressed={selected}
             aria-label={`${track.name}${retired ? " (superseded)" : ""}: median ${displayQuantileLabel(q.p50)}, range ${displayQuantileLabel(q.p10)} to ${displayQuantileLabel(q.p90)}`}
             onClick={() => onSelect(forecast.id)}
             onKeyDown={(event) => {
@@ -645,7 +647,7 @@ export function ForecastExplorer() {
   );
 
   return (
-    <section id="explorer" aria-labelledby="forecast-lens-title" className="scroll-mt-28">
+    <section id="explorer" aria-labelledby="forecast-lens-title" className="scroll-mt-36">
       <div className="mb-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Four forecasts</p>
@@ -665,11 +667,12 @@ export function ForecastExplorer() {
             <button
               key={id}
               type="button"
+              aria-pressed={selected === id}
               onClick={() => {
                 setSelected(id);
                 setDetailId(null);
               }}
-              className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-medium transition-colors ${
+              className={`min-h-11 shrink-0 rounded-full border px-3.5 py-2 text-xs font-medium transition-colors ${
                 selected === id
                   ? "border-ink bg-ink text-panel"
                   : "border-line bg-panel text-muted hover:text-ink"
@@ -680,7 +683,7 @@ export function ForecastExplorer() {
           );
         })}
         {hasRetired ? (
-          <label className="ml-auto inline-flex cursor-pointer items-center gap-2 text-xs text-muted">
+          <label className="ml-auto inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl px-3 text-xs text-muted transition-colors hover:bg-raised">
             <input
               type="checkbox"
               checked={showRetired}
@@ -688,7 +691,7 @@ export function ForecastExplorer() {
                 setShowRetired(event.target.checked);
                 setDetailId(null);
               }}
-              className="h-3.5 w-3.5 accent-[#167f92]"
+              className="h-4 w-4 accent-[#167f92]"
             />
             Show superseded records
           </label>
@@ -699,7 +702,7 @@ export function ForecastExplorer() {
           <h3 className="font-serif text-xl font-semibold text-ink">{milestone?.name}</h3>
           <p className="mt-1 max-w-3xl text-sm leading-6 text-muted">{milestone?.operational_definition}</p>
         </div>
-        <div className="overflow-x-auto px-2 pt-2">
+        <ChartScroller label={`${milestone?.name ?? "selected threshold"} forecast chart`} className="px-2 pt-2">
           <div className="min-w-[760px]">
             <ForecastChart
               rows={rows}
@@ -707,7 +710,7 @@ export function ForecastExplorer() {
               onSelect={(id) => setDetailId((prior) => (prior === id ? null : id))}
             />
           </div>
-        </div>
+        </ChartScroller>
         {detail ? <ForecastDetail forecast={detail} onClose={() => setDetailId(null)} /> : null}
       </div>
       <p className="mt-3 text-xs leading-5 text-muted">{canonical.meta.distribution_warning}</p>

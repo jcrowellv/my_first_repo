@@ -34,7 +34,8 @@ src/schema.ts                Zod schemas and inferred TypeScript types
 src/lib/                     Parsed data and date helpers
 src/components/              Content-agnostic layout primitives
 src/views/                   Eight routed views
-public/og.png                Generated 1200x630 social preview
+public/og-v2.png             Current generated 1200x630 social preview
+public/og.png                Previous social preview retained for comparison
 MISSING_CONTENT.md           Explicit inventory of unresolved source limitations
 vercel.json                  Vercel build configuration
 .github/workflows/deploy.yml GitHub Pages fallback deployment
