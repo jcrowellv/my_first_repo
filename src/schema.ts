@@ -475,6 +475,7 @@ export const CanonicalSchema = z
       ...driverIds,
       ...safetyIds,
       ...openWeightIds,
+      ...glossaryIds,
     ]);
 
     data.forecasts.forEach((forecast, index) => {
