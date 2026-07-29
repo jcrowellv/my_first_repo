@@ -51,46 +51,84 @@ function RouteScrollManager() {
 
 function DesktopNavigation() {
   const { pathname } = useLocation();
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setOpenMenuId(null);
+  }, [pathname]);
 
   return (
-    <nav aria-label="Primary navigation" className="flex items-center gap-0.5">
-      {canonical.meta.navigation.map((item) => (
-        <div key={item.id} className="group relative">
-          <NavLink
-            to={item.path}
-            end={item.path === "/"}
-            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
-            className={({ isActive }) => {
-              const groupedActive =
-                item.id === "method" && ["/methodology", "/bottlenecks", "/glossary", "/changelog"].includes(pathname);
-              return (
-              `inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm transition-colors ${
-                isActive || groupedActive
-                  ? "bg-ink font-medium text-panel"
-                  : "text-muted hover:bg-raised hover:text-ink"
-              }`
-              );
-            }}
+    <nav
+      aria-label="Primary navigation"
+      className="flex items-center gap-0.5"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setOpenMenuId(null);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setOpenMenuId(null);
+      }}
+      onPointerLeave={() => setOpenMenuId(null)}
+    >
+      {canonical.meta.navigation.map((item) => {
+        const menuOpen = openMenuId === item.id;
+        const menuId = `desktop-navigation-${item.id}`;
+
+        return (
+          <div
+            key={item.id}
+            className="relative"
+            onPointerEnter={() => setOpenMenuId(item.id)}
           >
-            {item.label}
-            <ChevronDown size={12} className="opacity-55" aria-hidden="true" />
-          </NavLink>
-          <div className="invisible absolute left-1/2 top-full z-50 w-[310px] -translate-x-1/2 pt-3 opacity-0 transition-[opacity,visibility] duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-            <div className="rounded-2xl border border-line bg-panel p-2 shadow-[0_22px_60px_rgba(19,35,54,.16)]">
-              {item.children.map((child) => (
-                <Link
-                  key={child.path}
-                  to={child.path}
-                  className="block rounded-xl px-3.5 py-3 transition-colors hover:bg-raised focus-visible:bg-raised"
-                >
-                  <span className="block text-sm font-semibold text-ink">{child.label}</span>
-                  <span className="mt-1 block text-xs leading-5 text-muted">{child.description}</span>
-                </Link>
-              ))}
+            <NavLink
+              to={item.path}
+              end={item.path === "/"}
+              aria-expanded={menuOpen}
+              aria-controls={menuId}
+              onFocus={() => setOpenMenuId(item.id)}
+              onClick={() => {
+                setOpenMenuId(null);
+                window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+              }}
+              className={({ isActive }) => {
+                const groupedActive =
+                  item.id === "method" &&
+                  ["/methodology", "/bottlenecks", "/glossary", "/changelog"].includes(pathname);
+                return (
+                  `inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm transition-colors ${
+                    isActive || groupedActive
+                      ? "bg-ink font-medium text-panel"
+                      : "text-muted hover:bg-raised hover:text-ink"
+                  }`
+                );
+              }}
+            >
+              {item.label}
+              <ChevronDown size={12} className="opacity-55" aria-hidden="true" />
+            </NavLink>
+            <div
+              id={menuId}
+              aria-hidden={!menuOpen}
+              className={`absolute left-1/2 top-full z-50 w-[310px] -translate-x-1/2 pt-3 transition-[opacity,visibility] duration-150 ${
+                menuOpen ? "visible opacity-100" : "invisible opacity-0"
+              }`}
+            >
+              <div className="rounded-2xl border border-line bg-panel p-2 shadow-[0_22px_60px_rgba(19,35,54,.16)]">
+                {item.children.map((child) => (
+                  <Link
+                    key={child.path}
+                    to={child.path}
+                    onClick={() => setOpenMenuId(null)}
+                    className="block rounded-xl px-3.5 py-3 transition-colors hover:bg-raised focus-visible:bg-raised"
+                  >
+                    <span className="block text-sm font-semibold text-ink">{child.label}</span>
+                    <span className="mt-1 block text-xs leading-5 text-muted">{child.description}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </nav>
   );
 }
