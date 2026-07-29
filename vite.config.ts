@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 const canonicalSource = readFileSync(
   new URL("./data/canonical.json", import.meta.url),
@@ -9,6 +10,10 @@ const canonicalSource = readFileSync(
 const canonical = JSON.parse(canonicalSource) as {
   meta: { site_title: string; site_description: string; site_url: string };
 };
+const isGitHubPages = process.env.GITHUB_PAGES === "true";
+const sitesWorkerSource =
+  "export default { async fetch(request, env) { return env.ASSETS.fetch(request); } };";
+let projectRoot = process.cwd();
 
 export default defineConfig({
   plugins: [
@@ -25,28 +30,39 @@ export default defineConfig({
     },
     {
       name: "publish-canonical-data",
+      configResolved(config) {
+        projectRoot = config.root;
+        if (!isGitHubPages) {
+          rmSync(resolve(projectRoot, "dist"), { force: true, recursive: true });
+        }
+      },
       generateBundle() {
         this.emitFile({
           type: "asset",
           fileName: "data/canonical.json",
           source: canonicalSource,
         });
-        this.emitFile({
-          type: "asset",
-          fileName: "server/index.js",
-          source:
-            "export default { async fetch(request, env) { return env.ASSETS.fetch(request); } };",
-        });
+      },
+      closeBundle() {
+        if (!isGitHubPages) {
+          const serverDirectory = resolve(projectRoot, "dist", "server");
+          mkdirSync(serverDirectory, { recursive: true });
+          writeFileSync(
+            resolve(serverDirectory, "index.js"),
+            sitesWorkerSource,
+            "utf8",
+          );
+        }
       },
     },
   ],
-  base:
-    process.env.GITHUB_PAGES === "true"
-      ? process.env.VITE_BASE_PATH ?? "/my_first_repo/"
-      : "/",
+  base: isGitHubPages
+    ? process.env.VITE_BASE_PATH ?? "/my_first_repo/"
+    : "/",
   build: {
     target: "es2022",
     sourcemap: false,
+    outDir: isGitHubPages ? "dist" : "dist/client",
     rollupOptions: {
       output: {
         manualChunks: {
