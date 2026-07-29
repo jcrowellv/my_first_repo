@@ -47,5 +47,15 @@ export default defineConfig({
   build: {
     target: "es2022",
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "react-vendor": ["react", "react-dom", "react-dom/client", "react-router"],
+          "markdown-vendor": ["react-markdown", "remark-gfm"],
+          "validation-vendor": ["zod"],
+          "icons-vendor": ["lucide-react"],
+        },
+      },
+    },
   },
 });

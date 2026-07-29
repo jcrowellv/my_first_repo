@@ -1,5 +1,5 @@
 import { ArrowUpRight, Database, Download, FileCheck2, Gauge, History, Scale } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { canonical } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
 import { DataCard, PageHeader } from "../components/Primitives";

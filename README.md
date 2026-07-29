@@ -7,7 +7,7 @@ A static forecasting instrument that combines a public-evidence capability rubri
 - Claude's widening-thesis distribution, with a 2035 WSI median; and
 - Daniel Kokotajlo's pinned April 2, 2026 AI Futures Model update.
 
-The site is built with Vite, React, TypeScript, Zod, native SVG, and Tailwind. It has no backend, database, authentication, CMS, or runtime data fetches.
+The site is built with Vite, React, React Router, TypeScript, Zod, native SVG, and Tailwind. It has no backend, database, authentication, CMS, or runtime data fetches.
 
 ## Canonical-data rule
 
@@ -43,7 +43,7 @@ vercel.json                  Vercel build configuration
 
 ## Local development
 
-Prerequisite: Node.js 22.13 or newer.
+Prerequisite: Node.js 22.22 or newer.
 
 ```bash
 npm install

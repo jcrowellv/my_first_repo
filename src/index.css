@@ -19,6 +19,12 @@ button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visibl
   outline: 2px solid #167f92;
   outline-offset: 2px;
 }
+.forecast-row:focus-visible > rect {
+  fill: #167f92;
+  opacity: .1;
+  stroke: #167f92;
+  stroke-width: 2px;
+}
 ::selection { color: #fffdf8; background: #167f92; }
 
 .prose-data p { margin: 0; }

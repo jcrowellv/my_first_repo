@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router";
 import { AppShell } from "./components/AppShell";
 import { TimelineView } from "./views/TimelineView";
 
@@ -27,16 +27,16 @@ const GlossaryView = lazy(() =>
 
 function RouteFallback() {
   return (
-    <div role="status" aria-live="polite" className="min-h-[55vh] animate-pulse">
+    <div role="status" aria-live="polite" aria-busy="true" className="min-h-[55vh] animate-pulse">
       <span className="sr-only">Loading page</span>
-      <div className="h-3 w-40 rounded-full bg-cyan/15" />
-      <div className="mt-5 h-12 max-w-2xl rounded-xl bg-line/65" />
-      <div className="mt-3 h-12 max-w-xl rounded-xl bg-line/45" />
-      <div className="mt-6 h-4 max-w-3xl rounded-full bg-line/55" />
-      <div className="mt-3 h-4 max-w-2xl rounded-full bg-line/40" />
+      <div className="h-3 w-40 rounded-full bg-cyan/15" aria-hidden="true" />
+      <div className="mt-5 h-12 max-w-2xl rounded-xl bg-line/65" aria-hidden="true" />
+      <div className="mt-3 h-12 max-w-xl rounded-xl bg-line/45" aria-hidden="true" />
+      <div className="mt-6 h-4 max-w-3xl rounded-full bg-line/55" aria-hidden="true" />
+      <div className="mt-3 h-4 max-w-2xl rounded-full bg-line/40" aria-hidden="true" />
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         {[0, 1, 2].map((item) => (
-          <div key={item} className="h-44 rounded-2xl border border-line bg-panel/70" />
+          <div key={item} className="h-44 rounded-2xl border border-line bg-panel/70" aria-hidden="true" />
         ))}
       </div>
     </div>

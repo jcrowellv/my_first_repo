@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { HashRouter, Link, NavLink, useLocation } from "react-router-dom";
+import { useEffect, useLayoutEffect, useState, type ReactNode } from "react";
+import { HashRouter, Link, NavLink, useLocation } from "react-router";
 import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
 import { canonical, newestChangelogDate } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
@@ -7,7 +7,7 @@ import { formatIsoDate } from "../lib/dates";
 function RouteScrollManager() {
   const { pathname, hash } = useLocation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const jumpWithoutAnimation = (action: () => void) => {
       const root = document.documentElement;
       const priorBehavior = root.style.scrollBehavior;
@@ -148,12 +148,60 @@ function MobileNavigation({ close }: { close: () => void }) {
   );
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+const viewIdByPath: Record<string, string> = {
+  "/": "timeline",
+  "/forecasts": "forecasts",
+  "/falsifiers": "falsifiers",
+  "/evidence": "evidence",
+  "/bottlenecks": "bottlenecks",
+  "/changelog": "changelog",
+  "/methodology": "methodology",
+  "/glossary": "glossary",
+};
+
+function AppShellContent({ children }: { children: ReactNode }) {
+  const { pathname, hash } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname, hash]);
+
+  useEffect(() => {
+    const view = canonical.meta.views.find((item) => item.id === viewIdByPath[pathname]);
+    document.title =
+      pathname === "/" || !view
+        ? canonical.meta.site_title
+        : `${view.label} · ${canonical.meta.site_title}`;
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
+
+  const skipToContent = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const main = document.getElementById("main-content");
+    main?.focus({ preventScroll: true });
+    main?.scrollIntoView({ block: "start", behavior: "auto" });
+  };
+
   return (
-    <HashRouter>
+    <>
       <RouteScrollManager />
+      <a
+        href="#main-content"
+        onClick={skipToContent}
+        className="fixed left-4 top-3 z-[70] -translate-y-20 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-panel shadow-lg transition-transform focus:translate-y-0"
+      >
+        Skip to content
+      </a>
       <div className="min-h-screen bg-canvas text-ink">
         <header className="sticky top-0 z-50 border-b border-line/80 bg-canvas/95 backdrop-blur-md">
           <div className="mx-auto flex min-h-[70px] max-w-[1360px] items-center justify-between gap-5 px-5 md:px-8">
@@ -181,19 +229,29 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="rounded-full border border-line bg-panel p-3 text-muted lg:hidden"
               aria-label={menuOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
               onClick={() => setMenuOpen((value) => !value)}
             >
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
           {menuOpen ? (
-            <div className="max-h-[calc(100vh-70px)] overflow-y-auto border-t border-line bg-panel px-5 py-3 lg:hidden">
+            <div
+              id="mobile-navigation"
+              className="max-h-[calc(100vh-70px)] overflow-y-auto border-t border-line bg-panel px-5 py-3 lg:hidden"
+            >
               <MobileNavigation close={() => setMenuOpen(false)} />
             </div>
           ) : null}
         </header>
 
-        <main id="main-content" className="mx-auto max-w-[1240px] px-5 py-9 md:px-8 md:py-14">{children}</main>
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="mx-auto max-w-[1240px] px-5 py-9 outline-none md:px-8 md:py-14"
+        >
+          {children}
+        </main>
 
         <footer className="mt-20 bg-ink text-panel">
           <div className="mx-auto max-w-[1240px] px-5 py-12 md:px-8 md:py-16">
@@ -236,6 +294,14 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </footer>
       </div>
+    </>
+  );
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
+  return (
+    <HashRouter>
+      <AppShellContent>{children}</AppShellContent>
     </HashRouter>
   );
 }

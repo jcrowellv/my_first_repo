@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, ChevronDown, Database, Search, ShieldCheck, SlidersHorizontal, Waves, X } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 import type { Evidence } from "../schema";
 import { canonical, evidenceById, milestonesById } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
@@ -219,6 +219,15 @@ export function EvidenceLedger() {
   const [sort, setSort] = useState<"diagnosticity" | "date">("diagnosticity");
   const [query, setQuery] = useState("");
 
+  useEffect(() => {
+    setQuery("");
+    setMilestone("all");
+    setDiagnosticity("all");
+    setSourceType("all");
+    setFavors("all");
+    setTheme("all");
+  }, [lens]);
+
   const evidence = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase();
 
@@ -267,7 +276,7 @@ export function EvidenceLedger() {
     [],
   );
 
-  const selectClass = "min-h-11 max-w-full rounded-xl border border-line bg-panel px-3.5 py-2.5 text-[13px] text-ink";
+  const selectClass = "min-h-11 w-full max-w-full rounded-xl border border-line bg-panel px-3.5 py-2.5 text-[13px] text-ink sm:w-auto";
   const lensItems = [
     { id: "capability", label: "Capability evidence", detail: "All milestone-moving records", path: "/evidence", icon: Database },
     { id: "safety", label: "Safety & control", detail: "Containment, monitors, safeguards", path: "/evidence#safety", icon: ShieldCheck },

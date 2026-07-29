@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ArrowRight, ArrowUpRight, CircleHelp, Clock3, ShieldCheck, Waves, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import type { CapabilityProgress, Forecast, QuantileDate } from "../schema";
 import { canonical, evidenceById, milestonesById, tracksById } from "../lib/data";
 import { displayQuantileLabel, formatIsoDate } from "../lib/dates";
@@ -219,7 +219,12 @@ function ProgressRing({ value }: { value: number }) {
 function CapabilityDetail({ item, onClose }: { item: CapabilityProgress; onClose: () => void }) {
   const milestone = milestonesById.get(item.milestone_id);
   return (
-    <div className="mt-4 rounded-2xl border border-line bg-panel shadow-instrument">
+    <div
+      id="capability-detail"
+      role="region"
+      aria-labelledby={`capability-tab-${item.id}`}
+      className="mt-4 rounded-2xl border border-line bg-panel shadow-instrument"
+    >
       <div className="flex items-start justify-between gap-6 border-b border-line p-5 md:p-6">
         <div>
           <div className="flex flex-wrap items-center gap-2.5">
@@ -300,15 +305,17 @@ function CapabilitySection() {
           <CircleHelp size={14} /> {canonical.meta.progress_label}
         </Link>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Capability levels">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" role="group" aria-label="Capability levels">
         {canonical.capability_progress.map((item) => {
           const milestone = milestonesById.get(item.milestone_id);
           const isSelected = selectedId === item.id;
           return (
             <button
               key={item.id}
+              id={`capability-tab-${item.id}`}
               type="button"
               aria-expanded={isSelected}
+              aria-controls="capability-detail"
               onClick={() => setSelectedId(isSelected ? null : item.id)}
               className={`rounded-2xl border p-5 text-left shadow-instrument transition-colors ${
                 isSelected ? "border-cyan/60 bg-panel ring-1 ring-cyan/30" : "border-line bg-panel hover:border-cyan/35"
@@ -453,7 +460,7 @@ function ForecastChart({
     <svg
       viewBox={`0 0 ${chartWidth} ${height}`}
       className="w-full"
-      role="img"
+      role="group"
       aria-label="Forecast distributions for the selected capability threshold"
     >
       {years.map((year) => (
@@ -526,7 +533,7 @@ function ForecastChart({
                 onSelect(forecast.id);
               }
             }}
-            className="cursor-pointer outline-none"
+            className="forecast-row cursor-pointer outline-none"
           >
             {index > 0 ? (
               <line x1={16} x2={chartWidth - 16} y1={centerY - rowHeight / 2} y2={centerY - rowHeight / 2} stroke="#ece7db" strokeWidth={1} />
@@ -660,14 +667,16 @@ export function ForecastExplorer() {
           median. Select a row for quantiles and provenance.
         </p>
       </div>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="mb-4 flex flex-wrap items-center gap-2" role="group" aria-label="Capability thresholds">
         {milestoneIds.map((id) => {
           const item = milestonesById.get(id);
           return (
             <button
               key={id}
+              id={`forecast-tab-${id}`}
               type="button"
               aria-pressed={selected === id}
+              aria-label={`${item?.code}: ${item?.name}`}
               onClick={() => {
                 setSelected(id);
                 setDetailId(null);
