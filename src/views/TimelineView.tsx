@@ -4,8 +4,12 @@ import {
   ArrowRight,
   ArrowUp,
   ArrowUpRight,
+  BookOpen,
+  ChevronDown,
   CircleHelp,
   Clock3,
+  Compass,
+  Database,
   Eye,
   GitBranch,
   LineChart,
@@ -15,12 +19,17 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import type { CapabilityProgress, Forecast, QuantileDate } from "../schema";
-import { canonical, evidenceById, milestonesById, tracksById } from "../lib/data";
+import {
+  canonical,
+  evidenceById,
+  getProgressRange,
+  milestonesById,
+  tracksById,
+} from "../lib/data";
 import { displayQuantileLabel, formatIsoDate } from "../lib/dates";
-import { StatusBadge } from "../components/Primitives";
+import { DataCard, StatusBadge } from "../components/Primitives";
 import { ChartScroller } from "../components/NavigationPrimitives";
 
-const ACCENT = "#167f92";
 const todayDate = new Date();
 const startOfYear = new Date(todayDate.getFullYear(), 0, 1);
 const startOfNextYear = new Date(todayDate.getFullYear() + 1, 0, 1);
@@ -48,91 +57,170 @@ const paceStatusTone = {
 
 function BriefingHero() {
   const briefing = canonical.meta.briefing;
+  const agentTwo =
+    canonical.capability_progress.find((item) => item.label === "Agent-2") ??
+    canonical.capability_progress[1];
+  const agentTwoRange = getProgressRange(agentTwo);
+  const nextTest = canonical.falsifiers.find(
+    (item) => item.kind === "dated-tripwire" && item.status === "watching",
+  );
   const statusTotal = briefing.pace_statuses.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <section id="state" className="scroll-mt-28 overflow-hidden rounded-[28px] border border-line bg-panel shadow-instrument">
-      <div className="grid lg:grid-cols-[1.2fr_.8fr]">
-        <div className="relative overflow-hidden p-6 md:p-9 lg:p-11">
-          <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full border-[46px] border-cyan/[0.06]" aria-hidden="true" />
-          <p className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-cyan">
-            {briefing.eyebrow} · {formatIsoDate(briefing.as_of)}
+    <section
+      id="state"
+      className="scroll-mt-28 overflow-hidden rounded-[28px] border border-line bg-panel shadow-instrument"
+    >
+      <div className="grid lg:grid-cols-[1.08fr_.92fr]">
+        <div className="relative p-6 md:p-9 lg:p-11">
+          <div
+            className="absolute bottom-0 left-0 top-0 w-1 bg-gradient-to-b from-cyan via-violet to-rose"
+            aria-hidden="true"
+          />
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan">
+            {briefing.eyebrow} {formatIsoDate(briefing.as_of)}
           </p>
-          <h1 className="relative mt-5 max-w-3xl text-balance font-serif text-[42px] font-semibold leading-[1.02] tracking-[-0.025em] text-ink md:text-[60px]">
+          <h1 className="mt-5 max-w-3xl text-balance font-serif text-[42px] font-semibold leading-[1.02] tracking-[-0.025em] text-ink md:text-[60px]">
             {briefing.title}
           </h1>
-          <p className="relative mt-6 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
+          <p className="mt-6 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
             {briefing.description}
           </p>
-          <div className="relative mt-8 flex flex-wrap gap-3">
-            <Link to="/forecasts" className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-medium text-panel transition-colors hover:bg-cyan">
-              Explore four forecasts <ArrowRight size={15} />
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              to="/#paths"
+              className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-medium text-panel transition-colors hover:bg-cyan"
+            >
+              Take the 2-minute tour <ArrowRight size={15} />
             </Link>
-            <Link to="/evidence" className="inline-flex items-center gap-2 rounded-full border border-line bg-canvas px-5 py-3 text-sm font-medium text-ink transition-colors hover:border-cyan/40">
-              Audit the evidence
+            <Link
+              to="/forecasts"
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-canvas px-5 py-3 text-sm font-medium text-ink transition-colors hover:border-cyan/40"
+            >
+              Compare forecasts
             </Link>
           </div>
         </div>
         <aside className="border-t border-line bg-ink p-6 text-panel md:p-8 lg:border-l lg:border-t-0 lg:p-9">
-          <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-canvas/60">
-            Scenario pace · independent external read
-          </p>
-          <div className="mt-4">
-            <div className="flex items-end justify-between gap-4">
-              <span className="font-serif text-5xl font-semibold tracking-[-0.05em] text-panel">{briefing.pace_value}</span>
-              <span className="mb-1.5 rounded-full border border-canvas/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.13em] text-canvas/65">
-                mixed
-              </span>
+          <div className="flex items-center justify-between gap-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-canvas/60">
+              The plain-English read
+            </p>
+            <span className="rounded-full border border-canvas/15 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.13em] text-canvas/55">
+              public record
+            </span>
+          </div>
+          <div className="mt-5 divide-y divide-canvas/15">
+            <div className="pb-5">
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-cyan">
+                What can systems do now?
+              </p>
+              <p className="mt-2 font-serif text-2xl font-semibold">
+                Agent-1 is public. Agent-2 is partial.
+              </p>
+              <p className="mt-2 text-[13px] leading-5 text-canvas/65">
+                The Agent-2 central rubric estimate is {agentTwo.score}%, with a{" "}
+                {agentTwoRange.low}–{agentTwoRange.high}% judgment range. That is
+                completion, not probability.
+              </p>
             </div>
-            <div
-              className="mt-3 h-1.5 overflow-hidden rounded-full bg-canvas/15"
-              role="progressbar"
-              aria-label="AI 2027 scenario speed ratio"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={(briefing.pace_fraction ?? 0) * 100}
-            >
-              <div
-                className="h-full rounded-full bg-cyan"
-                style={{ width: `${(briefing.pace_fraction ?? 0) * 100}%` }}
+            <div className="py-5">
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-violet">
+                What do the forecasts disagree about?
+              </p>
+              <p className="mt-2 font-serif text-2xl font-semibold">
+                Mostly the speed of takeoff.
+              </p>
+              <p className="mt-2 hidden text-[13px] leading-5 text-canvas/65 sm:block">
+                The lanes share a capability sequence, then diverge on how long research
+                taste, verification, and coordination continue to bind.
+              </p>
+            </div>
+            <div className="pt-5">
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-rose">
+                What should change the view next?
+              </p>
+              <p className="mt-2 font-serif text-2xl font-semibold">
+                {nextTest?.title ?? "The next locked test"}
+              </p>
+              <Link
+                to="/falsifiers"
+                className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-cyan hover:text-panel"
+              >
+                {nextTest?.deadline
+                  ? formatIsoDate(nextTest.deadline)
+                  : nextTest?.review_label}{" "}
+                <ArrowRight size={12} />
+              </Link>
+            </div>
+          </div>
+          <details className="group mt-6 rounded-2xl border border-canvas/15 bg-canvas/[0.04]">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-xs font-medium text-canvas/70">
+              How is the frozen scenario tracking?
+              <ChevronDown
+                size={14}
+                className="transition-transform group-open:rotate-180"
+                aria-hidden="true"
               />
-            </div>
-            <p className="mt-3 text-[13px] leading-6 text-canvas/70">
-              <span className="font-semibold text-canvas/90">{briefing.pace_label}.</span> {briefing.pace_detail}
-            </p>
-            <a href={briefing.pace_source_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-cyan hover:text-panel">
-              {briefing.pace_source_label} <ArrowUpRight size={12} />
-            </a>
-          </div>
-          <div className="mt-6 border-t border-canvas/15 pt-5">
-            <div className="flex items-baseline justify-between gap-4">
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-canvas/55">53 tracked claims</p>
-              <p className="text-[11px] text-canvas/50">status, not speed</p>
-            </div>
-            <div className="mt-3 flex h-2 overflow-hidden rounded-full bg-canvas/10" aria-hidden="true">
-              {briefing.pace_statuses.map((status) => (
-                <span
-                  key={status.id}
-                  className={paceStatusTone[status.id]}
-                  style={{ width: `${(status.value / statusTotal) * 100}%` }}
-                />
-              ))}
-            </div>
-            <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5">
-              {briefing.pace_statuses.map((status) => (
-                <div key={status.id} className="flex items-center justify-between gap-3 text-[11px]">
-                  <dt className="flex min-w-0 items-center gap-2 text-canvas/60">
-                    <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${paceStatusTone[status.id]}`} />
-                    <span className="truncate">{status.label}</span>
-                  </dt>
-                  <dd className="font-mono text-canvas/85">{status.value}</dd>
+            </summary>
+            <div className="space-y-4 border-t border-canvas/15 px-4 py-4">
+              <div>
+                <p className="text-sm font-semibold">
+                  {briefing.pace_value} · {briefing.pace_label}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-canvas/60">
+                  {briefing.pace_detail}
+                </p>
+                <a
+                  href={briefing.pace_source_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-flex items-center gap-1 text-xs text-cyan"
+                >
+                  Source <ArrowUpRight size={11} />
+                </a>
+              </div>
+              <div className="border-t border-canvas/15 pt-4">
+                <div className="flex items-baseline justify-between gap-4">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-canvas/55">
+                    {statusTotal} tracked claims
+                  </p>
+                  <p className="text-[10px] text-canvas/45">status, not speed</p>
                 </div>
-              ))}
-            </dl>
-            <p className="mt-5 rounded-xl border border-canvas/10 bg-canvas/[0.04] p-3 text-[11px] leading-5 text-canvas/55">
-              {briefing.pace_note}
-            </p>
-          </div>
+                <div
+                  className="mt-3 flex h-2 overflow-hidden rounded-full bg-canvas/10"
+                  aria-hidden="true"
+                >
+                  {briefing.pace_statuses.map((status) => (
+                    <span
+                      key={status.id}
+                      className={paceStatusTone[status.id]}
+                      style={{ width: `${(status.value / statusTotal) * 100}%` }}
+                    />
+                  ))}
+                </div>
+                <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2">
+                  {briefing.pace_statuses.map((status) => (
+                    <div
+                      key={status.id}
+                      className="flex items-center justify-between gap-3 text-[10px]"
+                    >
+                      <dt className="flex min-w-0 items-center gap-2 text-canvas/55">
+                        <span
+                          className={`h-1.5 w-1.5 shrink-0 rounded-full ${paceStatusTone[status.id]}`}
+                        />
+                        <span className="truncate">{status.label}</span>
+                      </dt>
+                      <dd className="font-mono text-canvas/80">{status.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="mt-4 text-[10px] leading-5 text-canvas/50">
+                  {briefing.pace_note}
+                </p>
+              </div>
+            </div>
+          </details>
         </aside>
       </div>
       <div className="grid border-t border-line md:grid-cols-3">
@@ -146,35 +234,25 @@ function BriefingHero() {
                 index > 0 ? "border-t border-line md:border-l md:border-t-0" : ""
               }`}
             >
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
                 <span className="grid h-9 w-9 place-items-center rounded-full bg-cyan/10 text-cyan">
                   <Icon size={17} />
                 </span>
-                <ArrowRight size={15} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-cyan" />
+                <div className="min-w-0">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">
+                    {lens.label}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-ink">{lens.value}</p>
+                </div>
+                <ArrowRight
+                  size={14}
+                  className="ml-auto shrink-0 text-muted transition-transform group-hover:translate-x-1 group-hover:text-cyan"
+                />
               </div>
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">{lens.label}</p>
-              <p className="mt-1.5 text-lg font-semibold tracking-[-0.02em] text-ink">{lens.value}</p>
-              <p className="mt-2 text-[13px] leading-5 text-muted">{lens.detail}</p>
             </Link>
           );
         })}
       </div>
-    </section>
-  );
-}
-
-function HeadlineStats() {
-  const stats = canonical.meta.headline_stats;
-  if (!stats?.length) return null;
-  return (
-    <section aria-label="Headline statistics" className="mt-5 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
-      {stats.map((stat) => (
-        <div key={stat.label} className="bg-panel p-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">{stat.label}</p>
-          <p className="mt-2 text-xl font-semibold tracking-[-0.02em] text-ink">{stat.value}</p>
-          {stat.detail ? <p className="mt-2 text-[13px] leading-5 text-muted">{stat.detail}</p> : null}
-        </div>
-      ))}
     </section>
   );
 }
@@ -218,17 +296,38 @@ function ReasoningSection() {
 
   return (
     <section id="reasoning" className="mt-20 scroll-mt-28" aria-labelledby="reasoning-title">
-      <div className="max-w-4xl">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">How the bottom line is formed</p>
-        <h2 id="reasoning-title" className="mt-2 text-balance font-serif text-3xl font-semibold tracking-[-0.02em] text-ink md:text-4xl">
-          Show the reasoning, not just the verdict.
-        </h2>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">
-          {reasoning.epistemic_status}. Each step below names its evidence; the cruxes state what would move the read in either direction.
-        </p>
-      </div>
+      <details className="group">
+        <summary className="grid cursor-pointer list-none items-center gap-5 rounded-[24px] border border-line bg-panel p-5 shadow-instrument sm:grid-cols-[1fr_auto] md:p-7">
+          <span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">
+              Evidence-linked conclusion
+            </span>
+            <span
+              id="reasoning-title"
+              className="mt-2 block text-balance font-serif text-2xl font-semibold tracking-[-0.02em] text-ink md:text-3xl"
+            >
+              Show the reasoning, not just the verdict.
+            </span>
+            <span className="mt-2 block max-w-3xl text-sm leading-6 text-muted">
+              Open the observation → inference → forecast-impact chain, the strongest
+              disagreement, and three two-sided cruxes.
+            </span>
+          </span>
+          <span className="flex items-center gap-4">
+            <span className="hidden max-w-[220px] text-right font-mono text-[8px] uppercase leading-4 tracking-[0.12em] text-muted sm:block">
+              {reasoning.epistemic_status}
+            </span>
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-raised text-muted">
+              <ChevronDown
+                size={17}
+                className="transition-transform group-open:rotate-180"
+                aria-hidden="true"
+              />
+            </span>
+          </span>
+        </summary>
 
-      <div className="mt-7 overflow-hidden rounded-[24px] border border-line bg-panel shadow-instrument">
+        <div className="mt-7 overflow-hidden rounded-[24px] border border-line bg-panel shadow-instrument">
         <div className="grid lg:grid-cols-[1.2fr_.8fr]">
           <div className="p-5 md:p-7 lg:p-8">
             <h3 className="max-w-2xl font-serif text-2xl font-semibold tracking-[-0.02em] text-ink">
@@ -325,6 +424,7 @@ function ReasoningSection() {
           </article>
         ))}
       </div>
+      </details>
     </section>
   );
 }
@@ -332,41 +432,118 @@ function ReasoningSection() {
 function ReadingPaths() {
   const paths = canonical.meta.reading_paths;
   if (!paths?.length) return null;
+  const [activeId, setActiveId] = useState(paths[0].id);
+  const active = paths.find((path) => path.id === activeId) ?? paths[0];
+  const pathIcons = [Compass, BookOpen, Database];
+  const ActiveIcon = pathIcons[paths.findIndex((path) => path.id === active.id)] ?? Compass;
+
   return (
     <section id="paths" aria-labelledby="paths-title" className="scroll-mt-28">
-      <div className="mb-6 max-w-3xl">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Three depths, one record</p>
-        <h2 id="paths-title" className="mt-2 font-serif text-3xl font-semibold tracking-[-0.015em] text-ink">
-          Choose how far in you want to go
-        </h2>
-      </div>
-      <div className="grid gap-4 lg:grid-cols-3">
-        {paths.map((path, index) => (
-          <article key={path.id} className="flex flex-col rounded-2xl border border-line bg-panel p-5 shadow-instrument md:p-6">
-            <div className="flex items-baseline justify-between gap-4">
-              <span className="font-mono text-[10px] text-cyan">{String(index + 1).padStart(2, "0")}</span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">{path.duration}</span>
-            </div>
-            <h3 className="mt-3 font-serif text-xl font-semibold text-ink">{path.label}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted">{path.description}</p>
-            <ol className="mt-5 space-y-1 border-t border-line pt-4">
-              {path.steps.map((step, stepIndex) => (
-                <li key={step.path}>
-                  <Link
-                    to={step.path}
-                    className="group flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-sm text-ink transition-colors hover:bg-raised"
+      <div className="overflow-hidden rounded-[28px] border border-line bg-panel shadow-instrument">
+        <div className="grid lg:grid-cols-[.72fr_1.28fr]">
+          <div className="border-b border-line bg-raised/55 p-6 md:p-8 lg:border-b-0 lg:border-r">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">
+              Three depths · one record
+            </p>
+            <h2
+              id="paths-title"
+              className="mt-3 font-serif text-3xl font-semibold tracking-[-0.015em] text-ink"
+            >
+              Choose how far in you want to go
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-muted">
+              Start with the shape of the argument. The data, sources, and technical rules
+              stay available when you decide they matter.
+            </p>
+            <div className="mt-6 space-y-2" role="tablist" aria-label="Reading depth">
+              {paths.map((path, index) => {
+                const Icon = pathIcons[index];
+                const selected = active.id === path.id;
+                return (
+                  <button
+                    key={path.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    aria-controls="reading-path-panel"
+                    onClick={() => setActiveId(path.id)}
+                    className={`flex min-h-14 w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left transition-colors ${
+                      selected ? "bg-ink text-panel" : "text-ink hover:bg-panel"
+                    }`}
                   >
-                    <span className="flex items-center gap-2.5">
-                      <span className="font-mono text-[10px] text-muted">{stepIndex + 1}</span>
-                      {step.label}
+                    <Icon
+                      size={17}
+                      className={selected ? "text-cyan" : "text-muted"}
+                      aria-hidden="true"
+                    />
+                    <span>
+                      <span className="block text-sm font-semibold">{path.label}</span>
+                      <span
+                        className={`mt-0.5 block font-mono text-[8px] uppercase tracking-[0.13em] ${
+                          selected ? "text-canvas/50" : "text-muted"
+                        }`}
+                      >
+                        {path.duration}
+                      </span>
                     </span>
-                    <ArrowRight size={13} className="text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-cyan" />
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </article>
-        ))}
+                    <ArrowRight
+                      size={14}
+                      className={`ml-auto ${selected ? "text-cyan" : "text-muted"}`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div
+            id="reading-path-panel"
+            role="tabpanel"
+            className="flex min-h-[320px] flex-col justify-between p-6 md:min-h-[360px] md:p-8 lg:p-10"
+          >
+            <div>
+              <span className="grid h-11 w-11 place-items-center rounded-full bg-cyan/10 text-cyan">
+                <ActiveIcon size={19} aria-hidden="true" />
+              </span>
+              <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.15em] text-muted">
+                {active.duration}
+              </p>
+              <h3 className="mt-2 font-serif text-3xl font-semibold text-ink">
+                {active.label}
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
+                {active.description}
+              </p>
+              <ol className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+                {active.steps.slice(0, 3).map((step, index) => (
+                  <li key={step.path}>
+                    <Link
+                      to={step.path}
+                      className="group flex h-full flex-col items-start gap-2 rounded-xl border border-line p-3 hover:border-cyan/40 hover:bg-raised/35 sm:flex-row sm:gap-3 sm:p-3.5"
+                    >
+                      <span className="font-mono text-[9px] text-cyan">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-xs font-medium leading-5 text-ink">
+                        {step.label}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+              {active.steps.length > 3 ? (
+                <p className="mt-3 text-xs text-muted">
+                  + {active.steps.length - 3} more stops after you begin
+                </p>
+              ) : null}
+            </div>
+            <Link
+              to={active.steps[0].path}
+              className="mt-7 inline-flex w-fit items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-panel hover:bg-cyan"
+            >
+              Begin with {active.steps[0].label} <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -374,112 +551,168 @@ function ReadingPaths() {
 
 /* ---------- Capability progress ---------- */
 
-function ProgressRing({ value }: { value: number }) {
-  const radius = 42;
-  const circumference = 2 * Math.PI * radius;
-  return (
-    <div className="relative h-[104px] w-[104px] shrink-0">
-      <svg viewBox="0 0 104 104" className="h-full w-full -rotate-90" aria-hidden="true">
-        <circle cx="52" cy="52" r={radius} fill="none" stroke="#e7e2d6" strokeWidth="7" />
-        <circle
-          cx="52"
-          cy="52"
-          r={radius}
-          fill="none"
-          stroke={ACCENT}
-          strokeWidth="7"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference * (1 - value / 100)}
-        />
-      </svg>
-      <span className="absolute inset-0 grid place-items-center text-[23px] font-semibold tracking-[-0.05em] text-ink">
-        {value}%
-      </span>
-    </div>
-  );
-}
-
-function CapabilityDetail({ item, onClose }: { item: CapabilityProgress; onClose: () => void }) {
+function CapabilityDetail({ item }: { item: CapabilityProgress }) {
   const milestone = milestonesById.get(item.milestone_id);
+  const range = getProgressRange(item);
+
   return (
     <div
       id="capability-detail"
       role="region"
       aria-labelledby={`capability-tab-${item.id}`}
-      className="mt-4 rounded-2xl border border-line bg-panel shadow-instrument"
     >
-      <div className="flex items-start justify-between gap-6 border-b border-line p-5 md:p-6">
-        <div>
+      <DataCard className="mt-4">
+        <div className="grid lg:grid-cols-[.4fr_.6fr]">
+          <div className="bg-ink p-6 text-panel md:p-8">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">{item.label}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-canvas/55">
+              {item.label} · central estimate
+            </span>
             <StatusBadge value={item.confidence} />
-            <span className="text-[11px] text-muted">as of {formatIsoDate(item.as_of)}</span>
           </div>
-          <h3 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-ink">{milestone?.name}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">{milestone?.operational_definition}</p>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close capability detail"
-          className="rounded-full border border-line bg-canvas p-2 text-muted hover:text-ink"
-        >
-          <X size={15} />
-        </button>
-      </div>
-      <div className="grid gap-x-10 gap-y-6 p-5 md:grid-cols-2 md:p-6">
-        {item.criteria.map((criterion) => (
-          <div key={criterion.id}>
-            <div className="mb-2 flex items-baseline justify-between gap-4">
-              <span className="text-sm font-medium text-ink">{criterion.label}</span>
-              <span className="shrink-0 font-mono text-xs text-muted">
-                {Math.round(criterion.completion * 100)}% · w {Math.round(criterion.weight * 100)}
-              </span>
-            </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-raised">
+          <div className="mt-6 flex items-end gap-4">
+            <span className="font-serif text-7xl font-semibold leading-none tracking-[-0.06em]">
+              {item.score}
+            </span>
+            <span className="mb-2 text-sm text-canvas/55">of 100 rubric points</span>
+          </div>
+          <div className="mt-6">
+            <div className="relative h-3 overflow-hidden rounded-full bg-canvas/15">
               <div
-                className="h-full rounded-full"
-                style={{ width: `${criterion.completion * 100}%`, backgroundColor: ACCENT }}
+                className="absolute inset-y-0 rounded-full bg-cyan/45"
+                style={{ left: `${range.low}%`, width: `${range.high - range.low}%` }}
+                aria-hidden="true"
+              />
+              <span
+                className="absolute top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-panel"
+                style={{ left: `calc(${item.score}% - 2px)` }}
+                aria-hidden="true"
               />
             </div>
-            <p className="mt-2.5 text-xs leading-5 text-muted">{criterion.rationale}</p>
-            <div className="mt-2.5 flex flex-wrap gap-1.5">
-              {criterion.evidence_refs.map((ref) => {
-                const evidence = evidenceById.get(ref);
-                return evidence ? (
-                  <a
-                    key={ref}
-                    href={evidence.source_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-full border border-line bg-canvas px-2.5 py-1 text-[10px] text-muted transition-colors hover:border-cyan/40 hover:text-cyan"
-                  >
-                    {evidence.publisher} · {evidence.source_label}
-                  </a>
-                ) : null;
-              })}
+            <div className="mt-2 flex justify-between font-mono text-[9px] uppercase tracking-[0.12em] text-canvas/45">
+              <span>{range.low}% low</span>
+              <span>{range.high}% high</span>
             </div>
           </div>
-        ))}
-      </div>
-      <p className="border-t border-line px-5 py-4 text-xs leading-5 text-muted md:px-6">{item.summary}</p>
+          <p className="mt-5 text-xs leading-5 text-canvas/55">
+            Range = plausible scoring judgment under the same public record, not a
+            confidence interval.
+          </p>
+        </div>
+        <div className="p-6 md:p-8">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-cyan">
+              {milestone?.code} · {formatIsoDate(item.as_of)}
+            </span>
+            <StatusBadge value={milestone?.status ?? "not-arrived"} />
+          </div>
+          <h3 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.015em] text-ink">
+            {milestone?.name}
+          </h3>
+          <p className="mt-3 text-sm leading-6 text-muted">
+            {milestone?.operational_definition}
+          </p>
+          <p className="mt-5 rounded-xl bg-raised/65 p-4 text-sm leading-6 text-ink">
+            {item.summary}
+          </p>
+          <p className="mt-4 text-xs leading-5 text-muted">{item.confidence_note}</p>
+          <details className="group mt-5 rounded-xl border border-line">
+            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-ink">
+              See criteria, weights, and sources
+              <ChevronDown
+                size={15}
+                className="text-muted transition-transform group-open:rotate-180"
+                aria-hidden="true"
+              />
+            </summary>
+            <div className="grid gap-px border-t border-line bg-line md:grid-cols-2">
+              {item.criteria.map((criterion) => {
+                const band = canonical.methodology.score_bands.find(
+                  (entry) => entry.id === criterion.rating,
+                );
+                return (
+                  <div key={criterion.id} className="bg-panel p-4">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="text-xs font-semibold text-ink">
+                        {criterion.label}
+                      </span>
+                      <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.1em] text-cyan">
+                        {band?.label} · {Math.round(criterion.weight * 100)}% weight
+                      </span>
+                    </div>
+                    <div className="relative mt-3 h-1.5 overflow-hidden rounded-full bg-raised">
+                      <div
+                        className="absolute inset-y-0 rounded-full bg-cyan/20"
+                        style={{
+                          left: `${criterion.completion_range.low * 100}%`,
+                          width: `${
+                            (criterion.completion_range.high -
+                              criterion.completion_range.low) *
+                            100
+                          }%`,
+                        }}
+                      />
+                      <span
+                        className="absolute top-1/2 h-3 w-0.5 -translate-y-1/2 bg-cyan"
+                        style={{ left: `${criterion.completion * 100}%` }}
+                      />
+                    </div>
+                    <p className="mt-3 text-xs leading-5 text-muted">
+                      {criterion.rationale}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {criterion.evidence_refs.map((ref) => {
+                        const evidence = evidenceById.get(ref);
+                        return evidence ? (
+                          <a
+                            key={ref}
+                            href={evidence.source_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="rounded-full border border-line px-2 py-1 text-[9px] text-muted hover:border-cyan/40 hover:text-cyan"
+                          >
+                            {evidence.publisher}
+                          </a>
+                        ) : null;
+                      })}
+                    </div>
+                    {criterion.counterevidence_refs.length ? (
+                      <p className="mt-3 font-mono text-[8px] uppercase tracking-[0.11em] text-rose">
+                        {criterion.counterevidence_refs.length} explicit counter
+                        {criterion.counterevidence_refs.length === 1 ? "" : "s"} retained
+                      </p>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </details>
+        </div>
+        </div>
+      </DataCard>
     </div>
   );
 }
 
 function CapabilitySection() {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = canonical.capability_progress.find((item) => item.id === selectedId) ?? null;
+  const defaultItem =
+    canonical.capability_progress.find((item) => item.label === "Agent-2") ??
+    canonical.capability_progress[0];
+  const [selectedId, setSelectedId] = useState(defaultItem.id);
+  const selected =
+    canonical.capability_progress.find((item) => item.id === selectedId) ??
+    defaultItem;
+
   return (
     <section id="capability" aria-labelledby="progress-title" className="scroll-mt-28">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 id="progress-title" className="font-serif text-3xl font-semibold tracking-[-0.015em] text-ink">
-            Capability progress
+            The capability ladder, in one glance
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            Weighted completion of public-evidence criteria. Select a level to see every component and source.
+            These are cumulative job descriptions, not model versions. Pick a level to see
+            what is public, what is missing, and how uncertain the scoring judgment is.
           </p>
         </div>
         <Link
@@ -489,37 +722,64 @@ function CapabilitySection() {
           <CircleHelp size={14} /> {canonical.meta.progress_label}
         </Link>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" role="group" aria-label="Capability levels">
+      <div
+        className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line xl:grid-cols-4"
+        role="group"
+        aria-label="Capability levels"
+      >
         {canonical.capability_progress.map((item) => {
           const milestone = milestonesById.get(item.milestone_id);
           const isSelected = selectedId === item.id;
+          const range = getProgressRange(item);
           return (
             <button
               key={item.id}
               id={`capability-tab-${item.id}`}
               type="button"
-              aria-expanded={isSelected}
+              aria-pressed={isSelected}
               aria-controls="capability-detail"
-              onClick={() => setSelectedId(isSelected ? null : item.id)}
-              className={`rounded-2xl border p-5 text-left shadow-instrument transition-colors ${
-                isSelected ? "border-cyan/60 bg-panel ring-1 ring-cyan/30" : "border-line bg-panel hover:border-cyan/35"
+              onClick={() => setSelectedId(item.id)}
+              className={`min-h-[132px] p-5 text-left transition-colors ${
+                isSelected ? "bg-ink text-panel" : "bg-panel text-ink hover:bg-raised/50"
               }`}
             >
-              <div className="flex items-center gap-4 xl:flex-col xl:items-start">
-                <ProgressRing value={item.score} />
-                <div className="min-w-0">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">{item.label}</span>
-                  <h3 className="mt-1 text-lg font-semibold tracking-[-0.02em] text-ink">{milestone?.name}</h3>
-                  <span className={`mt-2 inline-block text-xs ${isSelected ? "text-cyan" : "text-muted"}`}>
-                    {isSelected ? "Hide detail" : "View criteria & sources"}
-                  </span>
+              <div className="flex items-start justify-between gap-4">
+                <span
+                  className={`font-mono text-[9px] uppercase tracking-[0.14em] ${
+                    isSelected ? "text-canvas/50" : "text-muted"
+                  }`}
+                >
+                  {item.label}
+                </span>
+                <span className="font-serif text-3xl font-semibold leading-none">
+                  {item.score}
+                </span>
+              </div>
+              <h3 className="mt-5 text-sm font-semibold">{milestone?.name}</h3>
+              <div className="mt-3 flex items-center gap-2">
+                <div
+                  className={`h-1.5 flex-1 overflow-hidden rounded-full ${
+                    isSelected ? "bg-canvas/15" : "bg-raised"
+                  }`}
+                >
+                  <div
+                    className="h-full rounded-full bg-cyan"
+                    style={{ width: `${item.score}%` }}
+                  />
                 </div>
+                <span
+                  className={`font-mono text-[8px] ${
+                    isSelected ? "text-canvas/45" : "text-muted"
+                  }`}
+                >
+                  {range.low}–{range.high}
+                </span>
               </div>
             </button>
           );
         })}
       </div>
-      {selected ? <CapabilityDetail item={selected} onClose={() => setSelectedId(null)} /> : null}
+      <CapabilityDetail item={selected} />
     </section>
   );
 }
@@ -919,7 +1179,7 @@ function SignalsSection() {
       [...canonical.evidence]
         .filter((item) => !item.archived)
         .sort((a, b) => b.date.localeCompare(a.date))
-        .slice(0, 5),
+        .slice(0, 2),
     [],
   );
   const datedTest = canonical.falsifiers.find(
@@ -933,7 +1193,7 @@ function SignalsSection() {
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Latest evidence</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-ink">
-              New signals in the ledger
+              New signals worth opening
             </h2>
           </div>
           <Link to="/evidence" className="inline-flex shrink-0 items-center gap-1 text-sm text-cyan">
@@ -990,20 +1250,23 @@ export function TimelineView() {
   return (
     <div>
       <BriefingHero />
-      <HeadlineStats />
-      <ReasoningSection />
+      <div className="mt-8 md:mt-10">
+        <ReadingPaths />
+      </div>
       <div className="mt-20">
         <CapabilitySection />
       </div>
+      <ReasoningSection />
       <section className="my-20 overflow-hidden rounded-2xl border border-line bg-ink text-panel shadow-instrument">
         <div className="grid items-center lg:grid-cols-[1fr_auto]">
           <div className="p-6 md:p-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Forecast workbench</p>
             <h2 className="mt-3 max-w-2xl font-serif text-3xl font-semibold tracking-[-0.02em]">
-              Compare the whole ladder before debating one date.
+              Ready for dates? Compare the whole ladder first.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-canvas/65">
-              Four committed distributions, every available quantile, explicit supersession history, and the assumptions that pull each timeline earlier or later.
+              Four source-faithful distributions show where the timelines agree, where they
+              diverge, and which assumptions pull each threshold earlier or later.
             </p>
           </div>
           <Link to="/forecasts" className="m-6 inline-flex items-center justify-center gap-2 rounded-full bg-panel px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-cyan hover:text-panel md:m-8">
@@ -1012,9 +1275,37 @@ export function TimelineView() {
         </div>
       </section>
       <SignalsSection />
-      <div className="mt-20">
-        <ReadingPaths />
-      </div>
+      <section className="mt-20 overflow-hidden rounded-[28px] border border-line bg-panel shadow-instrument">
+        <div className="grid lg:grid-cols-[.72fr_1.28fr]">
+          <div className="bg-raised/55 p-6 md:p-8">
+            <div className="flex items-center gap-3">
+              <span className="grid h-10 w-10 place-items-center rounded-full bg-cyan/10 text-cyan">
+                <CircleHelp size={18} aria-hidden="true" />
+              </span>
+              <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-cyan">
+                Method {canonical.methodology.version}
+              </p>
+            </div>
+            <h2 className="mt-5 font-serif text-3xl font-semibold tracking-[-0.015em] text-ink">
+              How does a signal earn a place here?
+            </h2>
+          </div>
+          <div className="p-6 md:p-8">
+            <p className="max-w-2xl text-sm leading-6 text-muted">
+              Follow one public observation through the five-step pipeline: define the
+              threshold, admit the source, classify the evidence, score the rubric, and
+              update the record visibly. The full method also exposes counterevidence,
+              uncertainty ranges, and known failure modes.
+            </p>
+            <Link
+              to="/methodology"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-panel hover:bg-cyan"
+            >
+              Read the 60-second method <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

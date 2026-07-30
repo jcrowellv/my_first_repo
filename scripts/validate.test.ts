@@ -27,6 +27,56 @@ describe("canonical data", () => {
     }
   });
 
+  it("rejects a criterion whose central estimate falls outside its uncertainty range", () => {
+    const broken = structuredClone(canonicalJson);
+    broken.capability_progress[1].criteria[0].completion_range.high = 0.7;
+    const result = CanonicalSchema.safeParse(broken);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(
+        result.error.issues.some(
+          (issue) =>
+            issue.path.join(".") ===
+            "capability_progress.1.criteria.0.completion_range",
+        ),
+      ).toBe(true);
+    }
+  });
+
+  it("requires complete provenance labels on every evidence record", () => {
+    const broken = structuredClone(canonicalJson) as unknown as {
+      evidence: Array<Record<string, unknown>>;
+    };
+    delete broken.evidence[0].verification;
+    const result = CanonicalSchema.safeParse(broken);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(
+        result.error.issues.some(
+          (issue) => issue.path.join(".") === "evidence.0.verification",
+        ),
+      ).toBe(true);
+    }
+  });
+
+  it("rejects overlapping evidence and counterevidence on one criterion", () => {
+    const broken = structuredClone(canonicalJson);
+    broken.capability_progress[1].criteria[0].counterevidence_refs = [
+      broken.capability_progress[1].criteria[0].evidence_refs[0],
+    ];
+    const result = CanonicalSchema.safeParse(broken);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(
+        result.error.issues.some(
+          (issue) =>
+            issue.path.join(".") ===
+            "capability_progress.1.criteria.0.counterevidence_refs.0",
+        ),
+      ).toBe(true);
+    }
+  });
+
   it("rejects an outside view whose evidence record is missing", () => {
     const broken = structuredClone(canonicalJson);
     broken.outside_views[0].evidence_ref = "ev-does-not-exist";

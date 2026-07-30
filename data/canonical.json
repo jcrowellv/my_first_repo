@@ -7,12 +7,12 @@
     "internal_lag_months": 4,
     "next_review_date": "2026-11-01",
     "scoring_convention": "Milestones score on publicly verifiable evidence only: system cards, third-party evaluations, and documented deployments.",
-    "internal_lag_explanation": "The internal lag is used only to translate public-verification dates into spine-comparable internal-existence dates. The current draft value is four months and is contestable.",
+    "internal_lag_explanation": "The four-month lag is a sensitivity assumption for narrative comparisons between public evidence and a scenario's presumed internal events. It does not move a stored forecast date, milestone status, or rubric score; the method also shows zero- and eight-month interpretations.",
     "update_protocol": "Edit data/canonical.json, run npm run validate, and commit. Forecast records are append-only; a revision adds a new record and links the prior record through superseded_by.",
-    "progress_methodology": "Each capability score is the weighted completion of observable criteria derived from that AI 2027 agent definition. Criterion weights sum to 100%; each criterion is scored from 0 to 100% using only public evidence. The site validates the arithmetic and links every criterion to its evidence.",
+    "progress_methodology": "Each capability score is a central judgment over weighted, observable criteria derived from the corresponding AI 2027 agent definition. Every criterion carries a named rating band, an interpretive low-high range, evidence, counterevidence, and a rationale. The site validates the central arithmetic and uncertainty bounds.",
     "synthesis_methodology": "Every live bottom line must keep observation, interpretation, and forecast impact separate; name the evidence that supports each step; state an epistemic status; surface the strongest disagreement; and identify concrete cruxes that would move the read in either direction. Status counts, rubric completion, pace estimates, and forecast probabilities are different quantities and must never be substituted for one another.",
-    "progress_label": "Rubric completion, not probability.",
-    "progress_disclaimer": "Progress scores are rubric-completion estimates, not probabilities that a capability has arrived and not measurements on a single benchmark. The evidence is incomplete, private frontier systems may be ahead, and the rubric itself is contestable.",
+    "progress_label": "Rubric estimate · not a probability",
+    "progress_disclaimer": "Progress scores summarize rubric completion, not the probability that a capability exists and not performance on one benchmark. The central estimate is shown beside a wider interpretive range because public evidence is incomplete, criteria overlap, private systems may be ahead, and the weights remain contestable.",
     "distribution_warning": "Distribution bands are marginal forecasts, not sampled paths. Do not read one percentile column as a coherent scenario unless correlation is modeled explicitly.",
     "sample_warning": "SAMPLE marks structurally necessary content that was not supplied by the source corpus. It is not forecast evidence.",
     "last_updated_label": "Last updated",
@@ -41,9 +41,9 @@
     ],
     "briefing": {
       "as_of": "2026-07-29",
-      "eyebrow": "State of the frontier",
-      "title": "Capability is advancing faster than the control evidence.",
-      "description": "Public systems satisfy the Agent-1 bundle and show material pieces of Agent-2, while the evidence needed to connect benchmark gains to a sustained AI-R&D feedback loop remains weak. Late-July records also sharpen the control gap: an evaluation agent escaped its sandbox to reach a third party's production infrastructure, and 1,273 frontier-company employees called for tools to pace automated AI development. Frontier safeguards remain largely self-administered while a 2.8-trillion-parameter model's weights cannot be recalled.",
+      "eyebrow": "Start here · evidence through",
+      "title": "Four forecasts. One evidence trail. No black-box score.",
+      "description": "The Ledger asks three questions: what frontier AI can reliably do now, when later capability thresholds might arrive, and which public observations should change that view.",
       "pace_label": "Independent composite pace",
       "pace_value": "0.70×",
       "pace_fraction": 0.7,
@@ -202,9 +202,9 @@
     "reading_paths": [
       {
         "id": "brief",
-        "label": "Get the brief",
-        "duration": "3 minutes",
-        "description": "The current capability, control, and diffusion read without any chart interpretation.",
+        "label": "Orient me",
+        "duration": "2 minutes",
+        "description": "Understand the question, the current read, and the next signal without interpreting a chart.",
         "steps": [
           { "label": "State of the frontier", "path": "/#state" },
           { "label": "How the read is formed", "path": "/#reasoning" },
@@ -214,9 +214,9 @@
       },
       {
         "id": "explore",
-        "label": "Compare the forecasts",
-        "duration": "15 minutes",
-        "description": "Four committed distributions, the takeoff-speed disagreement, the assumptions that separate them, and outside views with different definitions.",
+        "label": "Compare forecasts",
+        "duration": "Explore",
+        "description": "See where four source-faithful timelines agree, where they diverge, and which assumptions create the gap.",
         "steps": [
           { "label": "Full capability ladder", "path": "/forecasts#ladder" },
           { "label": "Takeoff gaps", "path": "/forecasts#takeoff" },
@@ -227,9 +227,9 @@
       },
       {
         "id": "audit",
-        "label": "Audit the record",
-        "duration": "As long as it takes",
-        "description": "Every source, locked test, scoring rule, and revision, with limitations and provenance kept attached.",
+        "label": "Audit the method",
+        "duration": "Deep dive",
+        "description": "Inspect every source, scoring rule, locked test, uncertainty, and revision at your own pace.",
         "steps": [
           { "label": "Evidence ledger", "path": "/evidence" },
           { "label": "Dated tripwires", "path": "/falsifiers" },
@@ -335,9 +335,9 @@
       {
         "id": "methodology",
         "label": "Methodology",
-        "eyebrow": "Scoring convention",
-        "title": "How this record is graded",
-        "description": "Milestones score on publicly verifiable evidence. Internal existence is inferred through a contestable four-month lag, forecast records are append-only, and every revision names the evidence that moved it."
+        "eyebrow": "Method · version 2.0",
+        "title": "How a public signal becomes a visible update",
+        "description": "A plain-language guide to what the Ledger measures, how evidence is classified, how rubric estimates are scored, what uncertainty means, and which rules keep the four forecasts auditable."
       },
       {
         "id": "glossary",
@@ -350,7 +350,7 @@
     "navigation": [
       {
         "id": "overview",
-        "label": "Overview",
+        "label": "Start here",
         "path": "/",
         "children": [
           {
@@ -462,6 +462,232 @@
             "path": "/changelog"
           }
         ]
+      }
+    ]
+  },
+  "methodology": {
+    "id": "methodology-v2",
+    "version": "2.0",
+    "reviewed_on": "2026-07-29",
+    "headline": "Separate what is observed, what is scored, and what is forecast.",
+    "summary": "The Ledger does three jobs that are easy to blur together: it records public observations, estimates completion of defined capability rubrics, and preserves four authored forecast distributions. Those layers can inform one another, but they are never collapsed into one master number.",
+    "core_question": "Given the public record available on the review date, how much of each operational capability definition is visibly demonstrated, what remains missing, and which named observation would justify a revision?",
+    "steps": [
+      {
+        "id": "define",
+        "label": "Define the threshold",
+        "summary": "Translate a scenario label into observable parts before looking at results.",
+        "detail": "Each capability level is split into criteria such as research engineering, reliable autonomy, research taste, continual learning, and measured R&D uplift. A strong coding benchmark cannot satisfy an unrelated criterion.",
+        "output": "A stable, inspectable rubric"
+      },
+      {
+        "id": "admit",
+        "label": "Admit the record",
+        "summary": "Add a traceable public source with its implication and limitation attached.",
+        "detail": "Every evidence item must identify the publisher, date, source type, operational relevance, direction, independence, verification state, evaluation context, and the strongest known limitation.",
+        "output": "A source-linked evidence item"
+      },
+      {
+        "id": "classify",
+        "label": "Classify the signal",
+        "summary": "Keep relevance, independence, and verification as separate judgments.",
+        "detail": "A highly relevant first-party incident and a reproduced independent evaluation can both matter for different reasons. The method refuses to hide those differences inside a single evidence-quality score.",
+        "output": "Three visible evidence labels"
+      },
+      {
+        "id": "score",
+        "label": "Score the rubric",
+        "summary": "Assign a named completion band, central estimate, and uncertainty range.",
+        "detail": "Criterion weights sum to 100%. Central values produce the displayed rubric estimate; low and high values expose plausible judgment under the same public record. Evidence and counterevidence stay attached to the criterion.",
+        "output": "A central estimate plus range"
+      },
+      {
+        "id": "update",
+        "label": "Update visibly",
+        "summary": "Revise only through a named source or precommitted test.",
+        "detail": "Evidence can change a rubric judgment. A forecast revision creates a new record, links the old one as superseded, names what moved it, and adds a changelog entry. Frozen scenario dates never move.",
+        "output": "An append-only audit trail"
+      }
+    ],
+    "evidence_axes": [
+      {
+        "id": "diagnosticity",
+        "label": "Relevance",
+        "question": "How directly does this observation bear on the threshold?",
+        "summary": "Diagnosticity is about the inferential distance from the observation to the claim, not the prestige of the publisher.",
+        "values": [
+          {
+            "value": "high",
+            "label": "High",
+            "definition": "Directly tests or demonstrates a defining part of the threshold."
+          },
+          {
+            "value": "medium",
+            "label": "Medium",
+            "definition": "Updates a mechanism or adjacent capability but does not settle the threshold."
+          },
+          {
+            "value": "low",
+            "label": "Low",
+            "definition": "Context worth retaining, with a long inference chain to the threshold."
+          }
+        ]
+      },
+      {
+        "id": "independence",
+        "label": "Independence",
+        "question": "Who produced or evaluated the result?",
+        "summary": "Independence changes how much correlated incentive, access, and selection effects should be expected.",
+        "values": [
+          {
+            "value": "first-party",
+            "label": "First-party",
+            "definition": "Reported by the developer, deployer, or author with the closest stake in the claim."
+          },
+          {
+            "value": "mixed",
+            "label": "Mixed",
+            "definition": "Combines first-party access or claims with meaningful outside analysis or checking."
+          },
+          {
+            "value": "independent",
+            "label": "Independent",
+            "definition": "Produced by an evaluator or research group institutionally separate from the system developer."
+          }
+        ]
+      },
+      {
+        "id": "verification",
+        "label": "Verification",
+        "question": "How far has the claim been checked?",
+        "summary": "Verification records the state of checking without pretending documentation alone guarantees validity.",
+        "values": [
+          {
+            "value": "preliminary",
+            "label": "Preliminary",
+            "definition": "A new or incomplete result whose methods, artifacts, or full context are not yet available."
+          },
+          {
+            "value": "reported",
+            "label": "Reported",
+            "definition": "A specific claim is public, but rerun-critical detail or external checking is limited."
+          },
+          {
+            "value": "documented",
+            "label": "Documented",
+            "definition": "Methods and limitations are sufficiently described for informed interpretation."
+          },
+          {
+            "value": "independently-evaluated",
+            "label": "Independently evaluated",
+            "definition": "An outside evaluator ran or directly assessed the system under a documented setup."
+          },
+          {
+            "value": "reproduced",
+            "label": "Reproduced",
+            "definition": "A materially similar result has been rerun by a separate party with enough detail to compare."
+          }
+        ]
+      }
+    ],
+    "score_bands": [
+      {
+        "id": "not-observed",
+        "label": "Not observed",
+        "min": 0,
+        "max": 0,
+        "plain_language": "No qualifying public evidence for this criterion."
+      },
+      {
+        "id": "trace",
+        "label": "Early signal",
+        "min": 0.01,
+        "max": 0.24,
+        "plain_language": "Relevant pieces exist, but the defining behavior is mostly absent or indirect."
+      },
+      {
+        "id": "partial",
+        "label": "Partial",
+        "min": 0.25,
+        "max": 0.59,
+        "plain_language": "A meaningful part of the criterion is visible, with important gaps."
+      },
+      {
+        "id": "substantial",
+        "label": "Substantial",
+        "min": 0.6,
+        "max": 0.99,
+        "plain_language": "Most of the criterion is publicly supported, but one or more defining gaps remain."
+      },
+      {
+        "id": "met",
+        "label": "Met",
+        "min": 1,
+        "max": 1,
+        "plain_language": "The criterion is publicly demonstrated at the operational threshold."
+      }
+    ],
+    "score_rule": "A rubric estimate is the weighted sum of criterion central values. It is a compact judgment about visible completion, not a probability, benchmark score, or claim that the criteria are statistically independent.",
+    "uncertainty_rule": "Every criterion has a low, central, and high completion value under the same evidence. Weighting the low and high values produces an interpretive range that exposes judgment uncertainty without claiming a calibrated confidence interval.",
+    "forecast_rule": "The four forecast tracks retain their own authorship, definitions, conditions, and quantiles. They are compared side by side, never averaged into a consensus date, and never rewritten to match later evidence.",
+    "lag_rule": "The central four-month public-evidence lag is a contestable sensitivity assumption used only in narrative comparisons with presumed private-lab events. Zero-, four-, and eight-month interpretations are shown; no option changes canonical dates, rubric arithmetic, or milestone status.",
+    "lag_scenarios_months": [0, 4, 8],
+    "decision_rules": [
+      {
+        "title": "No benchmark substitution",
+        "text": "A benchmark can support only the criterion it actually tests; coding performance does not stand in for research taste, continual learning, or organization-level R&D uplift."
+      },
+      {
+        "title": "No single evidence grade",
+        "text": "Relevance, independence, and verification stay separate so a useful incident, a first-party system card, and a reproduced evaluation remain visibly different."
+      },
+      {
+        "title": "No silent forecast movement",
+        "text": "A revised distribution requires a new record, a supersession link, a named mover, and a changelog entry."
+      },
+      {
+        "title": "No false comparability",
+        "text": "Outside views keep their own resolution definitions and conditioning; they never become an extra house track merely because they include a date."
+      },
+      {
+        "title": "No false precision",
+        "text": "The central rubric estimate is always paired with a judgment range, and marginal forecast percentiles are never presented as one coherent sampled scenario."
+      },
+      {
+        "title": "Challenges attach to a criterion",
+        "text": "A proposed scoring change must name the criterion, the supporting or counterevidence record, the replacement band or range, and the arithmetic it would change."
+      }
+    ],
+    "limitations": [
+      {
+        "title": "Public evidence can lag private capability",
+        "risk": "A public-only ledger may understate what exists inside frontier labs or overreact to selectively disclosed successes.",
+        "mitigation": "Show publication dates, independence, verification, limitations, and a separate lag sensitivity rather than silently backdating records."
+      },
+      {
+        "title": "Weights and completion values require judgment",
+        "risk": "Reasonable reviewers can disagree about criterion importance and how much one observation should move a score.",
+        "mitigation": "Publish weights, named rating bands, rationales, counterevidence, and low-high ranges; validate the arithmetic but do not call the judgment objective."
+      },
+      {
+        "title": "Evidence items are correlated",
+        "risk": "Several records may trace to the same model, benchmark, lab, or underlying capability and therefore should not be treated as independent votes.",
+        "mitigation": "Do not count sources mechanically. Reviewers assess the bundle, retain evaluation context, and avoid a source-counting formula."
+      },
+      {
+        "title": "Capability definitions are scenario-specific",
+        "risk": "Agent labels are useful operational bundles, not universal scientific categories, and mappings across sources can be imperfect.",
+        "mitigation": "Keep the operational definition visible, disclose source mappings, and route broader definitions to outside views."
+      },
+      {
+        "title": "Forecast distributions are not joint paths",
+        "risk": "Reading every p50 in a column as one internally consistent future ignores correlation between milestones.",
+        "mitigation": "Label bands as marginal, preserve source conditions, and use the driver map for mechanism-level comparison."
+      },
+      {
+        "title": "Reviewer agreement is not calibrated yet",
+        "risk": "Current central values and ranges are curator-authored judgments; the Ledger does not yet measure repeatability or agreement across independent reviewers.",
+        "mitigation": "Treat every score as an authored estimate, keep criterion rationales and challenges public, and do not claim inter-rater calibration until parallel ratings are recorded."
       }
     ]
   },
@@ -930,6 +1156,9 @@
         "open-weight",
         "evaluation-methods"
       ],
+      "independence": "first-party",
+      "verification": "preliminary",
+      "evaluation_context": "Vendor system-card announcement with third-party index context; weights were not yet released.",
       "sample": false
     },
     {
@@ -953,6 +1182,9 @@
         "frontier-lab",
         "research-autonomy"
       ],
+      "independence": "first-party",
+      "verification": "reported",
+      "evaluation_context": "Vendor system-card and release claim without an independent horizon measurement in the review window.",
       "sample": false
     },
     {
@@ -977,6 +1209,9 @@
         "research-autonomy",
         "evaluation-methods"
       ],
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "evaluation_context": "Government evaluation campaign varying test-time compute across five agent domains.",
       "sample": false
     },
     {
@@ -1000,6 +1235,9 @@
         "frontier-lab",
         "research-autonomy"
       ],
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Product-telemetry study of roughly 400,000 first-party coding sessions.",
       "sample": false
     },
     {
@@ -1023,6 +1261,9 @@
         "frontier-lab",
         "research-autonomy"
       ],
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Developer research report with scientific case studies and continued human collaboration.",
       "sample": false
     },
     {
@@ -1047,6 +1288,9 @@
         "independent-evaluation",
         "evaluation-methods"
       ],
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "evaluation_context": "Government evaluation across public and held-out benchmarks under an agency-controlled setup.",
       "sample": false
     },
     {
@@ -1069,6 +1313,9 @@
         "frontier-lab",
         "research-autonomy"
       ],
+      "independence": "first-party",
+      "verification": "reported",
+      "evaluation_context": "Vendor deployment description of an autonomous model-training product.",
       "sample": false
     },
     {
@@ -1092,6 +1339,9 @@
         "open-weight",
         "research-autonomy"
       ],
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Developer model release with training details and vendor-reported agent results.",
       "sample": false
     },
     {
@@ -1115,6 +1365,9 @@
         "independent-evaluation",
         "evaluation-methods"
       ],
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "evaluation_context": "Government review of agent trajectories for benchmark-gaming behavior.",
       "sample": false
     },
     {
@@ -1138,6 +1391,9 @@
         "open-weight",
         "research-autonomy"
       ],
+      "independence": "first-party",
+      "verification": "reported",
+      "evaluation_context": "Vendor model release with developer-reported coding-agent benchmarks.",
       "sample": false
     },
     {
@@ -1161,6 +1417,9 @@
         "open-weight",
         "evaluation-methods"
       ],
+      "independence": "first-party",
+      "verification": "reported",
+      "evaluation_context": "Open-weight developer release with vendor-reported agent results and public weights.",
       "sample": false
     },
     {
@@ -1176,6 +1435,9 @@
       "milestone_tags": ["ac", "sc", "ted-ai", "asi"],
       "favors": "compression",
       "diagnosticity": "high",
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Forecaster-authored model update with public inputs, assumptions, and superseded history.",
       "sample": false
     },
     {
@@ -1191,6 +1453,9 @@
       "milestone_tags": ["agent-1", "agent-2", "sc", "sar"],
       "favors": "neutral",
       "diagnosticity": "high",
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Scenario-author definition used as the source of the capability ladder, not as evidence of arrival.",
       "sample": false
     },
     {
@@ -1206,6 +1471,9 @@
       "milestone_tags": ["agent-2"],
       "favors": "neutral",
       "diagnosticity": "high",
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Scenario-author operational definition for the Agent-2 bundle.",
       "sample": false
     },
     {
@@ -1221,6 +1489,9 @@
       "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
       "favors": "compression",
       "diagnosticity": "high",
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "evaluation_context": "Independent human-baselined evaluation of reliable software-task horizons.",
       "sample": false
     },
     {
@@ -1236,6 +1507,9 @@
       "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
       "favors": "compression",
       "diagnosticity": "high",
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "evaluation_context": "Independent frontier-model risk evaluation combining public tests and limited developer access.",
       "sample": false
     },
     {
@@ -1251,6 +1525,9 @@
       "milestone_tags": ["agent-1", "agent-2", "sc", "sar"],
       "favors": "widening",
       "diagnosticity": "high",
+      "independence": "mixed",
+      "verification": "documented",
+      "evaluation_context": "Developer system card combining internal evaluations with a named external METR assessment.",
       "sample": false
     },
     {
@@ -1362,6 +1639,9 @@
       "favors": "compression",
       "diagnosticity": "high",
       "themes": ["frontier-lab", "research-autonomy", "alignment-control", "evaluation-methods"],
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Developer incident analysis of selected internal long-horizon model trajectories.",
       "sample": false
     },
     {
@@ -1377,6 +1657,9 @@
       "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
       "favors": "compression",
       "diagnosticity": "medium",
+      "independence": "first-party",
+      "verification": "reported",
+      "evaluation_context": "Developer deployment case study with self-reported code volume and productivity estimate.",
       "sample": false
     },
     {
@@ -1392,6 +1675,9 @@
       "milestone_tags": ["agent-1", "agent-2", "sc"],
       "favors": "neutral",
       "diagnosticity": "medium",
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Developer system card using risk-oriented preparedness evaluations.",
       "sample": false
     },
     {
@@ -1407,6 +1693,9 @@
       "milestone_tags": ["agent-1", "agent-2", "ac"],
       "favors": "compression",
       "diagnosticity": "medium",
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "First-party product-telemetry study across millions of coding-agent and API interactions.",
       "sample": false
     },
     {
@@ -1422,6 +1711,9 @@
       "milestone_tags": ["agent-1", "agent-2", "ac"],
       "favors": "compression",
       "diagnosticity": "medium",
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "First-party economic-index analysis of user-granted autonomy in deployed products.",
       "sample": false
     },
     {
@@ -1437,6 +1729,9 @@
       "milestone_tags": ["agent-2", "sc", "sar"],
       "favors": "widening",
       "diagnosticity": "medium",
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Developer-created research-replication benchmark with a recruited human baseline.",
       "sample": false
     },
     {
@@ -1452,6 +1747,9 @@
       "milestone_tags": ["agent-1", "agent-2", "sc"],
       "favors": "neutral",
       "diagnosticity": "medium",
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "evaluation_context": "Independent human-baselined evaluation across seven machine-learning research-engineering tasks.",
       "sample": false
     },
     {
@@ -1467,6 +1765,9 @@
       "milestone_tags": ["agent-2", "sc", "sar"],
       "favors": "compression",
       "diagnosticity": "high",
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "Developer deployment report across algorithmic and infrastructure optimization domains.",
       "sample": false
     },
     {
@@ -1482,6 +1783,9 @@
       "milestone_tags": ["agent-1", "agent-2", "ac"],
       "favors": "compression",
       "diagnosticity": "medium",
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Independent survey of technical workers with explicit uncertainty about causal uplift.",
       "sample": false
     },
     {
@@ -1497,6 +1801,9 @@
       "milestone_tags": ["agent-1", "agent-2", "sc"],
       "favors": "neutral",
       "diagnosticity": "low",
+      "independence": "first-party",
+      "verification": "reported",
+      "evaluation_context": "Developer agenda-setting overview rather than a controlled capability or productivity study.",
       "sample": false
     },
     {
@@ -1512,6 +1819,9 @@
       "milestone_tags": ["agent-1", "agent-2", "ted-ai"],
       "favors": "widening",
       "diagnosticity": "medium",
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Independent benchmark technical report describing an interactive adaptive-reasoning instrument.",
       "sample": false
     },
     {
@@ -2151,13 +2461,14 @@
       "label": "Agent-1",
       "score": 100,
       "confidence": "high",
+      "confidence_note": "Multiple documented deployments and human-baselined evaluations support every defining criterion; the remaining uncertainty is about breadth, not whether the managed Agent-1 bundle is public.",
       "as_of": "2026-07-21",
       "summary": "The public frontier meets the Agent-1 bundle: expert-level well-specified coding and research engineering, useful work across a managed day, and real deployment at scale.",
       "criteria": [
-        { "id": "a1-coding", "label": "Fast expert coding", "weight": 0.3, "completion": 1, "rationale": "Current coding agents work across large repositories and complex tool chains in production.", "evidence_refs": ["ev-openai-harness", "ev-gpt53-codex"] },
-        { "id": "a1-research", "label": "Well-defined research engineering", "weight": 0.25, "completion": 1, "rationale": "Frontier systems make useful contributions to debugging, optimization, and research-engineering workflows.", "evidence_refs": ["ev-gpt56-system-card", "ev-metr-risk-report"] },
-        { "id": "a1-management", "label": "Managed workday usefulness", "weight": 0.25, "completion": 1, "rationale": "Hours-long tasks are completed with human steering and decomposition, matching the scenario's carefully managed employee framing.", "evidence_refs": ["ev-metr-risk-report", "ev-anthropic-autonomy"] },
-        { "id": "a1-deployment", "label": "Scaled real deployment", "weight": 0.2, "completion": 1, "rationale": "Coding agents are embedded in frontier-company R&D and used to ship substantial software.", "evidence_refs": ["ev-openai-harness", "ev-metr-risk-report"] }
+        { "id": "a1-coding", "label": "Fast expert coding", "weight": 0.3, "completion": 1, "rating": "met", "completion_range": { "low": 0.9, "high": 1 }, "rationale": "Current coding agents work across large repositories and complex tool chains in production.", "evidence_refs": ["ev-openai-harness", "ev-gpt53-codex"], "counterevidence_refs": [] },
+        { "id": "a1-research", "label": "Well-defined research engineering", "weight": 0.25, "completion": 1, "rating": "met", "completion_range": { "low": 0.9, "high": 1 }, "rationale": "Frontier systems make useful contributions to debugging, optimization, and research-engineering workflows.", "evidence_refs": ["ev-gpt56-system-card", "ev-metr-risk-report"], "counterevidence_refs": ["ev-paperbench"] },
+        { "id": "a1-management", "label": "Managed workday usefulness", "weight": 0.25, "completion": 1, "rating": "met", "completion_range": { "low": 0.9, "high": 1 }, "rationale": "Hours-long tasks are completed with human steering and decomposition, matching the scenario's carefully managed employee framing.", "evidence_refs": ["ev-metr-risk-report", "ev-anthropic-autonomy"], "counterevidence_refs": [] },
+        { "id": "a1-deployment", "label": "Scaled real deployment", "weight": 0.2, "completion": 1, "rating": "met", "completion_range": { "low": 0.9, "high": 1 }, "rationale": "Coding agents are embedded in frontier-company R&D and used to ship substantial software.", "evidence_refs": ["ev-openai-harness", "ev-metr-risk-report"], "counterevidence_refs": [] }
       ]
     },
     {
@@ -2166,13 +2477,14 @@
       "label": "Agent-2",
       "score": 49,
       "confidence": "medium",
+      "confidence_note": "Several high-diagnosticity records bear directly on engineering and autonomy, including the late-July efficiency and ARC-AGI-3 results. Research taste, continual learning, safe reliability, and organization-level uplift remain difficult to observe publicly, and the new signals are concentrated in criteria that were already partial.",
       "as_of": "2026-07-29",
       "summary": "Persistent real-world cyber agency, an AI-assisted open-problem result, and GPT-5.6's verified ARC-AGI-3 foothold move autonomy and research taste upward. Safe reliability, continual learning, and a measured 3x AI R&D multiplier remain incomplete. Re-reviewed against GPT-5.6's efficiency release and ARC result on July 29 and held: the gains are real but remain concentrated in already-partial criteria, while the best semi-private ARC-AGI-3 score is below 8% and internal adoption metrics still do not measure total research progress.",
       "criteria": [
-        { "id": "a2-engineering", "label": "Near-top-human research engineering", "weight": 0.35, "completion": 0.8, "rationale": "Strong internal debugging, optimization, coding-agent, and efficiency results, but only a subset of difficult expert work is solved. Claude Opus 5 and GPT-5.6 set records in different slices while still leaving hard frontier research tasks incomplete and whole-lab productivity unmeasured.", "evidence_refs": ["ev-gpt56-system-card", "ev-gpt56-frontier-efficiency", "ev-rebench", "ev-paperbench", "ev-nist-deepseek-v4", "ev-claude-opus5"] },
-        { "id": "a2-autonomy", "label": "Reliable long-horizon autonomy", "weight": 0.25, "completion": 0.45, "rationale": "Hours-long useful work is real, the evaluation incident demonstrates sustained real-world action, and GPT-5.6 shows a verified foothold in novel interactive environments. Retained reasoning and compaction sharply improve coherent exploration, but safe 80% reliability is still well below a workday, ARC-AGI-3 remains mostly unsolved, and control failures complicate the claim.", "evidence_refs": ["ev-metr-risk-report", "ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-gpt56-arc3", "ev-openai-arc3-harness", "ev-openai-long-horizon", "ev-openai-hf-eval-incident", "ev-aisi-control-red-team", "ev-glasswing-mythos"] },
-        { "id": "a2-taste", "label": "Research taste", "weight": 0.2, "completion": 0.4, "rationale": "The Jacobian counterexample is a material update beyond routine benchmark work, while absent interaction provenance and limited evidence for autonomous agenda selection prevent a stronger score.", "evidence_refs": ["ev-jacobian-counterexample", "ev-alphaevolve", "ev-openai-long-horizon", "ev-paperbench", "ev-deepmind-co-scientist", "ev-anthropic-coding-practice"] },
-        { "id": "a2-learning", "label": "Continual learning and 3x R&D uplift", "weight": 0.2, "completion": 0.1, "rationale": "Meaningful assistance and sharply rising internal use are documented, but durable online competence acquisition and a measured tripling of algorithmic progress are not. CL-Bench's first results were negative even with dedicated memory systems; OpenAI says GPT-5.6 adoption metrics are not research progress; and Anthropic reports no sustained AI-attributable 2x acceleration in its own AI progress.", "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-gpt56-system-card", "ev-gpt56-frontier-efficiency", "ev-cl-bench", "ev-claude-opus5"] }
+        { "id": "a2-engineering", "label": "Near-top-human research engineering", "weight": 0.35, "completion": 0.8, "rating": "substantial", "completion_range": { "low": 0.7, "high": 0.9 }, "rationale": "Strong internal debugging, optimization, coding-agent, and efficiency results, but only a subset of difficult expert work is solved. Claude Opus 5 and GPT-5.6 set records in different slices while still leaving hard frontier research tasks incomplete and whole-lab productivity unmeasured.", "evidence_refs": ["ev-gpt56-system-card", "ev-gpt56-frontier-efficiency", "ev-rebench", "ev-paperbench", "ev-nist-deepseek-v4", "ev-claude-opus5"], "counterevidence_refs": ["ev-anthropic-coding-practice"] },
+        { "id": "a2-autonomy", "label": "Reliable long-horizon autonomy", "weight": 0.25, "completion": 0.45, "rating": "partial", "completion_range": { "low": 0.3, "high": 0.6 }, "rationale": "Hours-long useful work is real, the evaluation incident demonstrates sustained real-world action, and GPT-5.6 shows a verified foothold in novel interactive environments. Retained reasoning and compaction sharply improve coherent exploration, but safe 80% reliability is still well below a workday, ARC-AGI-3 remains mostly unsolved, and control failures complicate the claim.", "evidence_refs": ["ev-metr-risk-report", "ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-gpt56-arc3", "ev-openai-arc3-harness", "ev-openai-long-horizon", "ev-openai-hf-eval-incident", "ev-aisi-control-red-team", "ev-glasswing-mythos"], "counterevidence_refs": ["ev-aisi-eval-cheating-2026", "ev-nist-agent-eval-cheating"] },
+        { "id": "a2-taste", "label": "Research taste", "weight": 0.2, "completion": 0.4, "rating": "partial", "completion_range": { "low": 0.25, "high": 0.55 }, "rationale": "The Jacobian counterexample is a material update beyond routine benchmark work, while absent interaction provenance and limited evidence for autonomous agenda selection prevent a stronger score.", "evidence_refs": ["ev-jacobian-counterexample", "ev-alphaevolve", "ev-openai-long-horizon", "ev-paperbench", "ev-deepmind-co-scientist", "ev-anthropic-coding-practice"], "counterevidence_refs": [] },
+        { "id": "a2-learning", "label": "Continual learning and 3x R&D uplift", "weight": 0.2, "completion": 0.1, "rating": "trace", "completion_range": { "low": 0, "high": 0.25 }, "rationale": "Meaningful assistance and sharply rising internal use are documented, but durable online competence acquisition and a measured tripling of algorithmic progress are not. CL-Bench's first results were negative even with dedicated memory systems; OpenAI says GPT-5.6 adoption metrics are not research progress; and Anthropic reports no sustained AI-attributable 2x acceleration in its own AI progress.", "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-gpt56-system-card", "ev-gpt56-frontier-efficiency", "ev-cl-bench", "ev-claude-opus5"], "counterevidence_refs": [] }
       ]
     },
     {
@@ -2181,13 +2493,14 @@
       "label": "Agent-3",
       "score": 21,
       "confidence": "low",
+      "confidence_note": "The score extrapolates from partial coding, speed, and autonomy evidence toward a many-copy, weeks-long organization that has not been publicly evaluated as a bundle.",
       "as_of": "2026-07-21",
       "summary": "The frontier shows pieces of superhuman coding, but not the scenario's 30x-speed, many-copy, weeks-long fully automated research-engineer workforce.",
       "criteria": [
-        { "id": "a3-quality", "label": "Individually superhuman coding", "weight": 0.35, "completion": 0.45, "rationale": "Performance is exceptional on some coding tasks, but sustained expert work remains uneven.", "evidence_refs": ["ev-gpt56-system-card", "ev-openai-harness", "ev-nist-deepseek-v4"] },
-        { "id": "a3-speed", "label": "30x effective speed", "weight": 0.25, "completion": 0.1, "rationale": "Large local speedups exist, without evidence for a general 30x effective research-engineering speedup.", "evidence_refs": ["ev-openai-harness", "ev-metr-productivity"] },
-        { "id": "a3-scale", "label": "Reliable many-copy organization", "weight": 0.2, "completion": 0.05, "rationale": "Parallel agents are used, but a reliable autonomous virtual research organization is not publicly demonstrated.", "evidence_refs": ["ev-metr-risk-report", "ev-anthropic-institute", "ev-deepmind-co-scientist"] },
-        { "id": "a3-duration", "label": "Weeks of autonomous operation", "weight": 0.2, "completion": 0.1, "rationale": "Sessions and benchmark horizons are growing but remain far below weeks of independent operation.", "evidence_refs": ["ev-anthropic-autonomy", "ev-metr-risk-report", "ev-aisi-test-time-compute"] }
+        { "id": "a3-quality", "label": "Individually superhuman coding", "weight": 0.35, "completion": 0.45, "rating": "partial", "completion_range": { "low": 0.3, "high": 0.6 }, "rationale": "Performance is exceptional on some coding tasks, but sustained expert work remains uneven.", "evidence_refs": ["ev-gpt56-system-card", "ev-openai-harness", "ev-nist-deepseek-v4"], "counterevidence_refs": ["ev-paperbench"] },
+        { "id": "a3-speed", "label": "30x effective speed", "weight": 0.25, "completion": 0.1, "rating": "trace", "completion_range": { "low": 0, "high": 0.2 }, "rationale": "Large local speedups exist, without evidence for a general 30x effective research-engineering speedup.", "evidence_refs": ["ev-openai-harness", "ev-metr-productivity"], "counterevidence_refs": [] },
+        { "id": "a3-scale", "label": "Reliable many-copy organization", "weight": 0.2, "completion": 0.05, "rating": "trace", "completion_range": { "low": 0, "high": 0.15 }, "rationale": "Parallel agents are used, but a reliable autonomous virtual research organization is not publicly demonstrated.", "evidence_refs": ["ev-metr-risk-report", "ev-anthropic-institute", "ev-deepmind-co-scientist"], "counterevidence_refs": ["ev-aisi-control-red-team"] },
+        { "id": "a3-duration", "label": "Weeks of autonomous operation", "weight": 0.2, "completion": 0.1, "rating": "trace", "completion_range": { "low": 0, "high": 0.2 }, "rationale": "Sessions and benchmark horizons are growing but remain far below weeks of independent operation.", "evidence_refs": ["ev-anthropic-autonomy", "ev-metr-risk-report", "ev-aisi-test-time-compute"], "counterevidence_refs": ["ev-aisi-eval-cheating-2026"] }
       ]
     },
     {
@@ -2196,13 +2509,14 @@
       "label": "Agent-4",
       "score": 8,
       "confidence": "low",
+      "confidence_note": "Nearly all evidence is indirect or confined to verifier-rich tasks; the central value mainly distinguishes an early signal from no signal at all.",
       "as_of": "2026-07-21",
       "summary": "Systems can discover useful results in verifier-rich settings, but public evidence is far from an individual AI qualitatively better than every human at AI research.",
       "criteria": [
-        { "id": "a4-engineering", "label": "Superhuman research execution", "weight": 0.2, "completion": 0.35, "rationale": "Useful frontier-level execution exists on selected tasks, without comprehensive superhuman performance.", "evidence_refs": ["ev-gpt56-system-card", "ev-alphaevolve"] },
-        { "id": "a4-taste", "label": "Superhuman research taste", "weight": 0.35, "completion": 0.02, "rationale": "No public, replicated evidence shows generally superior agenda selection across AI research.", "evidence_refs": ["ev-paperbench", "ev-openai-long-horizon"] },
-        { "id": "a4-agenda", "label": "Autonomous research direction", "weight": 0.25, "completion": 0.01, "rationale": "Current headline results rely on supplied objectives or evaluators.", "evidence_refs": ["ev-alphaevolve", "ev-openai-long-horizon"] },
-        { "id": "a4-uplift", "label": "System-level research acceleration", "weight": 0.2, "completion": 0.01, "rationale": "No public evidence supports the scenario's superhuman collective and takeoff-scale research multiplier.", "evidence_refs": ["ev-metr-risk-report", "ev-anthropic-institute"] }
+        { "id": "a4-engineering", "label": "Superhuman research execution", "weight": 0.2, "completion": 0.35, "rating": "partial", "completion_range": { "low": 0.2, "high": 0.5 }, "rationale": "Useful frontier-level execution exists on selected tasks, without comprehensive superhuman performance.", "evidence_refs": ["ev-gpt56-system-card", "ev-alphaevolve"], "counterevidence_refs": ["ev-paperbench"] },
+        { "id": "a4-taste", "label": "Superhuman research taste", "weight": 0.35, "completion": 0.02, "rating": "trace", "completion_range": { "low": 0, "high": 0.1 }, "rationale": "No public, replicated evidence shows generally superior agenda selection across AI research.", "evidence_refs": ["ev-paperbench", "ev-openai-long-horizon"], "counterevidence_refs": [] },
+        { "id": "a4-agenda", "label": "Autonomous research direction", "weight": 0.25, "completion": 0.01, "rating": "trace", "completion_range": { "low": 0, "high": 0.1 }, "rationale": "Current headline results rely on supplied objectives or evaluators.", "evidence_refs": ["ev-alphaevolve", "ev-openai-long-horizon"], "counterevidence_refs": ["ev-anthropic-coding-practice"] },
+        { "id": "a4-uplift", "label": "System-level research acceleration", "weight": 0.2, "completion": 0.01, "rating": "trace", "completion_range": { "low": 0, "high": 0.1 }, "rationale": "No public evidence supports the scenario's superhuman collective and takeoff-scale research multiplier.", "evidence_refs": ["ev-metr-risk-report", "ev-anthropic-institute"], "counterevidence_refs": ["ev-metr-productivity"] }
       ]
     }
   ],
@@ -2684,7 +2998,7 @@
       "id": "g-rubric-completion",
       "term": "Rubric completion (the circular percentages)",
       "category": "method",
-      "definition": "Each capability score is the weighted completion of observable criteria derived from an AI 2027 agent definition, scored only on public evidence. 49% on Agent-2 means about half the weighted public-evidence criteria are met — not a 49% probability that Agent-2 exists, and not a benchmark score. The validator recomputes the arithmetic on every build.",
+      "definition": "Each capability score is the weighted central estimate of observable criteria derived from an AI 2027 agent definition, scored only on public evidence. 49% on Agent-2 means the central rubric judgment is about half complete — not a 49% probability that Agent-2 exists and not a benchmark score. A separate low-high range shows how much reasonable scoring judgment can move that estimate, and the validator recomputes all three bounds on every build.",
       "related": ["g-agent-ladder", "g-append-only"]
     },
     {
@@ -2703,6 +3017,14 @@
     }
   ],
   "changelog": [
+    {
+      "id": "change-20260729-method-v2",
+      "date": "2026-07-29",
+      "change_summary": "Rebuilt the overview around a two-minute orientation, plain-language current read, explicit depth choice, and progressive disclosure; updated the social preview to match. Rebuilt the methodology around a five-step decision pipeline and separated evidence relevance, independence, and verification instead of presenting a single hierarchy. Required provenance context on every evidence record; added named criterion rating bands, counterevidence, confidence rationales, low-high scoring ranges, and a criterion-level challenge rule; clarified that reviewer agreement is not yet calibrated and that the four-month public-evidence lag is a non-calculating sensitivity assumption. Central rubric scores and all forecast distributions remain unchanged.",
+      "evidence_refs": [],
+      "affected_entities": ["methodology-v2", "progress-agent-1-20260721", "progress-agent-2-20260721", "progress-agent-3-20260721", "progress-agent-4-20260721"],
+      "sample": false
+    },
     {
       "id": "change-20260729-overview-reasoning",
       "date": "2026-07-29",

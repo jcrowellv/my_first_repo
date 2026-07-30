@@ -34,8 +34,9 @@ src/schema.ts                Zod schemas and inferred TypeScript types
 src/lib/                     Parsed data and date helpers
 src/components/              Content-agnostic layout primitives
 src/views/                   Eight routed views
-public/og-v2.png             Current generated 1200x630 social preview
-public/og.png                Previous social preview retained for comparison
+public/og-v3.png             Current generated 1200x630 social preview
+public/og-v2.png             Previous social preview retained for comparison
+public/og.png                Original social preview retained for comparison
 MISSING_CONTENT.md           Explicit inventory of unresolved source limitations
 vercel.json                  Vercel build configuration
 .github/workflows/deploy.yml GitHub Pages fallback deployment
@@ -72,7 +73,10 @@ The validator checks both schema shape and data integrity, including:
 - valid supersession and `moved_by` references;
 - valid evidence links in tests, drivers, progress criteria, and resolution records;
 - valid evidence links in outside views, forecast drivers, safety-readiness states, and open-weight indicators;
+- complete relevance, independence, verification, and evaluation-context metadata on every evidence record;
 - capability-criterion weights that sum to 100% and scores that match their weighted arithmetic;
+- criterion rating-band consistency, low <= central <= high uncertainty bounds, and non-overlapping evidence/counterevidence;
+- alignment between the central lag-sensitivity case and the declared public-evidence lag;
 - valid related-term references inside the glossary; and
 - valid affected-entity links in the changelog.
 
@@ -99,17 +103,27 @@ No component change is required. The forecast lens exposes the current band and 
 
 ## Capability-progress rubric
 
-The four circular percentages are not forecasts or probabilities. Each is the weighted completion of public-evidence criteria derived from an AI 2027 agent definition. `canonical.json` stores the weights, criterion completion values, rationale, evidence references, confidence, and as-of date. Validation recomputes each score and rejects inconsistent arithmetic.
+The four capability estimates are not forecasts or probabilities. Each is the weighted completion of public-evidence criteria derived from an AI 2027 agent definition. Every criterion carries a named rating band, central completion value, low-high judgment range, rationale, evidence, and explicit counterevidence. `canonical.json` also stores a confidence rationale and as-of date for each aggregate.
 
-To revise a score, update or append the evidence record, update the affected criterion, and append a changelog record. The UI recalculates its component bars directly from the data.
+Validation recomputes the central score, checks the uncertainty bounds, confirms that the central value fits its named band, and validates all evidence links. The low and high aggregates are interpretive sensitivity bounds, not calibrated confidence intervals.
+
+To revise a score, update or append the evidence record, update the affected criterion's band, central value, range, and rationale, and append a changelog record. The UI recalculates the aggregate range directly from the criterion data.
+
+Evidence quality is deliberately not collapsed into one grade. Every record must separately declare:
+
+- **diagnosticity:** how directly it bears on the threshold;
+- **independence:** who produced or evaluated the result; and
+- **verification:** how far the public claim has been checked.
+
+The four-month public-evidence lag is a narrative sensitivity assumption only. The methodology shows zero-, four-, and eight-month interpretations, and validation keeps the central scenario aligned with `meta.internal_lag_months`. No lag option changes a canonical forecast date, rubric score, or milestone status.
 
 ## Information architecture
 
 The site exposes one canonical record at three reading depths, and renders the three depths as explicit reading paths on the overview:
 
-- **Brief:** the overview gives the current capability, control-readiness, open-weight, and scenario-pace read without requiring chart interpretation. Scenario pace uses the independent tracker’s current 0.70x composite and keeps its six status counts visibly separate from speed, accuracy, and probability. The conclusion panel exposes observation, inference, forecast impact, disagreement, and two-sided cruxes.
+- **Brief:** the overview begins with a plain-language product map and an interactive two-minute path. It gives the current capability, control-readiness, open-weight, and next-test read without requiring chart interpretation. The independent tracker’s current 0.70x scenario-speed estimate and six status counts remain available in a collapsed source note, separate from accuracy, probability, and rubric completion.
 - **Explore:** the forecast workbench compares the full ladder, the takeoff-gap disagreement between milestone medians, one threshold at a time, the mechanism assumptions behind each track, and outside views whose definitions differ.
-- **Audit:** the current evidence ledger, provenance-preserving archive, locked tests, methodology, glossary, driver map, and changelog retain source limitations, superseded records, and resolution protocols. Archived evidence is excluded from live counts and latest-signal lists but never silently deleted.
+- **Audit:** the evidence-linked conclusion chain, provenance-preserving archive, locked tests, methodology, glossary, driver map, and changelog retain source limitations, three-axis provenance, uncertainty ranges, counterevidence, superseded records, and resolution protocols. Archived evidence is excluded from live counts and latest-signal lists but never silently deleted.
 
 A glossary view defines every recurring term (milestone codes, percentile bands, provenance letters, diagnosticity, tripwires versus monitors, rubric completion) with cross-references, so definitions stay attached to dates everywhere else on the site.
 
