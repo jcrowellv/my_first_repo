@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { ZodError } from "zod";
 import { CanonicalSchema } from "../src/schema.ts";
 
@@ -34,6 +35,8 @@ async function main() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const entryPath = process.argv[1];
+
+if (entryPath && import.meta.url === pathToFileURL(resolve(entryPath)).href) {
   await main();
 }

@@ -211,21 +211,43 @@ export function AppShell({ children }: { children: ReactNode }) {
               </div>
               <div className="grid gap-8 sm:grid-cols-3">
                 {canonical.meta.action_center.groups.map((group) => (
-                  <section key={group.id} aria-labelledby={`footer-${group.id}`}>
-                    <h3 id={`footer-${group.id}`} className="font-mono text-[10px] uppercase tracking-[0.17em] text-canvas/50">
-                      {group.label}
-                    </h3>
-                    <div className="mt-4 space-y-5">
-                      {group.items.map((item) => (
-                        <a key={item.url} href={item.url} target="_blank" rel="noreferrer" className="group/link block">
-                          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-panel transition-colors group-hover/link:text-cyan">
-                            {item.label}<ArrowUpRight size={12} aria-hidden="true" />
-                          </span>
-                          <span className="mt-1.5 block text-[13px] leading-5 text-canvas/60">{item.description}</span>
-                        </a>
-                      ))}
-                    </div>
-                  </section>
+                  <div key={group.id}>
+                    <details className="group rounded-xl border border-canvas/15 sm:hidden">
+                      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between px-4 py-3 font-mono text-[10px] uppercase tracking-[0.17em] text-canvas/60">
+                        {group.label}
+                        <ChevronDown
+                          size={14}
+                          className="transition-transform group-open:rotate-180"
+                          aria-hidden="true"
+                        />
+                      </summary>
+                      <div className="space-y-5 border-t border-canvas/15 px-4 py-4">
+                        {group.items.map((item) => (
+                          <a key={item.url} href={item.url} target="_blank" rel="noreferrer" className="group/link block">
+                            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-panel transition-colors group-hover/link:text-cyan">
+                              {item.label}<ArrowUpRight size={12} aria-hidden="true" />
+                            </span>
+                            <span className="mt-1.5 block text-[13px] leading-5 text-canvas/60">{item.description}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </details>
+                    <section className="hidden sm:block" aria-labelledby={`footer-${group.id}`}>
+                      <h3 id={`footer-${group.id}`} className="font-mono text-[10px] uppercase tracking-[0.17em] text-canvas/50">
+                        {group.label}
+                      </h3>
+                      <div className="mt-4 space-y-5">
+                        {group.items.map((item) => (
+                          <a key={item.url} href={item.url} target="_blank" rel="noreferrer" className="group/link block">
+                            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-panel transition-colors group-hover/link:text-cyan">
+                              {item.label}<ArrowUpRight size={12} aria-hidden="true" />
+                            </span>
+                            <span className="mt-1.5 block text-[13px] leading-5 text-canvas/60">{item.description}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </section>
+                  </div>
                 ))}
               </div>
             </div>

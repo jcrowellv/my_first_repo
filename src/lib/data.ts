@@ -36,3 +36,23 @@ export function getForecastChain(forecastId: string) {
   }
   return chain;
 }
+
+export function getProgressRange(
+  progress: (typeof canonical.capability_progress)[number],
+) {
+  const low = Math.round(
+    progress.criteria.reduce(
+      (sum, criterion) =>
+        sum + criterion.weight * criterion.completion_range.low,
+      0,
+    ) * 100,
+  );
+  const high = Math.round(
+    progress.criteria.reduce(
+      (sum, criterion) =>
+        sum + criterion.weight * criterion.completion_range.high,
+      0,
+    ) * 100,
+  );
+  return { low, high };
+}

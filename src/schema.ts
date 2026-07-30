@@ -124,6 +124,78 @@ export const ReadingPathSchema = z.object({
   steps: z.array(ReadingPathStepSchema).min(1),
 });
 
+export const MethodStepSchema = z.object({
+  id: z.enum(["define", "admit", "classify", "score", "update"]),
+  label: z.string().min(1),
+  summary: z.string().min(1),
+  detail: z.string().min(1),
+  output: z.string().min(1),
+});
+
+export const EvidenceAxisValueSchema = z.object({
+  value: z.string().min(1),
+  label: z.string().min(1),
+  definition: z.string().min(1),
+});
+
+export const EvidenceAxisSchema = z.object({
+  id: z.enum(["diagnosticity", "independence", "verification"]),
+  label: z.string().min(1),
+  question: z.string().min(1),
+  summary: z.string().min(1),
+  values: z.array(EvidenceAxisValueSchema).min(2),
+});
+
+export const ScoreBandIdSchema = z.enum([
+  "not-observed",
+  "trace",
+  "partial",
+  "substantial",
+  "met",
+]);
+
+export const ScoreBandSchema = z.object({
+  id: ScoreBandIdSchema,
+  label: z.string().min(1),
+  min: z.number().min(0).max(1),
+  max: z.number().min(0).max(1),
+  plain_language: z.string().min(1),
+});
+
+export const MethodDecisionRuleSchema = z.object({
+  title: z.string().min(1),
+  text: z.string().min(1),
+});
+
+export const MethodLimitationSchema = z.object({
+  title: z.string().min(1),
+  risk: z.string().min(1),
+  mitigation: z.string().min(1),
+});
+
+export const MethodologySchema = z.object({
+  id: z.string().min(1),
+  version: z.string().min(1),
+  reviewed_on: IsoDateSchema,
+  headline: z.string().min(1),
+  summary: z.string().min(1),
+  core_question: z.string().min(1),
+  steps: z.array(MethodStepSchema).length(5),
+  evidence_axes: z.array(EvidenceAxisSchema).length(3),
+  score_bands: z.array(ScoreBandSchema).length(5),
+  score_rule: z.string().min(1),
+  uncertainty_rule: z.string().min(1),
+  forecast_rule: z.string().min(1),
+  lag_rule: z.string().min(1),
+  lag_scenarios_months: z.tuple([
+    z.number().int().nonnegative(),
+    z.number().int().nonnegative(),
+    z.number().int().nonnegative(),
+  ]),
+  decision_rules: z.array(MethodDecisionRuleSchema).min(3),
+  limitations: z.array(MethodLimitationSchema).min(3),
+});
+
 export const MetaSchema = z.object({
   site_title: z.string().min(1),
   site_subtitle: z.string().min(1),
@@ -275,15 +347,15 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
     "open-science",
     "scaling",
   ])).optional(),
-  independence: z.enum(["first-party", "independent", "mixed"]).optional(),
+  independence: z.enum(["first-party", "independent", "mixed"]),
   verification: z.enum([
     "documented",
     "reported",
     "independently-evaluated",
     "reproduced",
     "preliminary",
-  ]).optional(),
-  evaluation_context: z.string().min(1).optional(),
+  ]),
+  evaluation_context: z.string().min(1),
 });
 
 export const BottleneckStatusSchema = z.enum(["easing", "mixed", "binding", "unresolved"]);
@@ -305,8 +377,14 @@ export const ProgressCriterionSchema = z.object({
   label: z.string().min(1),
   weight: z.number().positive().max(1),
   completion: z.number().min(0).max(1),
+  rating: ScoreBandIdSchema,
+  completion_range: z.object({
+    low: z.number().min(0).max(1),
+    high: z.number().min(0).max(1),
+  }),
   rationale: z.string().min(1),
   evidence_refs: z.array(z.string().min(1)).min(1),
+  counterevidence_refs: z.array(z.string().min(1)),
 });
 
 export const CapabilityProgressSchema = z.object({
@@ -315,6 +393,7 @@ export const CapabilityProgressSchema = z.object({
   label: z.string().min(1),
   score: z.number().int().min(0).max(100),
   confidence: z.enum(["high", "medium", "low"]),
+  confidence_note: z.string().min(1),
   as_of: IsoDateSchema,
   summary: z.string().min(1),
   criteria: z.array(ProgressCriterionSchema).min(1),
@@ -403,6 +482,7 @@ export const ChangelogSchema = SampleFieldsSchema.extend({
 export const CanonicalSchema = z
   .object({
     meta: MetaSchema,
+    methodology: MethodologySchema,
     milestones: z.array(MilestoneSchema).min(1),
     forecasts: z.array(ForecastSchema).min(1),
     falsifiers: z.array(FalsifierSchema).min(1),
@@ -449,6 +529,55 @@ export const CanonicalSchema = z
     const safetyIds = unique(data.safety_readiness, ["safety_readiness"], "safety readiness");
     const openWeightIds = unique(data.open_weight_indicators, ["open_weight_indicators"], "open-weight indicator");
     const glossaryIds = unique(data.glossary, ["glossary"], "glossary entry");
+    const methodStepIds = unique(data.methodology.steps, ["methodology", "steps"], "method step");
+    const methodAxisIds = unique(data.methodology.evidence_axes, ["methodology", "evidence_axes"], "evidence axis");
+    const scoreBandIds = unique(data.methodology.score_bands, ["methodology", "score_bands"], "score band");
+
+    if (methodStepIds.size !== 5) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Methodology must contain five unique decision steps",
+        path: ["methodology", "steps"],
+      });
+    }
+    if (methodAxisIds.size !== 3) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Methodology must contain three unique evidence axes",
+        path: ["methodology", "evidence_axes"],
+      });
+    }
+    if (scoreBandIds.size !== 5) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Methodology must contain five unique score bands",
+        path: ["methodology", "score_bands"],
+      });
+    }
+    data.methodology.score_bands.forEach((band, index) => {
+      if (band.min > band.max) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Score band minimum must not exceed maximum",
+          path: ["methodology", "score_bands", index],
+        });
+      }
+    });
+    const [lagLow, lagCenter, lagHigh] = data.methodology.lag_scenarios_months;
+    if (lagLow > lagCenter || lagCenter > lagHigh) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Lag scenarios must be ordered from shortest to longest",
+        path: ["methodology", "lag_scenarios_months"],
+      });
+    }
+    if (lagCenter !== data.meta.internal_lag_months) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "The center lag scenario must match meta.internal_lag_months",
+        path: ["methodology", "lag_scenarios_months", 1],
+      });
+    }
 
     data.glossary.forEach((entry, index) => {
       entry.related?.forEach((ref, refIndex) => {
@@ -463,6 +592,7 @@ export const CanonicalSchema = z
     });
 
     const allEntityIds = new Set([
+      data.methodology.id,
       ...trackIds,
       ...milestoneIds,
       ...forecastIds,
@@ -568,9 +698,55 @@ export const CanonicalSchema = z
       if (Math.abs(totalWeight - 1) > 0.001) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Capability progress criterion weights must sum to 1", path: ["capability_progress", index, "criteria"] });
       const calculated = Math.round(progress.criteria.reduce((sum, criterion) => sum + criterion.weight * criterion.completion, 0) * 100);
       if (calculated !== progress.score) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Capability progress score must equal weighted criteria (${calculated})`, path: ["capability_progress", index, "score"] });
-      progress.criteria.forEach((criterion, criterionIndex) => criterion.evidence_refs.forEach((ref, refIndex) => {
-        if (!evidenceIds.has(ref)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown evidence id: ${ref}`, path: ["capability_progress", index, "criteria", criterionIndex, "evidence_refs", refIndex] });
-      }));
+      progress.criteria.forEach((criterion, criterionIndex) => {
+        if (
+          criterion.completion_range.low > criterion.completion ||
+          criterion.completion > criterion.completion_range.high
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Criterion completion must fall inside its uncertainty range",
+            path: ["capability_progress", index, "criteria", criterionIndex, "completion_range"],
+          });
+        }
+        const band = data.methodology.score_bands.find((item) => item.id === criterion.rating);
+        if (
+          band &&
+          (criterion.completion < band.min || criterion.completion > band.max)
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Criterion completion does not match the ${criterion.rating} score band`,
+            path: ["capability_progress", index, "criteria", criterionIndex, "rating"],
+          });
+        }
+        const supportingRefs = new Set(criterion.evidence_refs);
+        criterion.evidence_refs.forEach((ref, refIndex) => {
+          if (!evidenceIds.has(ref)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Unknown evidence id: ${ref}`,
+              path: ["capability_progress", index, "criteria", criterionIndex, "evidence_refs", refIndex],
+            });
+          }
+        });
+        criterion.counterevidence_refs.forEach((ref, refIndex) => {
+          if (!evidenceIds.has(ref)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Unknown evidence id: ${ref}`,
+              path: ["capability_progress", index, "criteria", criterionIndex, "counterevidence_refs", refIndex],
+            });
+          }
+          if (supportingRefs.has(ref)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "A criterion cannot list the same record as evidence and counterevidence",
+              path: ["capability_progress", index, "criteria", criterionIndex, "counterevidence_refs", refIndex],
+            });
+          }
+        });
+      });
     });
 
     data.outside_views.forEach((view, index) => {
@@ -689,3 +865,4 @@ export type GlossaryEntry = z.infer<typeof GlossaryEntrySchema>;
 export type ReadingPath = z.infer<typeof ReadingPathSchema>;
 export type PaceSource = z.infer<typeof PaceSourceSchema>;
 export type ChangelogEntry = z.infer<typeof ChangelogSchema>;
+export type Methodology = z.infer<typeof MethodologySchema>;
