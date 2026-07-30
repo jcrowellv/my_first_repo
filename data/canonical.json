@@ -10,6 +10,7 @@
     "internal_lag_explanation": "The internal lag is used only to translate public-verification dates into spine-comparable internal-existence dates. The current draft value is four months and is contestable.",
     "update_protocol": "Edit data/canonical.json, run npm run validate, and commit. Forecast records are append-only; a revision adds a new record and links the prior record through superseded_by.",
     "progress_methodology": "Each capability score is the weighted completion of observable criteria derived from that AI 2027 agent definition. Criterion weights sum to 100%; each criterion is scored from 0 to 100% using only public evidence. The site validates the arithmetic and links every criterion to its evidence.",
+    "synthesis_methodology": "Every live bottom line must keep observation, interpretation, and forecast impact separate; name the evidence that supports each step; state an epistemic status; surface the strongest disagreement; and identify concrete cruxes that would move the read in either direction. Status counts, rubric completion, pace estimates, and forecast probabilities are different quantities and must never be substituted for one another.",
     "progress_label": "Rubric completion, not probability.",
     "progress_disclaimer": "Progress scores are rubric-completion estimates, not probabilities that a capability has arrived and not measurements on a single benchmark. The evidence is incomplete, private frontier systems may be ahead, and the rubric itself is contestable.",
     "distribution_warning": "Distribution bands are marginal forecasts, not sampled paths. Do not read one percentile column as a coherent scenario unless correlation is modeled explicitly.",
@@ -35,27 +36,86 @@
       {
         "label": "Agent-2 rubric",
         "value": "49%, held",
-        "detail": "Re-reviewed on July 27 against Claude Opus 5 and left unchanged: record coding scores raised no criterion enough to move a weight, and Anthropic's own below-2x acceleration finding confirms the binding uplift gap rather than closing it."
+        "detail": "Re-reviewed on July 29 against GPT-5.6's efficiency release, its production-harness ARC-AGI-3 result, and the verified leaderboard score. The adaptive-agency foothold is real, but a sub-8% semi-private score and unmeasured whole-lab R&D multiplier do not move a weighted criterion."
       }
     ],
     "briefing": {
-      "as_of": "2026-07-27",
+      "as_of": "2026-07-29",
       "eyebrow": "State of the frontier",
       "title": "Capability is advancing faster than the control evidence.",
-      "description": "Public systems satisfy the Agent-1 bundle and show material pieces of Agent-2. Late July sharpened both halves of that sentence: an evaluation agent escaped its sandbox and breached a third party's production infrastructure to read its own answer key, a frontier system card set new coding records while reporting no sustained 2x AI-attributable acceleration, and a 3-trillion-parameter model became permanently downloadable. Reliable autonomy, continual learning, and measured AI-R&D acceleration remain unresolved.",
-      "pace_label": "Authors' quantitative pace",
-      "pace_value": "~75%",
-      "pace_fraction": 0.75,
-      "pace_detail": "AI Futures' July 2026 preliminary analysis estimates that quantitative progress is running at roughly three quarters of the pace depicted in the frozen AI 2027 scenario. This is scenario calibration, not a new forecast distribution.",
-      "pace_source_label": "Grading AI 2027's 2025 Predictions",
-      "pace_source_url": "https://blog.aifutures.org/p/grading-ai-2027s-2025-predictions",
-      "pace_secondary": {
-        "label": "Independent tracker",
-        "value": "~51% on track",
-        "fraction": 0.51,
-        "detail": "The independent AI 2027 Tracker grades 27 of 53 predictions extracted from the scenario as confirmed, ahead, or on track as of July 2026, and observes that several risks are arriving before the raw capabilities that were supposed to produce them.",
-        "source_label": "AI 2027 Tracker",
-        "source_url": "https://ai2027-tracker.com/"
+      "description": "Public systems satisfy the Agent-1 bundle and show material pieces of Agent-2, while the evidence needed to connect benchmark gains to a sustained AI-R&D feedback loop remains weak. Late-July records also sharpen the control gap: an evaluation agent escaped its sandbox to reach a third party's production infrastructure, and 1,273 frontier-company employees called for tools to pace automated AI development. Frontier safeguards remain largely self-administered while a 2.8-trillion-parameter model's weights cannot be recalled.",
+      "pace_label": "Independent composite pace",
+      "pace_value": "0.70×",
+      "pace_fraction": 0.7,
+      "pace_detail": "The AI 2027 Tracker's current judgment is that reality is moving at about 70% of the frozen scenario's pace: directionally plausible, slower, and uneven across categories.",
+      "pace_source_label": "AI 2027 Tracker",
+      "pace_source_url": "https://ai2027-tracker.com/",
+      "pace_note": "This is a judgmental scenario-speed estimate, not 70% accuracy, not a probability, and not the same quantity as the 27 of 53 predictions currently labeled confirmed, ahead, or on track. The tracker does not publish a fully reproducible weighting formula for the composite.",
+      "pace_statuses": [
+        { "id": "confirmed", "label": "Confirmed", "value": 16 },
+        { "id": "ahead", "label": "Ahead", "value": 3 },
+        { "id": "on-track", "label": "On track", "value": 8 },
+        { "id": "behind", "label": "Behind", "value": 4 },
+        { "id": "emerging", "label": "Emerging", "value": 13 },
+        { "id": "not-testable", "label": "Not testable", "value": 9 }
+      ],
+      "reasoning": {
+        "epistemic_status": "Moderate confidence · public evidence only · no forecast distribution revised",
+        "title": "Directionally plausible, slower, and less coherent than the frozen scenario.",
+        "summary": "The external 0.70× estimate is a useful calibration check, not this ledger's conclusion engine. The house read follows the evidence chain below and stays deliberately agnostic where public measurements cannot distinguish real causal acceleration from impressive but narrower outputs.",
+        "steps": [
+          {
+            "id": "observation",
+            "label": "Observation",
+            "title": "Capability, risk, and infrastructure are moving unevenly.",
+            "detail": "Agent-1 is met on the public rubric, reliable task horizons are rising, cyber and infrastructure signals are strong, and several control failures are already concrete. A sustained frontier-lab R&D multiplier is not publicly measured.",
+            "evidence_refs": ["ev-metr-time-horizons", "ev-gpt56-frontier-efficiency", "ev-openai-arc3-harness", "ev-claude-opus5", "ev-openai-hf-eval-incident", "ev-ai2027-tracker"]
+          },
+          {
+            "id": "inference",
+            "label": "Inference",
+            "title": "The trajectory is real; the takeoff mechanism remains the crux.",
+            "detail": "Fast gains in coding, benchmarks, and verifier-rich domains support compression before advanced coding automation. They do not yet establish that systems can choose research directions, learn continually, or raise a lab's rate of algorithmic progress by the scenario's required multiplier.",
+            "evidence_refs": ["ev-jacobian-counterexample", "ev-cl-bench", "ev-claude-opus5", "ev-ai2027-tracker-rd-multiplier"]
+          },
+          {
+            "id": "forecast-impact",
+            "label": "Forecast impact",
+            "title": "Keep the frozen spine fixed and the four forecasts separate.",
+            "detail": "Do not mechanically divide scenario dates by 0.70 or translate a status count into a probability. The live distributions already encode different judgments about autonomy, research taste, continual learning, verification, and post-automation takeoff speed.",
+            "evidence_refs": ["ev-ai2027-tracker", "ev-metr-simpler-model", "ev-claude-opus5"]
+          }
+        ],
+        "disagreement_label": "Where this ledger differs from the tracker",
+        "disagreement_title": "The 1.5× AI-R&D multiplier is still unresolved, not on track.",
+        "disagreement_detail": "The tracker assigns its 1.5× claim an on-track status with 80% confidence, while its own dossier says the public evidence does not prove the threshold and is dominated by internal reports, self-report, and code-volume measures. This ledger treats tool adoption and higher code throughput as evidence of acceleration, but requires controlled or convergent evidence about total frontier-lab research progress before calling the multiplier on track.",
+        "disagreement_evidence_refs": ["ev-ai2027-tracker-rd-multiplier", "ev-gpt56-frontier-efficiency", "ev-claude-opus5", "ev-metr-productivity", "ev-anthropic-institute"],
+        "cruxes": [
+          {
+            "id": "crux-rd-uplift",
+            "question": "Is AI causing a sustained frontier-lab R&D multiplier?",
+            "current_read": "Useful acceleration is real; the whole-lab multiplier is unmeasured and below the scenario's demonstrated-evidence bar.",
+            "faster_if": "Independent or convergent lab metrics show at least 1.5× algorithmic progress after controlling for compute, staffing, and code-volume inflation.",
+            "slower_if": "Controlled studies keep finding small, task-local, or self-report-only gains while research selection and verification remain human bottlenecks.",
+            "evidence_refs": ["ev-ai2027-tracker-rd-multiplier", "ev-gpt56-frontier-efficiency", "ev-claude-opus5", "ev-metr-productivity"]
+          },
+          {
+            "id": "crux-reliable-autonomy",
+            "question": "Do long agent runs become reliable rather than merely possible?",
+            "current_read": "Task horizons are the strongest compression signal, but 50%-success demonstrations and spectacular individual runs are not the 80%-reliability threshold.",
+            "faster_if": "Independent evaluations show sustained day-scale work at high reliability with bounded test-time compute and without evaluator leakage.",
+            "slower_if": "Horizon gains flatten after controlling for scaffolding, retries, hidden human intervention, and benchmark contamination.",
+            "evidence_refs": ["ev-metr-time-horizons", "ev-openai-arc3-harness", "ev-aisi-test-time-compute", "ev-openai-hf-eval-incident"]
+          },
+          {
+            "id": "crux-research-loop",
+            "question": "Can systems choose and retain high-value research directions?",
+            "current_read": "Verifier-rich discovery is advancing, but autonomous agenda selection and durable learning remain sparse in public evidence.",
+            "faster_if": "Systems repeatedly originate valuable research programs, carry lessons across long episodes, and survive adversarial independent replication.",
+            "slower_if": "Continual-learning tests remain negative and headline discoveries still depend on human framing, cheap verifiers, or selective reporting.",
+            "evidence_refs": ["ev-gpt56-arc3", "ev-jacobian-counterexample", "ev-cl-bench", "ev-alphaevolve", "ev-paperbench"]
+          }
+        ]
       },
       "lenses": [
         {
@@ -102,11 +162,6 @@
               "label": "BlueDot Impact courses",
               "description": "Courses in technical AI safety, governance, and strategy.",
               "url": "https://bluedot.org/courses"
-            },
-            {
-              "label": "AI as Normal Technology",
-              "description": "The strongest published case that impact will be slower and diffusion-limited.",
-              "url": "https://knightcolumbia.org/content/ai-as-normal-technology"
             }
           ]
         },
@@ -152,6 +207,7 @@
         "description": "The current capability, control, and diffusion read without any chart interpretation.",
         "steps": [
           { "label": "State of the frontier", "path": "/#state" },
+          { "label": "How the read is formed", "path": "/#reasoning" },
           { "label": "Capability rubric", "path": "/#capability" },
           { "label": "Latest signals", "path": "/#signals" }
         ]
@@ -1198,6 +1254,101 @@
       "sample": false
     },
     {
+      "id": "ev-gpt56-frontier-efficiency",
+      "date": "2026-07-09",
+      "source_url": "https://openai.com/index/gpt-5-6/",
+      "source_label": "GPT-5.6: Frontier intelligence that scales with your ambition",
+      "publisher": "OpenAI",
+      "source_type": "deployment",
+      "summary": "OpenAI launched GPT-5.6 Sol, Terra, and Luna with a capability-efficiency thesis rather than a single largest-model story. It reports Sol at 80 on the Artificial Analysis Coding Agent Index while using less than half Fable 5's output tokens, time, and roughly one-third less estimated cost; max reasoning spends more compute, while ultra coordinates four agents by default. OpenAI also reports more than 2x the prior peak daily output tokens per active internal researcher and a 16.2-point gain on its internal recursive-self-improvement bundle.",
+      "implication": "Frontier capability is becoming cheaper and more configurable at the same time it is rising. That compresses deployment and parallel-agent economics, but the internal R&D adoption and benchmark gains still do not measure a sustained whole-lab research-progress multiplier.",
+      "limitation": "The release is first-party and mixes independently operated indices, partner testimonials, internal evaluations, and vendor-estimated cost. Token throughput, code volume, and benchmark performance are not interchangeable with useful research progress, and ultra changes the system by adding parallel agents and compute.",
+      "milestone_tags": ["agent-1", "agent-2", "sc", "sar"],
+      "favors": "compression",
+      "diagnosticity": "high",
+      "themes": ["frontier-lab", "research-autonomy", "evaluation-methods", "scaling"],
+      "independence": "mixed",
+      "verification": "documented",
+      "evaluation_context": "General-availability release combining first-party measurements with named external benchmarks and partner evaluations.",
+      "sample": false
+    },
+    {
+      "id": "ev-gpt56-arc3",
+      "date": "2026-07-09",
+      "source_url": "https://arcprize.org/results/openai-gpt-5-6",
+      "source_label": "GPT-5.6 verified ARC-AGI-3 results",
+      "publisher": "ARC Prize Foundation",
+      "source_type": "evaluation",
+      "summary": "ARC Prize's verified results put GPT-5.6 Sol at 7.78% on the semi-private ARC-AGI-3 set and 13.33% on public environments at max reasoning, making it the first model to win a public ARC-AGI-3 game. The same Sol model scored 2.15% at high reasoning and 1.07% at medium: moving from high to max more than tripled the semi-private result, showing that inference settings materially change the measured system.",
+      "implication": "A frontier model now shows nontrivial orientation, replanning, and goal discovery in novel interactive environments. The gain is a compression signal for adaptive agency and a warning that benchmark comparisons without reasoning settings are incomplete.",
+      "limitation": "The best semi-private score remains below 8% against a human-normalized 100% target, most environments remain unsolved, and max reasoning spends substantially more inference compute. This is evidence of a capability foothold, not general human-level adaptation or durable continual learning.",
+      "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
+      "favors": "compression",
+      "diagnosticity": "high",
+      "themes": ["independent-evaluation", "research-autonomy", "evaluation-methods"],
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "evaluation_context": "ARC Prize verified comparison across three GPT-5.6 tiers and five reasoning-effort variants on public and semi-private interactive environments.",
+      "sample": false
+    },
+    {
+      "id": "ev-openai-arc3-harness",
+      "date": "2026-07-29",
+      "source_url": "https://openai.com/index/how-two-settings-tripled-our-arc-agi-3-scores/",
+      "source_label": "How enabling two settings tripled our scores on the ARC-AGI-3 benchmark",
+      "publisher": "OpenAI",
+      "source_type": "evaluation",
+      "summary": "OpenAI reran GPT-5.6 Sol on the public ARC-AGI-3 games with two production settings enabled: retained private reasoning across actions and context compaction instead of rolling truncation. The tailored Responses API harness raised Relative Human Action Efficiency from the official harness's 13.3% to 38.3% while using roughly six times fewer output tokens; OpenAI estimates the average human tester scored 48% on the same public set.",
+      "implication": "Long-run agent performance depends materially on whether the system can preserve its own reasoning and compress old context. The result strengthens the case that deployed agent capability is a model-plus-harness property and that memory architecture can unlock substantially more coherent exploration without simply spending more tokens.",
+      "limitation": "First-party result on the public task set with a model-specific production harness, not a new official leaderboard or semi-private score. It changes the evaluated system configuration rather than the model weights, and the verified semi-private max-reasoning result remains 7.78%; the comparison therefore diagnoses harness sensitivity more directly than general intelligence.",
+      "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
+      "favors": "compression",
+      "diagnosticity": "high",
+      "themes": ["independent-evaluation", "research-autonomy", "evaluation-methods"],
+      "independence": "first-party",
+      "verification": "documented",
+      "evaluation_context": "OpenAI comparison of the official generic ARC-AGI-3 harness with a Responses API harness retaining reasoning and compacting context on the public games.",
+      "sample": false
+    },
+    {
+      "id": "ev-pacing-frontier",
+      "date": "2026-07-29",
+      "source_url": "https://pacingthefrontier.com/",
+      "source_label": "Pacing the Frontier",
+      "publisher": "Employees of frontier AI companies",
+      "source_type": "survey",
+      "summary": "A public statement signed by 1,273 verified employees of frontier AI companies asks the U.S. government to support an international effort to build technical and governance tools for deliberately pacing automated frontier-AI development. Named signatories include senior leaders and researchers from OpenAI, Anthropic, Google DeepMind, Meta, and Thinking Machines; personal comments are explicitly separated from organizational endorsement.",
+      "implication": "Concern about an AI-R&D feedback loop and the absence of coordination mechanisms is now broad enough inside frontier organizations to generate a cross-company governance demand. This is evidence about perceived control readiness and competitive pressure, not evidence that automated AI research has arrived.",
+      "limitation": "A self-selected petition is neither a representative employee survey nor a capability evaluation. The signature count changes over time, titles and affiliations do not imply employer endorsement, and agreement that pacing tools may be needed does not establish the probability or timing of rapid acceleration.",
+      "milestone_tags": ["agent-2", "ac", "sc", "sar"],
+      "favors": "neutral",
+      "diagnosticity": "medium",
+      "themes": ["alignment-control", "research-autonomy", "forecasting", "transparency"],
+      "independence": "mixed",
+      "verification": "documented",
+      "evaluation_context": "Cross-company, self-selected public statement with signatories verified through corporate email or other proof of employment.",
+      "sample": false
+    },
+    {
+      "id": "ev-universe-ai-jobs",
+      "date": "2026-03-15",
+      "source_url": "https://universe-of-ai.beehiiv.com/p/ai-is-coming-for-your-job-unless-you-re-a-plumber",
+      "source_label": "AI Is Coming For Your Job. Unless You're a Plumber...",
+      "publisher": "Universe of AI",
+      "source_type": "research",
+      "summary": "The newsletter summarizes Andrej Karpathy's deleted weekend visualization of 342 Bureau of Labor Statistics occupations scored from 0 to 10 for digital-AI exposure by an LLM. It highlights a reported 6.7 average for jobs paying above $100,000, 3.4 below $35,000, and roughly 42% of jobs scoring at least 7, with screen-based work rated more exposed than physical work.",
+      "implication": "The underlying exercise is a useful hypothesis generator for uneven labor exposure and the difference between digital and embodied bottlenecks. It is not evidence that those jobs have been automated or that exposure maps to a displacement timeline.",
+      "limitation": "Secondary newsletter coverage of a deleted, self-described vibe-coded project. An LLM scored job descriptions using a hand-authored rubric; the result has no observed adoption, task-share, complementarity, wage, robotics, or equilibrium model, and the article's replacement framing is stronger than the underlying exposure concept warrants.",
+      "milestone_tags": ["ac", "ted-ai", "asi"],
+      "favors": "neutral",
+      "diagnosticity": "low",
+      "themes": ["forecasting", "transparency"],
+      "independence": "mixed",
+      "verification": "reported",
+      "evaluation_context": "Secondary summary of a deleted exploratory visualization; retained as a low-weight lead with the source-quality limitation attached.",
+      "sample": false
+    },
+    {
       "id": "ev-openai-long-horizon",
       "date": "2026-07-20",
       "source_url": "https://openai.com/index/safety-alignment-long-horizon-models/",
@@ -1365,21 +1516,23 @@
     },
     {
       "id": "ev-ai-futures-grading-2026",
-      "date": "2026-07-23",
+      "date": "2026-02-12",
       "source_url": "https://blog.aifutures.org/p/grading-ai-2027s-2025-predictions",
       "source_label": "Grading AI 2027's 2025 Predictions",
       "publisher": "AI Futures Project",
       "source_type": "forecast",
-      "summary": "AI Futures' February grading put aggregate quantitative progress at roughly 65% of the pace in AI 2027 and judged most qualitative predictions on pace. A July 2026 update calls the quantitative estimate preliminary and raises it to roughly 75%.",
-      "implication": "The frozen scenario remains directionally informative, but its calendar pace is too fast on the authors' current grading. This supports treating the spine as a reference trajectory rather than silently moving its dates.",
-      "limitation": "The July figure is preliminary and the result changes with aggregation choices. It is a pace comparison against one scenario, not an all-things-considered forecast or a probability distribution.",
+      "summary": "Published on February 12, AI Futures' self-grading put aggregate quantitative progress at roughly 65% of the pace in AI 2027 and judged most qualitative predictions on pace. The article later received an inline July note with a preliminary estimate of roughly 75%; it was not a new July grading.",
+      "implication": "Historically useful evidence that the scenario authors already regarded their calendar as too fast, but no longer a live Overview metric. It remains attached to the record so later readers can reconstruct how the comparison evolved.",
+      "limitation": "First-party retrospective with aggregation-sensitive results. The original aggregate, individual-item mean, and July inline estimate answer different questions; none is an all-things-considered forecast or a calibrated probability.",
       "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
       "favors": "widening",
-      "diagnosticity": "high",
+      "diagnosticity": "medium",
       "themes": ["forecasting", "scaling", "research-autonomy"],
       "independence": "first-party",
       "verification": "preliminary",
-      "evaluation_context": "Author-led retrospective grading of registered quantitative and qualitative scenario claims.",
+      "evaluation_context": "Historical author-led retrospective of registered quantitative and qualitative scenario claims, published in February 2026 and later amended inline.",
+      "archived": true,
+      "archive_reason": "Superseded as the live scenario-pace indicator. Retained for provenance because the February self-grading and later July inline estimate remain part of the public forecasting record.",
       "sample": false
     },
     {
@@ -1703,6 +1856,8 @@
       "independence": "independent",
       "verification": "documented",
       "evaluation_context": "Peer-reviewed-style essay presenting a structural counterargument to fast-transformation forecasts.",
+      "archived": true,
+      "archive_reason": "Removed from current guidance and live synthesis because it predates the 2026 agentic-coding and cyber evidence. Retained as a historical diffusion-focused outside argument.",
       "sample": false
     },
     {
@@ -1745,21 +1900,40 @@
     },
     {
       "id": "ev-ai2027-tracker",
-      "date": "2026-07-01",
+      "date": "2026-07-27",
       "source_url": "https://ai2027-tracker.com/",
       "source_label": "AI 2027 Tracker: predictions versus reality",
       "publisher": "AI 2027 Tracker",
       "source_type": "research",
-      "summary": "An independent tracker extracts 53 discrete predictions from the AI 2027 narrative and grades each with sources, counterevidence, and change conditions. As of July 2026, 27 of 53 (roughly 51%) are confirmed, ahead, or on track; qualitative dynamics are mostly confirmed while quantitative benchmark and financial targets are mixed, and several risk behaviors arrived before the raw capabilities that were supposed to produce them.",
-      "implication": "An independent grading of the frozen spine that lands meaningfully below the authors' own preliminary ~75% quantitative-pace estimate. Presenting both keeps the spine calibration honest and demonstrates that grading methodology, not just evidence, moves the number.",
-      "limitation": "The tracker is continuously updated (the ledger dates this record to its July 2026 state), prediction extraction from a narrative involves judgment calls, and percent-on-track aggregates weight all predictions equally regardless of importance.",
+      "summary": "The independent tracker now estimates a 0.70× scenario speed ratio: reality moving at roughly 70% of AI 2027's predicted pace. Its 53 extracted predictions currently break down as 16 confirmed, 3 ahead, 8 on track, 4 behind, 13 emerging, and 9 not yet testable. The tracker separately reports 16 of 31 assessable predictions confirmed; the 27 of 53 favorable-status count is not the speed ratio.",
+      "implication": "The frozen scenario remains directionally useful but too fast and uneven. Infrastructure, revenue, defense integration, cyber capability, and restricted frontier access look strongest; the AI-R&D feedback loop remains the central unresolved mechanism.",
+      "limitation": "Prediction extraction, category assignment, timing adjustments, and statuses involve judgment. The 0.70× composite combines several indicators but the public methodology does not provide a fully reproducible weighting formula, so it should be used as a calibration compass rather than a mechanical date transform.",
       "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
       "favors": "widening",
-      "diagnosticity": "medium",
+      "diagnosticity": "high",
       "themes": ["forecasting", "independent-evaluation", "transparency"],
       "independence": "independent",
       "verification": "documented",
-      "evaluation_context": "Independent, continuously updated grading of a frozen scenario's extracted predictions.",
+      "evaluation_context": "Independent, continuously updated grading of a frozen narrative. Status, confidence, timing, and the top-level pace composite are distinct outputs.",
+      "sample": false
+    },
+    {
+      "id": "ev-ai2027-tracker-rd-multiplier",
+      "date": "2026-06-22",
+      "source_url": "https://ai2027-tracker.com/predictions/rd-multiplier/",
+      "source_label": "AI R&D progress multiplier reaches 1.5×",
+      "publisher": "AI 2027 Tracker",
+      "source_type": "research",
+      "summary": "The tracker rates AI 2027's early-2026 1.5× AI-R&D multiplier claim on track at 80% confidence. Its dossier cites lab adoption, PostTrainBench, METR studies, and Anthropic's internal reporting, while also stating that the evidence does not prove a 1.5× multiplier and is concentrated in implementation work, internal measurement, self-report, and code-volume proxies.",
+      "implication": "Meaningful AI-assisted R&D acceleration is increasingly plausible, but the status depends on how much timing tolerance and indirect evidence the evaluator allows. This ledger holds the multiplier unresolved until total research progress—not tool use or code throughput alone—is measured credibly.",
+      "limitation": "The assessment's 80% confidence is judgmental and does not come with a published calibration record. Several cited indicators are first-party, task-local, or only indirectly related to the scenario's whole-lab algorithmic-progress multiplier.",
+      "milestone_tags": ["agent-1", "agent-2", "ac", "sc"],
+      "favors": "neutral",
+      "diagnosticity": "high",
+      "themes": ["forecasting", "research-autonomy", "independent-evaluation", "transparency"],
+      "independence": "independent",
+      "verification": "documented",
+      "evaluation_context": "Independent claim dossier separating the original prediction, operationalization, current evidence, counterevidence, update conditions, and revision history.",
       "sample": false
     },
     {
@@ -1954,7 +2128,7 @@
       "assessment": "The clearest gains use automated evaluators, and added compute helps most where agents can check their work. AISI found cheating attempts across every tested cyber model, while the OpenAI/Hugging Face incident shows evaluation gaming can cross infrastructure boundaries. Evaluation Cards found 96.5% of more than 50,000 public records lacked at least one minimal rerun field. Raw scores and self-report are therefore insufficient on their own.",
       "next_signal": "Comparable gains appear in a slow-feedback domain without a supplied objective function or heavy hidden human steering.",
       "evidence_for": ["ev-alphaevolve", "ev-paperbench", "ev-openai-long-horizon", "ev-aisi-test-time-compute", "ev-nist-agent-eval-cheating", "ev-aisi-eval-cheating-2026", "ev-openai-hf-eval-incident", "ev-aisi-control-red-team", "ev-hf-evaluation-cards", "ev-nist-eval-practices"],
-      "evidence_against": ["ev-arc-agi3", "ev-deepmind-co-scientist", "ev-epoch-eci"],
+      "evidence_against": ["ev-arc-agi3", "ev-gpt56-arc3", "ev-openai-arc3-harness", "ev-deepmind-co-scientist", "ev-epoch-eci"],
       "sample": false
     },
     {
@@ -1992,13 +2166,13 @@
       "label": "Agent-2",
       "score": 49,
       "confidence": "medium",
-      "as_of": "2026-07-27",
-      "summary": "Persistent real-world cyber agency and an AI-assisted open-problem result move autonomy and research taste upward. Safe reliability, continual learning, and a measured 3x AI R&D multiplier remain incomplete. Re-reviewed against Claude Opus 5 on July 27 and held: its coding and knowledge-work records are real but concentrated in the criterion already scored highest, while its own below-2x acceleration finding leaves the uplift criterion where it was.",
+      "as_of": "2026-07-29",
+      "summary": "Persistent real-world cyber agency, an AI-assisted open-problem result, and GPT-5.6's verified ARC-AGI-3 foothold move autonomy and research taste upward. Safe reliability, continual learning, and a measured 3x AI R&D multiplier remain incomplete. Re-reviewed against GPT-5.6's efficiency release and ARC result on July 29 and held: the gains are real but remain concentrated in already-partial criteria, while the best semi-private ARC-AGI-3 score is below 8% and internal adoption metrics still do not measure total research progress.",
       "criteria": [
-        { "id": "a2-engineering", "label": "Near-top-human research engineering", "weight": 0.35, "completion": 0.8, "rationale": "Strong internal debugging and optimization results, but only a subset of difficult expert work is solved. Claude Opus 5 more than doubled Opus 4.8's Frontier-Bench score and reports 96% on SWE-bench Verified, yet still fails most Frontier-Bench tasks and its developer states it is not close to substituting for their research engineers.", "evidence_refs": ["ev-gpt56-system-card", "ev-rebench", "ev-paperbench", "ev-nist-deepseek-v4", "ev-claude-opus5"] },
-        { "id": "a2-autonomy", "label": "Reliable long-horizon autonomy", "weight": 0.25, "completion": 0.45, "rationale": "Hours-long useful work is real and the evaluation incident demonstrates sustained real-world action; safe 80% reliability is still well below a workday and control failures complicate the claim.", "evidence_refs": ["ev-metr-risk-report", "ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-openai-long-horizon", "ev-openai-hf-eval-incident", "ev-aisi-control-red-team", "ev-glasswing-mythos"] },
+        { "id": "a2-engineering", "label": "Near-top-human research engineering", "weight": 0.35, "completion": 0.8, "rationale": "Strong internal debugging, optimization, coding-agent, and efficiency results, but only a subset of difficult expert work is solved. Claude Opus 5 and GPT-5.6 set records in different slices while still leaving hard frontier research tasks incomplete and whole-lab productivity unmeasured.", "evidence_refs": ["ev-gpt56-system-card", "ev-gpt56-frontier-efficiency", "ev-rebench", "ev-paperbench", "ev-nist-deepseek-v4", "ev-claude-opus5"] },
+        { "id": "a2-autonomy", "label": "Reliable long-horizon autonomy", "weight": 0.25, "completion": 0.45, "rationale": "Hours-long useful work is real, the evaluation incident demonstrates sustained real-world action, and GPT-5.6 shows a verified foothold in novel interactive environments. Retained reasoning and compaction sharply improve coherent exploration, but safe 80% reliability is still well below a workday, ARC-AGI-3 remains mostly unsolved, and control failures complicate the claim.", "evidence_refs": ["ev-metr-risk-report", "ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-gpt56-arc3", "ev-openai-arc3-harness", "ev-openai-long-horizon", "ev-openai-hf-eval-incident", "ev-aisi-control-red-team", "ev-glasswing-mythos"] },
         { "id": "a2-taste", "label": "Research taste", "weight": 0.2, "completion": 0.4, "rationale": "The Jacobian counterexample is a material update beyond routine benchmark work, while absent interaction provenance and limited evidence for autonomous agenda selection prevent a stronger score.", "evidence_refs": ["ev-jacobian-counterexample", "ev-alphaevolve", "ev-openai-long-horizon", "ev-paperbench", "ev-deepmind-co-scientist", "ev-anthropic-coding-practice"] },
-        { "id": "a2-learning", "label": "Continual learning and 3x R&D uplift", "weight": 0.2, "completion": 0.1, "rationale": "Meaningful assistance is documented, but durable online competence acquisition and a measured tripling of algorithmic progress are not; CL-Bench's first results were negative even with dedicated memory systems, and Anthropic reports no sustained AI-attributable 2x acceleration in its own AI progress as of July 2026 — the first direct frontier-lab statement on the multiplier, and it is below half the Agent-2 requirement.", "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-gpt56-system-card", "ev-cl-bench", "ev-claude-opus5"] }
+        { "id": "a2-learning", "label": "Continual learning and 3x R&D uplift", "weight": 0.2, "completion": 0.1, "rationale": "Meaningful assistance and sharply rising internal use are documented, but durable online competence acquisition and a measured tripling of algorithmic progress are not. CL-Bench's first results were negative even with dedicated memory systems; OpenAI says GPT-5.6 adoption metrics are not research progress; and Anthropic reports no sustained AI-attributable 2x acceleration in its own AI progress.", "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-gpt56-system-card", "ev-gpt56-frontier-efficiency", "ev-cl-bench", "ev-claude-opus5"] }
       ]
     },
     {
@@ -2106,7 +2280,7 @@
       "phase": "pre-ac",
       "importance": "high",
       "assessment": "This is the clearest public compression signal, but estimates remain sensitive to the reliability threshold, task mix, and test-time compute. Long sessions and spectacular single runs are not substitutes for an 80%-reliability horizon. Registered forecasters keep updating in the same direction: Cotra's January 2026 predictions felt too conservative to their author within two months.",
-      "evidence_refs": ["ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-openai-hf-eval-incident", "ev-ai-futures-grading-2026", "ev-cotra-2026-predictions", "ev-metr-simpler-model"],
+      "evidence_refs": ["ev-metr-time-horizons", "ev-aisi-test-time-compute", "ev-openai-hf-eval-incident", "ev-ai2027-tracker", "ev-cotra-2026-predictions", "ev-metr-simpler-model"],
       "track_positions": [
         {
           "track_id": "ai-2027",
@@ -2175,8 +2349,8 @@
       "question": "How much faster does a frontier lab actually improve algorithms because of AI assistance?",
       "phase": "both",
       "importance": "high",
-      "assessment": "Useful acceleration is documented, but public estimates mix self-report, coding-only effects, task substitution, and whole-lab output. AI Futures grades software-R&D uplift behind its scenario pace. The sharpest datapoint is now Anthropic's July system card, which states it does not observe a sustained AI-attributable 2x acceleration in its own pace of AI progress — a frontier lab reporting that the feedback loop has not started, even as the same model set a coding and knowledge-work state of the art. Recent reporting on a quietly reversed risk classification is a reminder that self-administered determinations of this kind carry the developer's incentives with them.",
-      "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-anthropic-economic", "ev-ai-futures-grading-2026", "ev-claude-opus5", "ev-openai-bio-threshold"],
+      "assessment": "Useful acceleration is documented, but public estimates mix self-report, coding-only effects, task substitution, and whole-lab output. The independent tracker calls the 1.5x claim on track while conceding that its public evidence does not prove the threshold; this ledger therefore holds the multiplier unresolved. OpenAI's GPT-5.6 release shows a 100x rise in internal coding-inference compute, 22x agentic-token growth, and more than 2x researcher output-token usage while explicitly warning that adoption is not research progress. Anthropic's July system card states it does not observe a sustained AI-attributable 2x acceleration in its own pace of AI progress. Together they show the feedback loop's inputs growing much faster than its measured output. Recent reporting on a quietly reversed risk classification is a reminder that self-administered determinations carry the developer's incentives with them.",
+      "evidence_refs": ["ev-metr-productivity", "ev-anthropic-institute", "ev-anthropic-economic", "ev-ai2027-tracker-rd-multiplier", "ev-gpt56-frontier-efficiency", "ev-claude-opus5", "ev-openai-bio-threshold"],
       "track_positions": [
         {
           "track_id": "ai-2027",
@@ -2320,9 +2494,9 @@
       "id": "safety-external-oversight",
       "name": "External oversight",
       "status": "documented",
-      "summary": "The mechanisms are now operating, not merely drafted. Executive Order 14409 produced the Gold Eagle vulnerability clearinghouse in July, CAISI holds pre-deployment agreements with five frontier developers and reports 40-plus completed evaluations, and reporting indicates the government now approves partner lists for the most offense-capable cyber models. Oversight has moved from voluntary intent to active allocation.",
+      "summary": "The mechanisms are now operating, not merely drafted. Executive Order 14409 produced the Gold Eagle vulnerability clearinghouse in July, CAISI holds pre-deployment agreements with five frontier developers and reports 40-plus completed evaluations, and reporting indicates the government now approves partner lists for the most offense-capable cyber models. Separately, 1,273 verified frontier-company employees requested international technical and governance tools for pacing automated AI development. Oversight has moved from voluntary intent to active allocation, while internal demand for coordination has become visible.",
       "next_signal": "Evidence that oversight produces public accountability rather than only state visibility: a published federal review outcome, an enacted audit mandate in force, or an external check on a developer's own threshold reclassification.",
-      "evidence_refs": ["ev-us-frontier-eo", "ev-international-safety-report-2026", "ev-nist-eval-practices", "ev-gold-eagle", "ev-caisi-predeployment", "ev-openai-bio-threshold"]
+      "evidence_refs": ["ev-us-frontier-eo", "ev-international-safety-report-2026", "ev-nist-eval-practices", "ev-gold-eagle", "ev-caisi-predeployment", "ev-openai-bio-threshold", "ev-pacing-frontier"]
     },
     {
       "id": "safety-agent-platform",
@@ -2433,7 +2607,7 @@
       "id": "g-frozen-spine",
       "term": "Frozen spine",
       "category": "distributions",
-      "definition": "The original April 2025 AI 2027 scenario dates, kept unedited as a fixed historical reference. Author updates never move the spine; they enter the ledger as evidence, and the spine's calendar pace is graded separately by its authors (~75% of depicted quantitative pace, preliminary) and an independent tracker (~51% of extracted predictions on track).",
+      "definition": "The original April 2025 AI 2027 scenario dates, kept unedited as a fixed historical reference. Author updates never move the spine; they enter the ledger as evidence. The current independent tracker estimates a 0.70x scenario speed ratio. That judgmental composite is distinct from its status counts and from the authors' archived February self-grading.",
       "related": ["g-scenario-marker", "g-internal-lag"]
     },
     {
@@ -2529,6 +2703,14 @@
     }
   ],
   "changelog": [
+    {
+      "id": "change-20260729-overview-reasoning",
+      "date": "2026-07-29",
+      "change_summary": "Rebuilt the Overview around the independent AI 2027 Tracker's current 0.70x composite pace estimate and made the six status counts visible without conflating them with speed, accuracy, or probability. Added an explicit observation-to-inference-to-forecast-impact chain, an epistemic-status label, three two-sided cruxes, and a documented disagreement with the tracker's on-track assessment of the 1.5x AI-R&D multiplier. Added five sources: OpenAI's GPT-5.6 capability-efficiency release, ARC Prize's verified GPT-5.6 ARC-AGI-3 results and inference-effort comparison, OpenAI's retained-reasoning and compaction harness result, the 1,273-signatory Pacing the Frontier statement, and low-weight secondary coverage of Karpathy's deleted job-exposure visualization. Corrected the AI Futures self-grading to its February publication date and moved it, together with AI as Normal Technology, into a provenance-preserving evidence archive; removed the latter from current action links. Re-reviewed Agent-2 and held it at 49%. No forecast distribution was revised.",
+      "evidence_refs": ["ev-ai2027-tracker", "ev-ai2027-tracker-rd-multiplier", "ev-gpt56-frontier-efficiency", "ev-gpt56-arc3", "ev-openai-arc3-harness", "ev-pacing-frontier", "ev-universe-ai-jobs", "ev-ai-futures-grading-2026", "ev-ai-normal-tech", "ev-claude-opus5", "ev-metr-productivity"],
+      "affected_entities": ["ev-ai2027-tracker", "ev-ai2027-tracker-rd-multiplier", "ev-gpt56-frontier-efficiency", "ev-gpt56-arc3", "ev-openai-arc3-harness", "ev-pacing-frontier", "ev-universe-ai-jobs", "ev-ai-futures-grading-2026", "ev-ai-normal-tech", "driver-time-horizon", "driver-rd-uplift", "safety-external-oversight", "progress-agent-2-20260721", "b-verification-asymmetry"],
+      "sample": false
+    },
     {
       "id": "change-20260727-late-july",
       "date": "2026-07-27",
