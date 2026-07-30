@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { canonical, evidenceById, milestonesById, tracksById } from "../lib/data";
 import { displayQuantileLabel, formatDecimalYear, formatIsoDate } from "../lib/dates";
 import { PageHeader, StatusBadge } from "../components/Primitives";

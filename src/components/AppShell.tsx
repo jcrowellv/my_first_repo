@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { HashRouter, Link, NavLink, useLocation } from "react-router-dom";
+import { useEffect, useLayoutEffect, useState, type ReactNode } from "react";
+import { HashRouter, Link, NavLink, useLocation } from "react-router";
 import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
 import { canonical, newestChangelogDate } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
@@ -7,7 +7,7 @@ import { formatIsoDate } from "../lib/dates";
 function RouteScrollManager() {
   const { pathname, hash } = useLocation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const jumpWithoutAnimation = (action: () => void) => {
       const root = document.documentElement;
       const priorBehavior = root.style.scrollBehavior;
@@ -51,46 +51,84 @@ function RouteScrollManager() {
 
 function DesktopNavigation() {
   const { pathname } = useLocation();
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setOpenMenuId(null);
+  }, [pathname]);
 
   return (
-    <nav aria-label="Primary navigation" className="flex items-center gap-0.5">
-      {canonical.meta.navigation.map((item) => (
-        <div key={item.id} className="group relative">
-          <NavLink
-            to={item.path}
-            end={item.path === "/"}
-            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
-            className={({ isActive }) => {
-              const groupedActive =
-                item.id === "method" && ["/methodology", "/bottlenecks", "/glossary", "/changelog"].includes(pathname);
-              return (
-              `inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm transition-colors ${
-                isActive || groupedActive
-                  ? "bg-ink font-medium text-panel"
-                  : "text-muted hover:bg-raised hover:text-ink"
-              }`
-              );
-            }}
+    <nav
+      aria-label="Primary navigation"
+      className="flex items-center gap-0.5"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setOpenMenuId(null);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setOpenMenuId(null);
+      }}
+      onPointerLeave={() => setOpenMenuId(null)}
+    >
+      {canonical.meta.navigation.map((item) => {
+        const menuOpen = openMenuId === item.id;
+        const menuId = `desktop-navigation-${item.id}`;
+
+        return (
+          <div
+            key={item.id}
+            className="relative"
+            onPointerEnter={() => setOpenMenuId(item.id)}
           >
-            {item.label}
-            <ChevronDown size={12} className="opacity-55" aria-hidden="true" />
-          </NavLink>
-          <div className="invisible absolute left-1/2 top-full z-50 w-[310px] -translate-x-1/2 pt-3 opacity-0 transition-[opacity,visibility] duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-            <div className="rounded-2xl border border-line bg-panel p-2 shadow-[0_22px_60px_rgba(19,35,54,.16)]">
-              {item.children.map((child) => (
-                <Link
-                  key={child.path}
-                  to={child.path}
-                  className="block rounded-xl px-3.5 py-3 transition-colors hover:bg-raised focus-visible:bg-raised"
-                >
-                  <span className="block text-sm font-semibold text-ink">{child.label}</span>
-                  <span className="mt-1 block text-xs leading-5 text-muted">{child.description}</span>
-                </Link>
-              ))}
+            <NavLink
+              to={item.path}
+              end={item.path === "/"}
+              aria-expanded={menuOpen}
+              aria-controls={menuId}
+              onFocus={() => setOpenMenuId(item.id)}
+              onClick={() => {
+                setOpenMenuId(null);
+                window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+              }}
+              className={({ isActive }) => {
+                const groupedActive =
+                  item.id === "method" &&
+                  ["/methodology", "/bottlenecks", "/glossary", "/changelog"].includes(pathname);
+                return (
+                  `inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm transition-colors ${
+                    isActive || groupedActive
+                      ? "bg-ink font-medium text-panel"
+                      : "text-muted hover:bg-raised hover:text-ink"
+                  }`
+                );
+              }}
+            >
+              {item.label}
+              <ChevronDown size={12} className="opacity-55" aria-hidden="true" />
+            </NavLink>
+            <div
+              id={menuId}
+              aria-hidden={!menuOpen}
+              className={`absolute left-1/2 top-full z-50 w-[310px] -translate-x-1/2 pt-3 transition-[opacity,visibility] duration-150 ${
+                menuOpen ? "visible opacity-100" : "invisible opacity-0"
+              }`}
+            >
+              <div className="rounded-2xl border border-line bg-panel p-2 shadow-[0_22px_60px_rgba(19,35,54,.16)]">
+                {item.children.map((child) => (
+                  <Link
+                    key={child.path}
+                    to={child.path}
+                    onClick={() => setOpenMenuId(null)}
+                    className="block rounded-xl px-3.5 py-3 transition-colors hover:bg-raised focus-visible:bg-raised"
+                  >
+                    <span className="block text-sm font-semibold text-ink">{child.label}</span>
+                    <span className="mt-1 block text-xs leading-5 text-muted">{child.description}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </nav>
   );
 }
@@ -148,12 +186,60 @@ function MobileNavigation({ close }: { close: () => void }) {
   );
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+const viewIdByPath: Record<string, string> = {
+  "/": "timeline",
+  "/forecasts": "forecasts",
+  "/falsifiers": "falsifiers",
+  "/evidence": "evidence",
+  "/bottlenecks": "bottlenecks",
+  "/changelog": "changelog",
+  "/methodology": "methodology",
+  "/glossary": "glossary",
+};
+
+function AppShellContent({ children }: { children: ReactNode }) {
+  const { pathname, hash } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname, hash]);
+
+  useEffect(() => {
+    const view = canonical.meta.views.find((item) => item.id === viewIdByPath[pathname]);
+    document.title =
+      pathname === "/" || !view
+        ? canonical.meta.site_title
+        : `${view.label} · ${canonical.meta.site_title}`;
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
+
+  const skipToContent = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const main = document.getElementById("main-content");
+    main?.focus({ preventScroll: true });
+    main?.scrollIntoView({ block: "start", behavior: "auto" });
+  };
+
   return (
-    <HashRouter>
+    <>
       <RouteScrollManager />
+      <a
+        href="#main-content"
+        onClick={skipToContent}
+        className="fixed left-4 top-3 z-[70] -translate-y-20 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-panel shadow-lg transition-transform focus:translate-y-0"
+      >
+        Skip to content
+      </a>
       <div className="min-h-screen bg-canvas text-ink">
         <header className="sticky top-0 z-50 border-b border-line/80 bg-canvas/95 backdrop-blur-md">
           <div className="mx-auto flex min-h-[70px] max-w-[1360px] items-center justify-between gap-5 px-5 md:px-8">
@@ -181,19 +267,29 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="rounded-full border border-line bg-panel p-3 text-muted lg:hidden"
               aria-label={menuOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
               onClick={() => setMenuOpen((value) => !value)}
             >
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
           {menuOpen ? (
-            <div className="max-h-[calc(100vh-70px)] overflow-y-auto border-t border-line bg-panel px-5 py-3 lg:hidden">
+            <div
+              id="mobile-navigation"
+              className="max-h-[calc(100vh-70px)] overflow-y-auto border-t border-line bg-panel px-5 py-3 lg:hidden"
+            >
               <MobileNavigation close={() => setMenuOpen(false)} />
             </div>
           ) : null}
         </header>
 
-        <main id="main-content" className="mx-auto max-w-[1240px] px-5 py-9 md:px-8 md:py-14">{children}</main>
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="mx-auto max-w-[1240px] px-5 py-9 outline-none md:px-8 md:py-14"
+        >
+          {children}
+        </main>
 
         <footer className="mt-20 bg-ink text-panel">
           <div className="mx-auto max-w-[1240px] px-5 py-12 md:px-8 md:py-16">
@@ -258,6 +354,14 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </footer>
       </div>
+    </>
+  );
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
+  return (
+    <HashRouter>
+      <AppShellContent>{children}</AppShellContent>
     </HashRouter>
   );
 }

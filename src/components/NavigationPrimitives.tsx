@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Compass } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 export type SectionNavItem = {
   id: string;

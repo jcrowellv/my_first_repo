@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import {
+  ArrowDown,
   ArrowRight,
+  ArrowUp,
   ArrowUpRight,
   BookOpen,
   ChevronDown,
@@ -8,11 +10,14 @@ import {
   Clock3,
   Compass,
   Database,
+  Eye,
+  GitBranch,
+  LineChart,
   ShieldCheck,
   Waves,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import type { CapabilityProgress, Forecast, QuantileDate } from "../schema";
 import {
   canonical,
@@ -41,6 +46,15 @@ const briefingIcon = {
   diffusion: Waves,
 };
 
+const paceStatusTone = {
+  confirmed: "bg-emerald-400",
+  ahead: "bg-cyan",
+  "on-track": "bg-violet",
+  behind: "bg-amber",
+  emerging: "bg-rose",
+  "not-testable": "bg-canvas/35",
+};
+
 function BriefingHero() {
   const briefing = canonical.meta.briefing;
   const agentTwo =
@@ -50,6 +64,7 @@ function BriefingHero() {
   const nextTest = canonical.falsifiers.find(
     (item) => item.kind === "dated-tripwire" && item.status === "watching",
   );
+  const statusTotal = briefing.pace_statuses.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <section
@@ -165,24 +180,45 @@ function BriefingHero() {
                   Source <ArrowUpRight size={11} />
                 </a>
               </div>
-              {briefing.pace_secondary ? (
-                <div className="border-t border-canvas/15 pt-4">
-                  <p className="text-sm font-semibold">
-                    {briefing.pace_secondary.value} · {briefing.pace_secondary.label}
+              <div className="border-t border-canvas/15 pt-4">
+                <div className="flex items-baseline justify-between gap-4">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-canvas/55">
+                    {statusTotal} tracked claims
                   </p>
-                  <p className="mt-1 text-xs leading-5 text-canvas/60">
-                    {briefing.pace_secondary.detail}
-                  </p>
-                  <a
-                    href={briefing.pace_secondary.source_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-2 inline-flex items-center gap-1 text-xs text-cyan"
-                  >
-                    Source <ArrowUpRight size={11} />
-                  </a>
+                  <p className="text-[10px] text-canvas/45">status, not speed</p>
                 </div>
-              ) : null}
+                <div
+                  className="mt-3 flex h-2 overflow-hidden rounded-full bg-canvas/10"
+                  aria-hidden="true"
+                >
+                  {briefing.pace_statuses.map((status) => (
+                    <span
+                      key={status.id}
+                      className={paceStatusTone[status.id]}
+                      style={{ width: `${(status.value / statusTotal) * 100}%` }}
+                    />
+                  ))}
+                </div>
+                <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2">
+                  {briefing.pace_statuses.map((status) => (
+                    <div
+                      key={status.id}
+                      className="flex items-center justify-between gap-3 text-[10px]"
+                    >
+                      <dt className="flex min-w-0 items-center gap-2 text-canvas/55">
+                        <span
+                          className={`h-1.5 w-1.5 shrink-0 rounded-full ${paceStatusTone[status.id]}`}
+                        />
+                        <span className="truncate">{status.label}</span>
+                      </dt>
+                      <dd className="font-mono text-canvas/80">{status.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="mt-4 text-[10px] leading-5 text-canvas/50">
+                  {briefing.pace_note}
+                </p>
+              </div>
             </div>
           </details>
         </aside>
@@ -217,6 +253,178 @@ function BriefingHero() {
           );
         })}
       </div>
+    </section>
+  );
+}
+
+const reasoningStepIcon = {
+  observation: Eye,
+  inference: GitBranch,
+  "forecast-impact": LineChart,
+};
+
+function EvidenceLinks({ refs, dark = false }: { refs: string[]; dark?: boolean }) {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {refs.map((ref) => {
+        const item = evidenceById.get(ref);
+        if (!item) return null;
+        return (
+          <a
+            key={ref}
+            href={item.source_url}
+            target="_blank"
+            rel="noreferrer"
+            className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] transition-colors ${
+              dark
+                ? "border-canvas/15 text-canvas/65 hover:border-cyan/50 hover:text-panel"
+                : "border-line bg-canvas text-muted hover:border-cyan/40 hover:text-ink"
+            }`}
+            aria-label={`Open source: ${item.publisher}, ${item.source_label}`}
+          >
+            {item.publisher}
+            <ArrowUpRight size={9} aria-hidden="true" />
+          </a>
+        );
+      })}
+    </div>
+  );
+}
+
+function ReasoningSection() {
+  const reasoning = canonical.meta.briefing.reasoning;
+
+  return (
+    <section id="reasoning" className="mt-20 scroll-mt-28" aria-labelledby="reasoning-title">
+      <details className="group">
+        <summary className="grid cursor-pointer list-none items-center gap-5 rounded-[24px] border border-line bg-panel p-5 shadow-instrument sm:grid-cols-[1fr_auto] md:p-7">
+          <span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">
+              Evidence-linked conclusion
+            </span>
+            <span
+              id="reasoning-title"
+              className="mt-2 block text-balance font-serif text-2xl font-semibold tracking-[-0.02em] text-ink md:text-3xl"
+            >
+              Show the reasoning, not just the verdict.
+            </span>
+            <span className="mt-2 block max-w-3xl text-sm leading-6 text-muted">
+              Open the observation → inference → forecast-impact chain, the strongest
+              disagreement, and three two-sided cruxes.
+            </span>
+          </span>
+          <span className="flex items-center gap-4">
+            <span className="hidden max-w-[220px] text-right font-mono text-[8px] uppercase leading-4 tracking-[0.12em] text-muted sm:block">
+              {reasoning.epistemic_status}
+            </span>
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-raised text-muted">
+              <ChevronDown
+                size={17}
+                className="transition-transform group-open:rotate-180"
+                aria-hidden="true"
+              />
+            </span>
+          </span>
+        </summary>
+
+        <div className="mt-7 overflow-hidden rounded-[24px] border border-line bg-panel shadow-instrument">
+        <div className="grid lg:grid-cols-[1.2fr_.8fr]">
+          <div className="p-5 md:p-7 lg:p-8">
+            <h3 className="max-w-2xl font-serif text-2xl font-semibold tracking-[-0.02em] text-ink">
+              {reasoning.title}
+            </h3>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">{reasoning.summary}</p>
+            <ol className="mt-7">
+              {reasoning.steps.map((step, index) => {
+                const Icon = reasoningStepIcon[step.id];
+                return (
+                  <li
+                    key={step.id}
+                    className={`grid gap-4 py-5 first:pt-0 last:pb-0 sm:grid-cols-[44px_1fr] ${
+                      index > 0 ? "border-t border-line" : ""
+                    }`}
+                  >
+                    <span className="grid h-10 w-10 place-items-center rounded-full bg-cyan/10 text-cyan">
+                      <Icon size={17} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.15em] text-cyan">
+                        {String(index + 1).padStart(2, "0")} · {step.label}
+                      </p>
+                      <h4 className="mt-1.5 text-base font-semibold tracking-[-0.01em] text-ink">{step.title}</h4>
+                      <p className="mt-2 text-[13px] leading-6 text-muted">{step.detail}</p>
+                      <div className="mt-3">
+                        <EvidenceLinks refs={step.evidence_refs} />
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          <aside className="border-t border-line bg-ink p-5 text-panel md:p-7 lg:border-l lg:border-t-0 lg:p-8">
+            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-amber">{reasoning.disagreement_label}</p>
+            <h3 className="mt-4 font-serif text-2xl font-semibold leading-tight tracking-[-0.02em]">
+              {reasoning.disagreement_title}
+            </h3>
+            <p className="mt-4 text-[13px] leading-6 text-canvas/70">{reasoning.disagreement_detail}</p>
+            <div className="mt-5 border-t border-canvas/15 pt-5">
+              <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.14em] text-canvas/45">Audit the disagreement</p>
+              <EvidenceLinks refs={reasoning.disagreement_evidence_refs} dark />
+            </div>
+            <Link
+              to="/methodology"
+              className="mt-7 inline-flex items-center gap-2 rounded-full border border-canvas/15 px-4 py-2.5 text-xs font-medium text-panel transition-colors hover:border-cyan/50 hover:text-cyan"
+            >
+              Read the synthesis rules <ArrowRight size={13} aria-hidden="true" />
+            </Link>
+          </aside>
+        </div>
+      </div>
+
+      <div className="mt-10 flex items-end justify-between gap-6">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Live cruxes</p>
+          <h3 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.02em] text-ink">What would change this read?</h3>
+        </div>
+        <Link to="/bottlenecks" className="hidden items-center gap-1 text-sm text-cyan hover:text-ink sm:inline-flex">
+          Full driver map <ArrowRight size={13} aria-hidden="true" />
+        </Link>
+      </div>
+      <div className="mt-5 grid gap-4 xl:grid-cols-3">
+        {reasoning.cruxes.map((crux, index) => (
+          <article key={crux.id} className="flex flex-col rounded-2xl border border-line bg-panel p-5 shadow-instrument md:p-6">
+            <p className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">Crux {String(index + 1).padStart(2, "0")}</p>
+            <h4 className="mt-3 text-base font-semibold leading-6 text-ink">{crux.question}</h4>
+            <p className="mt-3 text-[13px] leading-6 text-muted">{crux.current_read}</p>
+            <div className="mt-5 space-y-3 border-t border-line pt-4">
+              <div className="grid grid-cols-[24px_1fr] gap-2.5">
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-cyan/10 text-cyan">
+                  <ArrowUp size={12} aria-hidden="true" />
+                </span>
+                <div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.13em] text-cyan">Faster if</p>
+                  <p className="mt-1 text-xs leading-5 text-muted">{crux.faster_if}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-[24px_1fr] gap-2.5">
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-rose/10 text-rose">
+                  <ArrowDown size={12} aria-hidden="true" />
+                </span>
+                <div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.13em] text-rose">Slower if</p>
+                  <p className="mt-1 text-xs leading-5 text-muted">{crux.slower_if}</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-auto pt-5">
+              <EvidenceLinks refs={crux.evidence_refs} />
+            </div>
+          </article>
+        ))}
+      </div>
+      </details>
     </section>
   );
 }
@@ -348,9 +556,14 @@ function CapabilityDetail({ item }: { item: CapabilityProgress }) {
   const range = getProgressRange(item);
 
   return (
-    <DataCard className="mt-4">
-      <div className="grid lg:grid-cols-[.4fr_.6fr]">
-        <div className="bg-ink p-6 text-panel md:p-8">
+    <div
+      id="capability-detail"
+      role="region"
+      aria-labelledby={`capability-tab-${item.id}`}
+    >
+      <DataCard className="mt-4">
+        <div className="grid lg:grid-cols-[.4fr_.6fr]">
+          <div className="bg-ink p-6 text-panel md:p-8">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-canvas/55">
               {item.label} · central estimate
@@ -475,8 +688,9 @@ function CapabilityDetail({ item }: { item: CapabilityProgress }) {
             </div>
           </details>
         </div>
-      </div>
-    </DataCard>
+        </div>
+      </DataCard>
+    </div>
   );
 }
 
@@ -510,6 +724,7 @@ function CapabilitySection() {
       </div>
       <div
         className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line xl:grid-cols-4"
+        role="group"
         aria-label="Capability levels"
       >
         {canonical.capability_progress.map((item) => {
@@ -519,8 +734,10 @@ function CapabilitySection() {
           return (
             <button
               key={item.id}
+              id={`capability-tab-${item.id}`}
               type="button"
               aria-pressed={isSelected}
+              aria-controls="capability-detail"
               onClick={() => setSelectedId(item.id)}
               className={`min-h-[132px] p-5 text-left transition-colors ${
                 isSelected ? "bg-ink text-panel" : "bg-panel text-ink hover:bg-raised/50"
@@ -687,7 +904,7 @@ function ForecastChart({
     <svg
       viewBox={`0 0 ${chartWidth} ${height}`}
       className="w-full"
-      role="img"
+      role="group"
       aria-label="Forecast distributions for the selected capability threshold"
     >
       {years.map((year) => (
@@ -760,7 +977,7 @@ function ForecastChart({
                 onSelect(forecast.id);
               }
             }}
-            className="cursor-pointer outline-none"
+            className="forecast-row cursor-pointer outline-none"
           >
             {index > 0 ? (
               <line x1={16} x2={chartWidth - 16} y1={centerY - rowHeight / 2} y2={centerY - rowHeight / 2} stroke="#ece7db" strokeWidth={1} />
@@ -894,14 +1111,16 @@ export function ForecastExplorer() {
           median. Select a row for quantiles and provenance.
         </p>
       </div>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="mb-4 flex flex-wrap items-center gap-2" role="group" aria-label="Capability thresholds">
         {milestoneIds.map((id) => {
           const item = milestonesById.get(id);
           return (
             <button
               key={id}
+              id={`forecast-tab-${id}`}
               type="button"
               aria-pressed={selected === id}
+              aria-label={`${item?.code}: ${item?.name}`}
               onClick={() => {
                 setSelected(id);
                 setDetailId(null);
@@ -956,7 +1175,11 @@ export function ForecastExplorer() {
 
 function SignalsSection() {
   const latestEvidence = useMemo(
-    () => [...canonical.evidence].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 2),
+    () =>
+      [...canonical.evidence]
+        .filter((item) => !item.archived)
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 2),
     [],
   );
   const datedTest = canonical.falsifiers.find(
@@ -1033,6 +1256,7 @@ export function TimelineView() {
       <div className="mt-20">
         <CapabilitySection />
       </div>
+      <ReasoningSection />
       <section className="my-20 overflow-hidden rounded-2xl border border-line bg-ink text-panel shadow-instrument">
         <div className="grid items-center lg:grid-cols-[1fr_auto]">
           <div className="p-6 md:p-8">

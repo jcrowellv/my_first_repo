@@ -7,7 +7,7 @@ A static forecasting instrument that combines a public-evidence capability rubri
 - Claude's widening-thesis distribution, with a 2035 WSI median; and
 - Daniel Kokotajlo's pinned April 2, 2026 AI Futures Model update.
 
-The site is built with Vite, React, TypeScript, Zod, native SVG, and Tailwind. It has no backend, database, authentication, CMS, or runtime data fetches.
+The site is built with Vite, React, React Router, TypeScript, Zod, native SVG, and Tailwind. It has no backend, database, authentication, CMS, or runtime data fetches.
 
 ## Canonical-data rule
 
@@ -44,7 +44,7 @@ vercel.json                  Vercel build configuration
 
 ## Local development
 
-Prerequisite: Node.js 22.13 or newer.
+Prerequisite: Node.js 22.22 or newer.
 
 ```bash
 npm install
@@ -121,9 +121,9 @@ The four-month public-evidence lag is a narrative sensitivity assumption only. T
 
 The site exposes one canonical record at three reading depths, and renders the three depths as explicit reading paths on the overview:
 
-- **Brief:** the overview begins with a plain-language product map and an interactive two-minute path. It gives the current capability, control-readiness, open-weight, and next-test read without requiring chart interpretation. The two scenario-pace gradings remain available in a collapsed source note.
+- **Brief:** the overview begins with a plain-language product map and an interactive two-minute path. It gives the current capability, control-readiness, open-weight, and next-test read without requiring chart interpretation. The independent tracker’s current 0.70x scenario-speed estimate and six status counts remain available in a collapsed source note, separate from accuracy, probability, and rubric completion.
 - **Explore:** the forecast workbench compares the full ladder, the takeoff-gap disagreement between milestone medians, one threshold at a time, the mechanism assumptions behind each track, and outside views whose definitions differ.
-- **Audit:** the evidence ledger, locked tests, methodology, glossary, driver map, and changelog retain source limitations, three-axis provenance, uncertainty ranges, counterevidence, superseded records, and resolution protocols.
+- **Audit:** the evidence-linked conclusion chain, provenance-preserving archive, locked tests, methodology, glossary, driver map, and changelog retain source limitations, three-axis provenance, uncertainty ranges, counterevidence, superseded records, and resolution protocols. Archived evidence is excluded from live counts and latest-signal lists but never silently deleted.
 
 A glossary view defines every recurring term (milestone codes, percentile bands, provenance letters, diagnosticity, tripwires versus monitors, rubric completion) with cross-references, so definitions stay attached to dates everywhere else on the site.
 

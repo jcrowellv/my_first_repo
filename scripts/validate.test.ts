@@ -107,4 +107,38 @@ describe("canonical data", () => {
       ).toBe(true);
     }
   });
+
+  it("requires an archive reason when a source leaves the live ledger", () => {
+    const broken = structuredClone(canonicalJson);
+    const archivedIndex = broken.evidence.findIndex((item) => item.archived);
+    broken.evidence[archivedIndex].archive_reason = undefined;
+    const result = CanonicalSchema.safeParse(broken);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(
+        result.error.issues.some(
+          (issue) =>
+            issue.path.join(".") ===
+            `evidence.${archivedIndex}.archive_reason`,
+        ),
+      ).toBe(true);
+    }
+  });
+
+  it("rejects a conclusion step whose evidence record is missing", () => {
+    const broken = structuredClone(canonicalJson);
+    broken.meta.briefing.reasoning.steps[0].evidence_refs[0] =
+      "ev-does-not-exist";
+    const result = CanonicalSchema.safeParse(broken);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(
+        result.error.issues.some(
+          (issue) =>
+            issue.path.join(".") ===
+            "meta.briefing.reasoning.steps.0.evidence_refs.0",
+        ),
+      ).toBe(true);
+    }
+  });
 });

@@ -14,7 +14,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { canonical, getProgressRange } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
 import { DataCard, PageHeader, StatusBadge } from "../components/Primitives";
