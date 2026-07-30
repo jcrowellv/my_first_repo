@@ -107,9 +107,9 @@ To revise a score, update or append the evidence record, update the affected cri
 
 The site exposes one canonical record at three reading depths, and renders the three depths as explicit reading paths on the overview:
 
-- **Brief:** the overview gives the current capability, control-readiness, open-weight, and scenario-pace read without requiring chart interpretation. Scenario pace shows two gradings side by side: the authors' preliminary quantitative estimate and an independent tracker's percent-on-track figure.
+- **Brief:** the overview gives the current capability, control-readiness, open-weight, and scenario-pace read without requiring chart interpretation. Scenario pace uses the independent tracker’s current 0.70x composite and keeps its six status counts visibly separate from speed, accuracy, and probability. The conclusion panel exposes observation, inference, forecast impact, disagreement, and two-sided cruxes.
 - **Explore:** the forecast workbench compares the full ladder, the takeoff-gap disagreement between milestone medians, one threshold at a time, the mechanism assumptions behind each track, and outside views whose definitions differ.
-- **Audit:** the evidence ledger, locked tests, methodology, glossary, driver map, and changelog retain source limitations, provenance, superseded records, and resolution protocols.
+- **Audit:** the current evidence ledger, provenance-preserving archive, locked tests, methodology, glossary, driver map, and changelog retain source limitations, superseded records, and resolution protocols. Archived evidence is excluded from live counts and latest-signal lists but never silently deleted.
 
 A glossary view defines every recurring term (milestone codes, percentile bands, provenance letters, diagnosticity, tripwires versus monitors, rubric completion) with cross-references, so definitions stay attached to dates everywhere else on the site.
 

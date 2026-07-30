@@ -1,15 +1,16 @@
-import { ArrowUpRight, Database, Download, FileCheck2, Gauge, History, Scale } from "lucide-react";
+import { ArrowUpRight, Database, Download, FileCheck2, Gauge, GitBranch, History, Scale } from "lucide-react";
 import { Link } from "react-router";
 import { canonical } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
 import { DataCard, PageHeader } from "../components/Primitives";
 
-const iconByIndex = [FileCheck2, Gauge, Scale, History, Database];
+const iconByIndex = [FileCheck2, Gauge, GitBranch, Scale, History, Database];
 
 export function MethodologyView() {
   const principles = [
     { title: "Public scoring", text: canonical.meta.scoring_convention },
     { title: "Capability rubric", text: canonical.meta.progress_methodology },
+    { title: "Conclusion discipline", text: canonical.meta.synthesis_methodology },
     { title: `${canonical.meta.internal_lag_months}-month internal lag`, text: canonical.meta.internal_lag_explanation },
     { title: "Append-only revisions", text: canonical.meta.update_protocol },
     { title: "Distribution discipline", text: canonical.meta.distribution_warning },
@@ -17,13 +18,13 @@ export function MethodologyView() {
   return (
     <div>
       <PageHeader viewId="methodology" />
-      <div className="mb-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2">
+      <div className="mb-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2 xl:grid-cols-3">
         {principles.map((principle, index) => {
           const Icon = iconByIndex[index];
           return (
             <div
               key={principle.title}
-              className={`bg-panel p-5 md:p-7 ${index === 0 ? "md:col-span-2" : ""}`}
+              className="bg-panel p-5 md:p-7"
             >
               <Icon size={18} className="mb-5 text-cyan" />
               <h2 className="text-sm font-semibold text-ink">{principle.title}</h2>

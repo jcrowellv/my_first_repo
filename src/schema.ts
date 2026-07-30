@@ -96,6 +96,41 @@ export const PaceSourceSchema = z.object({
   source_url: z.string().url(),
 });
 
+export const PaceStatusSchema = z.object({
+  id: z.enum(["confirmed", "ahead", "on-track", "behind", "emerging", "not-testable"]),
+  label: z.string().min(1),
+  value: z.number().int().nonnegative(),
+});
+
+export const ReasoningStepSchema = z.object({
+  id: z.enum(["observation", "inference", "forecast-impact"]),
+  label: z.string().min(1),
+  title: z.string().min(1),
+  detail: z.string().min(1),
+  evidence_refs: z.array(z.string().min(1)).min(1),
+});
+
+export const CruxSchema = z.object({
+  id: z.string().min(1),
+  question: z.string().min(1),
+  current_read: z.string().min(1),
+  faster_if: z.string().min(1),
+  slower_if: z.string().min(1),
+  evidence_refs: z.array(z.string().min(1)).min(1),
+});
+
+export const BriefingReasoningSchema = z.object({
+  epistemic_status: z.string().min(1),
+  title: z.string().min(1),
+  summary: z.string().min(1),
+  steps: z.array(ReasoningStepSchema).length(3),
+  disagreement_label: z.string().min(1),
+  disagreement_title: z.string().min(1),
+  disagreement_detail: z.string().min(1),
+  disagreement_evidence_refs: z.array(z.string().min(1)).min(1),
+  cruxes: z.array(CruxSchema).min(1).max(4),
+});
+
 export const BriefingSchema = z.object({
   as_of: IsoDateSchema,
   eyebrow: z.string().min(1),
@@ -107,7 +142,10 @@ export const BriefingSchema = z.object({
   pace_detail: z.string().min(1),
   pace_source_label: z.string().min(1),
   pace_source_url: z.string().url(),
+  pace_note: z.string().min(1),
+  pace_statuses: z.array(PaceStatusSchema).length(6),
   pace_secondary: PaceSourceSchema.optional(),
+  reasoning: BriefingReasoningSchema,
   lenses: z.array(BriefingLensSchema).length(3),
 });
 
@@ -135,6 +173,7 @@ export const MetaSchema = z.object({
   internal_lag_explanation: z.string().min(1),
   update_protocol: z.string().min(1),
   progress_methodology: z.string().min(1),
+  synthesis_methodology: z.string().min(1),
   progress_label: z.string().min(1),
   progress_disclaimer: z.string().min(1),
   distribution_warning: z.string().min(1),
@@ -284,6 +323,8 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
     "preliminary",
   ]).optional(),
   evaluation_context: z.string().min(1).optional(),
+  archived: z.boolean().optional(),
+  archive_reason: z.string().min(1).optional(),
 });
 
 export const BottleneckStatusSchema = z.enum(["easing", "mixed", "binding", "unresolved"]);
@@ -546,12 +587,59 @@ export const CanonicalSchema = z
     });
 
     data.evidence.forEach((item, index) => {
+      if (item.archived && !item.archive_reason) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Archived evidence must explain why it left the live ledger",
+          path: ["evidence", index, "archive_reason"],
+        });
+      }
+      if (!item.archived && item.archive_reason) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "archive_reason is only valid when archived is true",
+          path: ["evidence", index, "archive_reason"],
+        });
+      }
       item.milestone_tags.forEach((tag, tagIndex) => {
         if (!milestoneIds.has(tag)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Unknown milestone id: ${tag}`,
             path: ["evidence", index, "milestone_tags", tagIndex],
+          });
+        }
+      });
+    });
+
+    const reasoning = data.meta.briefing.reasoning;
+    reasoning.steps.forEach((step, stepIndex) => {
+      step.evidence_refs.forEach((ref, refIndex) => {
+        if (!evidenceIds.has(ref)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown evidence id: ${ref}`,
+            path: ["meta", "briefing", "reasoning", "steps", stepIndex, "evidence_refs", refIndex],
+          });
+        }
+      });
+    });
+    reasoning.disagreement_evidence_refs.forEach((ref, refIndex) => {
+      if (!evidenceIds.has(ref)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Unknown evidence id: ${ref}`,
+          path: ["meta", "briefing", "reasoning", "disagreement_evidence_refs", refIndex],
+        });
+      }
+    });
+    reasoning.cruxes.forEach((crux, cruxIndex) => {
+      crux.evidence_refs.forEach((ref, refIndex) => {
+        if (!evidenceIds.has(ref)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown evidence id: ${ref}`,
+            path: ["meta", "briefing", "reasoning", "cruxes", cruxIndex, "evidence_refs", refIndex],
           });
         }
       });

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowUpRight, ChevronDown, Database, Search, ShieldCheck, SlidersHorizontal, Waves, X } from "lucide-react";
+import { Archive, ArrowUpRight, ChevronDown, Database, Search, ShieldCheck, SlidersHorizontal, Waves, X } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import type { Evidence } from "../schema";
 import { canonical, evidenceById, milestonesById } from "../lib/data";
@@ -124,7 +124,14 @@ function EvidenceRow({ item }: { item: Evidence }) {
     <details className="group border-b border-line last:border-b-0">
       <summary className="cursor-pointer list-none px-5 py-4 transition-colors hover:bg-raised/40 md:px-6">
         <div className="grid items-baseline gap-x-5 gap-y-1.5 md:grid-cols-[96px_1fr_auto]">
-          <time className="font-mono text-xs text-muted">{formatIsoDate(item.date)}</time>
+          <div>
+            <time className="font-mono text-xs text-muted">{formatIsoDate(item.date)}</time>
+            {item.archived ? (
+              <span className="mt-1.5 block w-fit rounded-full border border-line bg-canvas px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.12em] text-muted">
+                Archived
+              </span>
+            ) : null}
+          </div>
           <div className="min-w-0">
             <span className="text-sm font-semibold text-ink">
               {item.publisher}
@@ -145,6 +152,12 @@ function EvidenceRow({ item }: { item: Evidence }) {
       </summary>
       <div className="grid gap-6 border-t border-line bg-raised/35 px-5 py-5 md:grid-cols-[1.4fr_.6fr] md:px-6">
         <div className="space-y-4">
+          {item.archived && item.archive_reason ? (
+            <div className="rounded-xl border border-amber/25 bg-amber/[0.06] p-3.5">
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-amber">Why this is archived</p>
+              <p className="mt-2 text-[13px] leading-5 text-muted">{item.archive_reason}</p>
+            </div>
+          ) : null}
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan">Observed</p>
             <p className="mt-2 text-sm leading-7 text-ink">{item.summary}</p>
@@ -232,6 +245,7 @@ export function EvidenceLedger() {
     const needle = query.trim().toLocaleLowerCase();
 
     return [...canonical.evidence]
+      .filter((item) => !item.archived)
       .filter((item) => evidenceMatchesLens(item, lens))
       .filter((item) => {
         if (!needle) return true;
@@ -267,13 +281,20 @@ export function EvidenceLedger() {
   }, [diagnosticity, favors, lens, milestone, query, sort, sourceType, theme]);
 
   const lensRecordCount = useMemo(
-    () => canonical.evidence.filter((item) => evidenceMatchesLens(item, lens)).length,
+    () => canonical.evidence.filter((item) => !item.archived && evidenceMatchesLens(item, lens)).length,
     [lens],
   );
 
   const themeOptions = useMemo(
-    () => [...new Set(canonical.evidence.flatMap((item) => item.themes ?? []))].sort(),
+    () => [...new Set(canonical.evidence.filter((item) => !item.archived).flatMap((item) => item.themes ?? []))].sort(),
     [],
+  );
+  const archivedEvidence = useMemo(
+    () =>
+      canonical.evidence
+        .filter((item) => item.archived && evidenceMatchesLens(item, lens))
+        .sort((a, b) => b.date.localeCompare(a.date)),
+    [lens],
   );
 
   const selectClass = "min-h-11 w-full max-w-full rounded-xl border border-line bg-panel px-3.5 py-2.5 text-[13px] text-ink sm:w-auto";
@@ -290,9 +311,10 @@ export function EvidenceLedger() {
         : lens === "open-weight"
           ? [{ id: "open-weight", label: "Diffusion indicators" }]
           : []),
-      { id: "ledger", label: "Source ledger" },
+      { id: "ledger", label: "Current ledger" },
+      ...(archivedEvidence.length ? [{ id: "archive", label: "Evidence archive" }] : []),
     ],
-    [lens],
+    [archivedEvidence.length, lens],
   );
   const hasActiveFilters =
     query.trim().length > 0 ||
@@ -340,11 +362,14 @@ export function EvidenceLedger() {
       <section id="ledger" className={`${lens === "capability" ? "" : "mt-16"} scroll-mt-36`} aria-labelledby="ledger-title">
         <div className="mb-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">
-            {lens === "capability" ? "Source ledger" : `${lens.replaceAll("-", " ")} sources`}
+            {lens === "capability" ? "Current source ledger" : `Current ${lens.replaceAll("-", " ")} sources`}
           </p>
           <h2 id="ledger-title" className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">
             Inspect the record
           </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">
+            Live synthesis draws from this ledger. Superseded or contextually stale records remain available in the archive below without influencing current counts or latest-signal lists.
+          </p>
         </div>
         <div className="mb-6 rounded-2xl border border-line bg-panel p-3 shadow-instrument md:p-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center">
@@ -383,7 +408,7 @@ export function EvidenceLedger() {
             </select>
             <select aria-label="Filter by source type" className={selectClass} value={sourceType} onChange={(event) => setSourceType(event.target.value)}>
               <option value="all">All source types</option>
-              {[...new Set(canonical.evidence.map((item) => item.source_type))].sort().map((type) => (
+              {[...new Set(canonical.evidence.filter((item) => !item.archived).map((item) => item.source_type))].sort().map((type) => (
                 <option key={type} value={type}>{type.replaceAll("-", " ")}</option>
               ))}
             </select>
@@ -425,6 +450,28 @@ export function EvidenceLedger() {
           </div>
         )}
       </section>
+      {archivedEvidence.length ? (
+        <section id="archive" className="mt-20 scroll-mt-36" aria-labelledby="archive-title">
+          <div className="mb-6 grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
+            <div className="max-w-3xl">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-amber">Evidence archive</p>
+              <h2 id="archive-title" className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">
+                Historical context, kept out of the live read
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-muted">
+                These sources are retained for provenance, correction history, and later re-audit. Each record states why it was archived; nothing is silently deleted.
+              </p>
+            </div>
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-line bg-panel px-3.5 py-2 text-xs text-muted">
+              <Archive size={13} aria-hidden="true" />
+              {archivedEvidence.length} {archivedEvidence.length === 1 ? "record" : "records"}
+            </span>
+          </div>
+          <div className="overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument">
+            {archivedEvidence.map((item) => <EvidenceRow key={item.id} item={item} />)}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }
