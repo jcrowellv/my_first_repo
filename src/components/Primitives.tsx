@@ -82,14 +82,18 @@ export function DataCard({
   children,
   className = "",
   sample = false,
+  tone = "light",
 }: {
   children: ReactNode;
   className?: string;
   sample?: boolean;
+  tone?: "light" | "dark";
 }) {
   return (
     <article
-      className={`relative overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument ${className}`}
+      className={`relative overflow-hidden rounded-2xl border shadow-instrument ${
+        tone === "dark" ? "border-ink bg-ink text-panel" : "border-line bg-panel"
+      } ${className}`}
     >
       {sample ? <SampleWatermark>SAMPLE</SampleWatermark> : null}
       {children}

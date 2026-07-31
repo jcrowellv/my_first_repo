@@ -151,7 +151,7 @@ function ScoreSection() {
             {canonical.methodology.score_rule}
           </p>
           <div className="grid gap-5 xl:grid-cols-[.72fr_1.28fr]">
-        <DataCard className="bg-ink text-panel">
+        <DataCard tone="dark">
           <div className="p-6 md:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-canvas/55">
@@ -614,7 +614,7 @@ function AuditSection() {
           </span>
         </summary>
         <div className="mt-6 grid gap-5 xl:grid-cols-[.8fr_1.2fr]">
-        <DataCard className="bg-ink text-panel">
+        <DataCard tone="dark">
           <div className="p-6 md:p-8">
             <div className="flex items-center gap-3">
               <Database size={18} className="text-cyan" />
