@@ -15,8 +15,18 @@ export function daysUntil(value: string) {
 }
 
 const monthAbbreviations = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 export function formatDecimalYear(value: number, lowerBound = false) {
@@ -27,9 +37,17 @@ export function formatDecimalYear(value: number, lowerBound = false) {
 
 const decimalLabelPattern = /^\d{4}(\.\d+)?\+?$/;
 
-export function displayQuantileLabel(quantile: { value: number; label: string; lower_bound?: boolean }) {
+export function displayQuantileLabel(quantile: {
+  value: number;
+  label: string;
+  lower_bound?: boolean;
+}) {
+  if (/^\d{4}\+?$/.test(quantile.label)) return quantile.label;
   if (decimalLabelPattern.test(quantile.label)) {
-    return formatDecimalYear(quantile.value, quantile.lower_bound ?? quantile.label.endsWith("+"));
+    return formatDecimalYear(
+      quantile.value,
+      quantile.lower_bound ?? quantile.label.endsWith("+"),
+    );
   }
   return `${quantile.label}${quantile.lower_bound && !quantile.label.includes("+") && !quantile.label.startsWith(">") ? "+" : ""}`;
 }

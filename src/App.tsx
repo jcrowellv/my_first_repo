@@ -4,41 +4,51 @@ import { AppShell } from "./components/AppShell";
 import { TimelineView } from "./views/TimelineView";
 
 const FalsifierBoard = lazy(() =>
-  import("./views/FalsifierBoard").then((module) => ({ default: module.FalsifierBoard })),
+  import("./views/FalsifierBoard").then((module) => ({
+    default: module.FalsifierBoard,
+  })),
 );
 const ForecastsView = lazy(() =>
-  import("./views/ForecastsView").then((module) => ({ default: module.ForecastsView })),
+  import("./views/ForecastsView").then((module) => ({
+    default: module.ForecastsView,
+  })),
 );
 const EvidenceLedger = lazy(() =>
-  import("./views/EvidenceLedger").then((module) => ({ default: module.EvidenceLedger })),
+  import("./views/EvidenceLedger").then((module) => ({
+    default: module.EvidenceLedger,
+  })),
 );
 const BottleneckTracker = lazy(() =>
-  import("./views/BottleneckTracker").then((module) => ({ default: module.BottleneckTracker })),
+  import("./views/BottleneckTracker").then((module) => ({
+    default: module.BottleneckTracker,
+  })),
 );
 const ChangelogView = lazy(() =>
-  import("./views/ChangelogView").then((module) => ({ default: module.ChangelogView })),
+  import("./views/ChangelogView").then((module) => ({
+    default: module.ChangelogView,
+  })),
 );
 const MethodologyView = lazy(() =>
-  import("./views/MethodologyView").then((module) => ({ default: module.MethodologyView })),
+  import("./views/MethodologyView").then((module) => ({
+    default: module.MethodologyView,
+  })),
 );
 const GlossaryView = lazy(() =>
-  import("./views/GlossaryView").then((module) => ({ default: module.GlossaryView })),
+  import("./views/GlossaryView").then((module) => ({
+    default: module.GlossaryView,
+  })),
 );
 
 function RouteFallback() {
   return (
-    <div role="status" aria-live="polite" aria-busy="true" className="min-h-[55vh] animate-pulse">
-      <span className="sr-only">Loading page</span>
-      <div className="h-3 w-40 rounded-full bg-cyan/15" aria-hidden="true" />
-      <div className="mt-5 h-12 max-w-2xl rounded-xl bg-line/65" aria-hidden="true" />
-      <div className="mt-3 h-12 max-w-xl rounded-xl bg-line/45" aria-hidden="true" />
-      <div className="mt-6 h-4 max-w-3xl rounded-full bg-line/55" aria-hidden="true" />
-      <div className="mt-3 h-4 max-w-2xl rounded-full bg-line/40" aria-hidden="true" />
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
-        {[0, 1, 2].map((item) => (
-          <div key={item} className="h-44 rounded-2xl border border-line bg-panel/70" aria-hidden="true" />
-        ))}
-      </div>
+    <div
+      className="container route-loading"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <span className="live-dot" />
+      Opening the ledger…
     </div>
   );
 }

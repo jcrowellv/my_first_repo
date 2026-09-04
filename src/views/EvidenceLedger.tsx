@@ -1,477 +1,348 @@
 import { useEffect, useMemo, useState } from "react";
-import { Archive, ArrowUpRight, ChevronDown, Database, Search, ShieldCheck, SlidersHorizontal, Waves, X } from "lucide-react";
-import { Link, useLocation } from "react-router";
-import type { Evidence } from "../schema";
-import { canonical, evidenceById, milestonesById } from "../lib/data";
+import { Link, useLocation, useSearchParams } from "react-router";
+import { Search, ArrowUpRight, ChevronDown, X } from "lucide-react";
+import { canonical, milestonesById } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
-import { PageHeader, StatusBadge } from "../components/Primitives";
-import { SectionNav } from "../components/NavigationPrimitives";
-
-const favorsLabel: Record<Evidence["favors"], string> = {
-  compression: "Favors faster timelines",
-  widening: "Favors slower timelines",
-  spine: "Matches the frozen scenario",
-  neutral: "Framework or neutral",
-};
-
-const diagnosticityRank: Record<Evidence["diagnosticity"], number> = {
-  high: 3,
-  medium: 2,
-  low: 1,
-};
-
-type Lens = "capability" | "safety" | "open-weight";
-
-function evidenceMatchesLens(item: Evidence, lens: Lens) {
-  if (lens === "safety") {
-    return item.themes?.some((theme) =>
-      ["alignment-control", "cybersecurity", "evaluation-methods"].includes(theme),
-    );
-  }
-  if (lens === "open-weight") {
-    return item.themes?.some((theme) =>
-      ["open-weight", "open-science", "transparency"].includes(theme),
-    );
-  }
-  return true;
-}
-
-function SourceLinks({ refs }: { refs: string[] }) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {refs.map((ref) => {
-        const item = evidenceById.get(ref);
-        return item ? (
-          <a
-            key={ref}
-            href={item.source_url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1 rounded-full border border-line bg-panel px-3 py-1.5 text-[11px] text-cyan hover:text-ink"
-          >
-            {item.publisher} · {item.source_label}<ArrowUpRight size={10} />
-          </a>
-        ) : null;
-      })}
-    </div>
-  );
-}
-
-function SafetyReadinessPanel() {
-  return (
-    <section id="safety" className="scroll-mt-36">
-      <div className="mb-6 max-w-3xl">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Separate control lens</p>
-        <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">Safety readiness</h2>
-        <p className="mt-3 text-sm leading-6 text-muted">
-          A capability score does not imply a control score. These states track the public evidence for evaluation, monitoring, safeguards, and independent access.
-        </p>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2">
-        {canonical.safety_readiness.map((item) => (
-          <article key={item.id} className="rounded-2xl border border-line bg-panel p-5 shadow-instrument md:p-6">
-            <div className="flex items-start justify-between gap-4">
-              <h3 className="text-base font-semibold text-ink">{item.name}</h3>
-              <StatusBadge value={item.status} />
-            </div>
-            <p className="mt-4 text-sm leading-6 text-muted">{item.summary}</p>
-            <details className="group mt-5 border-t border-line pt-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-semibold text-ink">
-                Evidence and next signal
-                <ChevronDown size={14} className="text-muted transition-transform group-open:rotate-180" />
-              </summary>
-              <p className="mt-3 text-xs leading-5 text-muted"><strong className="text-ink">Next:</strong> {item.next_signal}</p>
-              <div className="mt-3"><SourceLinks refs={item.evidence_refs} /></div>
-            </details>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function OpenWeightPanel() {
-  return (
-    <section id="open-weight" className="scroll-mt-36">
-      <div className="mb-6 max-w-3xl">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">Capability, access, transparency</p>
-        <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">Open-weight diffusion</h2>
-        <p className="mt-3 text-sm leading-6 text-muted">
-          Weight access changes who can deploy a capability. Full openness additionally requires legible data, code, training, and evaluation provenance.
-        </p>
-      </div>
-      <div className="grid gap-4 lg:grid-cols-3">
-        {canonical.open_weight_indicators.map((item) => (
-          <article key={item.id} className="rounded-2xl border border-line bg-panel p-5 shadow-instrument md:p-6">
-            <div className="flex items-start justify-between gap-4">
-              <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">{item.label}</span>
-              <StatusBadge value={item.status} />
-            </div>
-            <p className="mt-5 font-serif text-3xl font-semibold tracking-[-0.03em] text-ink">{item.value}</p>
-            <p className="mt-3 text-xs leading-5 text-muted">{item.detail}</p>
-            <a href={item.source_url} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-xs font-medium text-cyan hover:text-ink">
-              {item.source_label}<ArrowUpRight size={11} />
-            </a>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function EvidenceRow({ item }: { item: Evidence }) {
-  return (
-    <details className="group border-b border-line last:border-b-0">
-      <summary className="cursor-pointer list-none px-5 py-4 transition-colors hover:bg-raised/40 md:px-6">
-        <div className="grid items-baseline gap-x-5 gap-y-1.5 md:grid-cols-[96px_1fr_auto]">
-          <div>
-            <time className="font-mono text-xs text-muted">{formatIsoDate(item.date)}</time>
-            {item.archived ? (
-              <span className="mt-1.5 block w-fit rounded-full border border-line bg-canvas px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.12em] text-muted">
-                Archived
-              </span>
-            ) : null}
-          </div>
-          <div className="min-w-0">
-            <span className="text-sm font-semibold text-ink">
-              {item.publisher}
-              <span className="font-normal text-muted"> · {item.source_label}</span>
-            </span>
-            <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted">{item.implication}</p>
-          </div>
-          <div className="flex items-center gap-2.5 md:justify-end">
-            {item.independence ? (
-              <span className="hidden font-mono text-[10px] uppercase tracking-[0.1em] text-muted xl:inline">
-                {item.independence.replaceAll("-", " ")}
-              </span>
-            ) : null}
-            <StatusBadge value={item.diagnosticity} />
-            <ChevronDown size={15} className="text-muted transition-transform group-open:rotate-180" />
-          </div>
-        </div>
-      </summary>
-      <div className="grid gap-6 border-t border-line bg-raised/35 px-5 py-5 md:grid-cols-[1.4fr_.6fr] md:px-6">
-        <div className="space-y-4">
-          {item.archived && item.archive_reason ? (
-            <div className="rounded-xl border border-amber/25 bg-amber/[0.06] p-3.5">
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-amber">Why this is archived</p>
-              <p className="mt-2 text-[13px] leading-5 text-muted">{item.archive_reason}</p>
-            </div>
-          ) : null}
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan">Observed</p>
-            <p className="mt-2 text-sm leading-7 text-ink">{item.summary}</p>
-          </div>
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-amber">Limit</p>
-            <p className="mt-2 text-sm leading-6 text-muted">{item.limitation}</p>
-          </div>
-          {item.evaluation_context ? (
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Evaluation context</p>
-              <p className="mt-2 text-[13px] leading-5 text-muted">{item.evaluation_context}</p>
-            </div>
-          ) : null}
-        </div>
-        <div className="space-y-4 text-xs">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">Reading</p>
-            <p className="mt-1.5 text-ink">{favorsLabel[item.favors]}</p>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">Source</p>
-              <p className="mt-1.5 text-ink">{item.source_type.replaceAll("-", " ")}</p>
-            </div>
-            {item.verification ? (
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">Verification</p>
-                <p className="mt-1.5 text-ink">{item.verification.replaceAll("-", " ")}</p>
-              </div>
-            ) : null}
-          </div>
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">Bears on</p>
-            <div className="mt-1.5 flex flex-wrap gap-1.5">
-              {item.milestone_tags.map((tag) => (
-                <span key={tag} className="rounded-full bg-panel px-2.5 py-1 font-mono text-[10px] text-muted ring-1 ring-line">
-                  {milestonesById.get(tag)?.code}
-                </span>
-              ))}
-            </div>
-          </div>
-          {item.themes?.length ? (
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">Themes</p>
-              <div className="mt-1.5 flex flex-wrap gap-1.5">
-                {item.themes.map((tag) => (
-                  <span key={tag} className="rounded-full bg-panel px-2.5 py-1 font-mono text-[10px] text-muted ring-1 ring-line">
-                    {tag.replaceAll("-", " ")}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : null}
-          <a href={item.source_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-medium text-cyan hover:text-ink">
-            Open primary source <ArrowUpRight size={12} />
-          </a>
-        </div>
-      </div>
-    </details>
-  );
-}
-
+import { PageIntro, Disclosure, Sources } from "../components/Editorial";
+const topics = [
+  ["all", "Everything"],
+  ["research", "Research & agents"],
+  ["evaluation", "Evaluations"],
+  ["forecast", "Forecasts"],
+  ["safety", "Safety & control"],
+  ["diffusion", "Open models & deployment"],
+];
 export function EvidenceLedger() {
   const { hash } = useLocation();
-  const lens: Lens = hash === "#safety" ? "safety" : hash === "#open-weight" ? "open-weight" : "capability";
-  const [milestone, setMilestone] = useState("all");
-  const [diagnosticity, setDiagnosticity] = useState("all");
-  const [sourceType, setSourceType] = useState("all");
-  const [favors, setFavors] = useState("all");
-  const [theme, setTheme] = useState("all");
-  const [sort, setSort] = useState<"diagnosticity" | "date">("diagnosticity");
-  const [query, setQuery] = useState("");
-
-  useEffect(() => {
-    setQuery("");
-    setMilestone("all");
-    setDiagnosticity("all");
-    setSourceType("all");
-    setFavors("all");
-    setTheme("all");
-  }, [lens]);
-
-  const evidence = useMemo(() => {
-    const needle = query.trim().toLocaleLowerCase();
-
-    return [...canonical.evidence]
-      .filter((item) => !item.archived)
-      .filter((item) => evidenceMatchesLens(item, lens))
-      .filter((item) => {
-        if (!needle) return true;
-        const searchable = [
-          item.publisher,
-          item.source_label,
-          item.summary,
-          item.implication,
-          item.limitation,
-          item.evaluation_context,
-          item.source_type,
-          item.favors,
-          ...(item.themes ?? []),
-          ...item.milestone_tags.map((tag) => milestonesById.get(tag)?.name ?? tag),
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLocaleLowerCase();
-        return searchable.includes(needle);
-      })
-      .filter((item) => milestone === "all" || item.milestone_tags.includes(milestone))
-      .filter((item) => diagnosticity === "all" || item.diagnosticity === diagnosticity)
-      .filter((item) => sourceType === "all" || item.source_type === sourceType)
-      .filter((item) => favors === "all" || item.favors === favors)
-      .filter((item) => theme === "all" || item.themes?.includes(theme as NonNullable<Evidence["themes"]>[number]))
-      .sort((a, b) => {
-        if (sort === "diagnosticity") {
-          const rank = diagnosticityRank[b.diagnosticity] - diagnosticityRank[a.diagnosticity];
-          if (rank !== 0) return rank;
-        }
-        return b.date.localeCompare(a.date);
-      });
-  }, [diagnosticity, favors, lens, milestone, query, sort, sourceType, theme]);
-
-  const lensRecordCount = useMemo(
-    () => canonical.evidence.filter((item) => !item.archived && evidenceMatchesLens(item, lens)).length,
-    [lens],
-  );
-
-  const themeOptions = useMemo(
-    () => [...new Set(canonical.evidence.filter((item) => !item.archived).flatMap((item) => item.themes ?? []))].sort(),
-    [],
-  );
-  const archivedEvidence = useMemo(
+  const [params, setParams] = useSearchParams();
+  const query = params.get("q") || "";
+  const topic = params.get("topic") || "all";
+  const [independence, setIndependence] = useState("all");
+  const [archived, setArchived] = useState(false);
+  const [sort, setSort] = useState("date");
+  const [limit, setLimit] = useState(16);
+  const target = decodeURIComponent(hash.slice(1));
+  const setParam = (key: string, value: string) => {
+    const p = new URLSearchParams(params);
+    value ? p.set(key, value) : p.delete(key);
+    setParams(p, { preventScrollReset: true });
+  };
+  const results = useMemo(
     () =>
       canonical.evidence
-        .filter((item) => item.archived && evidenceMatchesLens(item, lens))
-        .sort((a, b) => b.date.localeCompare(a.date)),
-    [lens],
+        .filter((e) => {
+          if (
+            e.id === target &&
+            !query &&
+            topic === "all" &&
+            independence === "all"
+          )
+            return true;
+          if (e.archived && !archived) return false;
+          if (independence !== "all" && e.independence !== independence)
+            return false;
+          const text = [
+            e.source_label,
+            e.publisher,
+            e.summary,
+            e.implication,
+            e.limitation,
+            ...(e.themes || []),
+          ]
+            .join(" ")
+            .toLowerCase();
+          if (query && !text.includes(query.toLowerCase())) return false;
+          if (
+            topic === "research" &&
+            !e.milestone_tags.some((x) =>
+              ["agent-2", "sar", "siar", "sc"].includes(x),
+            )
+          )
+            return false;
+          if (
+            topic === "evaluation" &&
+            !["evaluation", "system-card"].includes(e.source_type)
+          )
+            return false;
+          if (
+            topic === "forecast" &&
+            !["forecast", "scenario", "survey"].includes(e.source_type)
+          )
+            return false;
+          if (
+            topic === "safety" &&
+            !e.themes?.some((x) =>
+              ["cybersecurity", "alignment-control", "governance"].includes(x),
+            ) &&
+            e.source_type !== "incident"
+          )
+            return false;
+          if (
+            topic === "diffusion" &&
+            !e.themes?.some((x) =>
+              ["open-weights", "deployment", "diffusion"].includes(x),
+            ) &&
+            e.source_type !== "deployment"
+          )
+            return false;
+          return true;
+        })
+        .sort((a, b) =>
+          sort === "relevance"
+            ? { high: 0, medium: 1, low: 2 }[a.diagnosticity] -
+                { high: 0, medium: 1, low: 2 }[b.diagnosticity] ||
+              b.date.localeCompare(a.date)
+            : b.date.localeCompare(a.date),
+        ),
+    [query, topic, independence, archived, sort, target],
   );
-
-  const selectClass = "min-h-11 w-full max-w-full rounded-xl border border-line bg-panel px-3.5 py-2.5 text-[13px] text-ink sm:w-auto";
-  const lensItems = [
-    { id: "capability", label: "Capability evidence", detail: "All milestone-moving records", path: "/evidence", icon: Database },
-    { id: "safety", label: "Safety & control", detail: "Containment, monitors, safeguards", path: "/evidence#safety", icon: ShieldCheck },
-    { id: "open-weight", label: "Open-weight", detail: "Diffusion, openness, transparency", path: "/evidence#open-weight", icon: Waves },
-  ] as const;
-  const sectionItems = useMemo(
-    () => [
-      { id: "lenses", label: "Evidence lenses" },
-      ...(lens === "safety"
-        ? [{ id: "safety", label: "Safety readiness" }]
-        : lens === "open-weight"
-          ? [{ id: "open-weight", label: "Diffusion indicators" }]
-          : []),
-      { id: "ledger", label: "Current ledger" },
-      ...(archivedEvidence.length ? [{ id: "archive", label: "Evidence archive" }] : []),
-    ],
-    [archivedEvidence.length, lens],
+  useEffect(() => setLimit(16), [query, topic, independence, archived, sort]);
+  const visible = results.slice(
+    0,
+    Math.max(limit, results.findIndex((e) => e.id === target) + 1),
   );
-  const hasActiveFilters =
-    query.trim().length > 0 ||
-    milestone !== "all" ||
-    diagnosticity !== "all" ||
-    sourceType !== "all" ||
-    favors !== "all" ||
-    theme !== "all";
-  const clearFilters = () => {
-    setQuery("");
-    setMilestone("all");
-    setDiagnosticity("all");
-    setSourceType("all");
-    setFavors("all");
-    setTheme("all");
-  };
-
   return (
-    <div>
-      <PageHeader viewId="evidence" />
-      <SectionNav items={sectionItems} label="Evidence sections" updateHash={false} />
-      <div id="lenses" className="mb-14 scroll-mt-36 grid gap-3 md:grid-cols-3">
-        {lensItems.map((item) => {
-          const Icon = item.icon;
-          const active = lens === item.id;
-          return (
-            <Link
-              key={item.id}
-              to={item.path}
-              className={`rounded-2xl border p-5 transition-colors ${
-                active ? "border-cyan/45 bg-panel shadow-instrument ring-1 ring-cyan/20" : "border-line bg-panel hover:border-cyan/30"
-              }`}
-            >
-              <Icon size={18} className={active ? "text-cyan" : "text-muted"} />
-              <span className="mt-4 block text-sm font-semibold text-ink">{item.label}</span>
-              <span className="mt-1 block text-xs text-muted">{item.detail}</span>
-            </Link>
-          );
-        })}
-      </div>
-
-      {lens === "safety" ? <SafetyReadinessPanel /> : null}
-      {lens === "open-weight" ? <OpenWeightPanel /> : null}
-
-      <section id="ledger" className={`${lens === "capability" ? "" : "mt-16"} scroll-mt-36`} aria-labelledby="ledger-title">
-        <div className="mb-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan">
-            {lens === "capability" ? "Current source ledger" : `Current ${lens.replaceAll("-", " ")} sources`}
-          </p>
-          <h2 id="ledger-title" className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">
-            Inspect the record
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">
-            Live synthesis draws from this ledger. Superseded or contextually stale records remain available in the archive below without influencing current counts or latest-signal lists.
-          </p>
-        </div>
-        <div className="mb-6 rounded-2xl border border-line bg-panel p-3 shadow-instrument md:p-4">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center">
-            <label className="relative min-w-0 flex-1">
-              <span className="sr-only">Search evidence</span>
-              <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" aria-hidden="true" />
-              <input
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search publishers, findings, limitations, or themes"
-                className="min-h-11 w-full rounded-xl border border-line bg-canvas py-2.5 pl-11 pr-4 text-sm text-ink placeholder:text-muted/75"
-              />
-            </label>
-            <span className="inline-flex shrink-0 items-center gap-2 px-1 text-xs text-muted" aria-live="polite">
-              <SlidersHorizontal size={14} aria-hidden="true" />
-              {hasActiveFilters ? `${evidence.length} of ${lensRecordCount}` : lensRecordCount} records
-            </span>
-            {hasActiveFilters ? (
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-line px-3.5 text-xs font-medium text-ink transition-colors hover:border-cyan/40 hover:bg-raised"
-              >
-                <X size={14} aria-hidden="true" />
-                Clear filters
-              </button>
-            ) : null}
-          </div>
-          <div className="mt-3 flex flex-wrap gap-2 border-t border-line pt-3">
-            <select aria-label="Filter by capability level" className={selectClass} value={milestone} onChange={(event) => setMilestone(event.target.value)}>
-              <option value="all">All capability levels</option>
-              {canonical.milestones.map((item) => (
-                <option key={item.id} value={item.id}>{item.code} · {item.name}</option>
-              ))}
-            </select>
-            <select aria-label="Filter by source type" className={selectClass} value={sourceType} onChange={(event) => setSourceType(event.target.value)}>
-              <option value="all">All source types</option>
-              {[...new Set(canonical.evidence.filter((item) => !item.archived).map((item) => item.source_type))].sort().map((type) => (
-                <option key={type} value={type}>{type.replaceAll("-", " ")}</option>
-              ))}
-            </select>
-            <select aria-label="Filter by signal strength" className={selectClass} value={diagnosticity} onChange={(event) => setDiagnosticity(event.target.value)}>
-              <option value="all">All signal strengths</option>
-              <option value="high">High diagnosticity</option>
-              <option value="medium">Medium diagnosticity</option>
-              <option value="low">Low diagnosticity</option>
-            </select>
-            <select aria-label="Filter by forecast direction" className={selectClass} value={favors} onChange={(event) => setFavors(event.target.value)}>
-              <option value="all">All directions</option>
-              <option value="compression">Favors faster timelines</option>
-              <option value="widening">Favors slower timelines</option>
-              <option value="spine">Matches the frozen scenario</option>
-              <option value="neutral">Framework or neutral</option>
-            </select>
-            <select aria-label="Filter by theme" className={selectClass} value={theme} onChange={(event) => setTheme(event.target.value)}>
-              <option value="all">All themes</option>
-              {themeOptions.map((item) => (
-                <option key={item} value={item}>{item.replaceAll("-", " ")}</option>
-              ))}
-            </select>
-            <select aria-label="Sort evidence" className={`${selectClass} sm:ml-auto`} value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}>
-              <option value="diagnosticity">Strongest signal first</option>
-              <option value="date">Newest first</option>
-            </select>
-          </div>
-        </div>
-        {evidence.length ? (
-          <div className="overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument">
-            {evidence.map((item) => <EvidenceRow key={item.id} item={item} />)}
-          </div>
-        ) : (
-          <div className="rounded-2xl border border-line bg-panel p-10 text-center">
-            <p className="text-sm text-muted">No evidence matches this search and filter combination.</p>
-            <button type="button" onClick={clearFilters} className="mt-4 rounded-full bg-ink px-4 py-2.5 text-xs font-medium text-panel">
-              Clear filters
+    <div className="page container">
+      <PageIntro
+        number="THE EVIDENCE"
+        title={
+          <>
+            Show <em>the work.</em>
+          </>
+        }
+      >
+        An experiment is more useful than a headline. Here is what was observed,
+        what it might mean, and where the inference stops.
+      </PageIntro>
+      <div className="evidence-toolbar">
+        <label className="search-field">
+          <Search size={20} />
+          <input
+            aria-label="Search evidence"
+            placeholder="Search a model, question or source…"
+            value={query}
+            onChange={(e) => setParam("q", e.target.value)}
+          />
+          {query && (
+            <button aria-label="Clear search" onClick={() => setParam("q", "")}>
+              <X size={18} />
             </button>
+          )}
+        </label>
+        <div className="topic-filters">
+          {topics.map(([id, label]) => (
+            <button
+              key={id}
+              aria-pressed={topic === id}
+              onClick={() => setParam("topic", id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="filter-bottom">
+          <p aria-live="polite">
+            {results.length} source record{results.length === 1 ? "" : "s"}
+          </p>
+          <div>
+            <label>
+              Source{" "}
+              <select
+                aria-label="Filter source independence"
+                value={independence}
+                onChange={(e) => setIndependence(e.target.value)}
+              >
+                <option value="all">All sources</option>
+                <option value="independent">Independent</option>
+                <option value="first-party">First-party</option>
+                <option value="mixed">Mixed</option>
+              </select>
+            </label>
+            <label>
+              Order{" "}
+              <select
+                aria-label="Sort evidence"
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+              >
+                <option value="date">Newest first</option>
+                <option value="relevance">Most relevant</option>
+              </select>
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={archived}
+                onChange={(e) => setArchived(e.target.checked)}
+              />{" "}
+              Include archive
+            </label>
           </div>
-        )}
-      </section>
-      {archivedEvidence.length ? (
-        <section id="archive" className="mt-20 scroll-mt-36" aria-labelledby="archive-title">
-          <div className="mb-6 grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
-            <div className="max-w-3xl">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-amber">Evidence archive</p>
-              <h2 id="archive-title" className="mt-2 font-serif text-3xl font-semibold tracking-[-0.02em] text-ink">
-                Historical context, kept out of the live read
-              </h2>
-              <p className="mt-3 text-sm leading-6 text-muted">
-                These sources are retained for provenance, correction history, and later re-audit. Each record states why it was archived; nothing is silently deleted.
-              </p>
+        </div>
+      </div>
+      <div className="evidence-list">
+        {visible.map((e) => (
+          <article
+            id={e.id}
+            className={`evidence-entry ${target === e.id ? "target-entry" : ""}`}
+            key={e.id}
+          >
+            <div className="evidence-date">
+              <time dateTime={e.date}>{formatIsoDate(e.date)}</time>
+              <span>
+                {e.id === "ev-anthropic-internal-rd-20260904"
+                  ? "Verified on this date"
+                  : e.source_type.replace("-", " ")}
+              </span>
+              {e.archived && <b>Historical account</b>}
             </div>
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-line bg-panel px-3.5 py-2 text-xs text-muted">
-              <Archive size={13} aria-hidden="true" />
-              {archivedEvidence.length} {archivedEvidence.length === 1 ? "record" : "records"}
-            </span>
-          </div>
-          <div className="overflow-hidden rounded-2xl border border-line bg-panel shadow-instrument">
-            {archivedEvidence.map((item) => <EvidenceRow key={item.id} item={item} />)}
-          </div>
-        </section>
-      ) : null}
+            <div className="evidence-main">
+              <div className="evidence-meta">
+                <span>{e.publisher}</span>
+                <span>
+                  {e.independence.replace("-", " ")} ·{" "}
+                  {e.verification.replaceAll("-", " ")}
+                </span>
+              </div>
+              <h2>
+                <a href={e.source_url} target="_blank" rel="noreferrer">
+                  {e.source_label}
+                  <ArrowUpRight size={19} />
+                </a>
+              </h2>
+              <p>{e.summary}</p>
+              <details
+                className="evidence-detail"
+                open={target === e.id || undefined}
+              >
+                <summary>
+                  Interpretation, limits & setup <ChevronDown size={17} />
+                </summary>
+                <div>
+                  <div className="evidence-analysis">
+                    <div>
+                      <span className="eyebrow">WHAT IT MAY CHANGE</span>
+                      <p>{e.implication}</p>
+                    </div>
+                    <div>
+                      <span className="eyebrow">WHERE THE CLAIM STOPS</span>
+                      <p>{e.limitation}</p>
+                    </div>
+                  </div>
+                  <div className="experiment-context">
+                    <span className="eyebrow">THE SETUP</span>
+                    <p>
+                      {e.evaluation_context ||
+                        "See the original source for the full evaluation context."}
+                    </p>
+                  </div>
+                  {e.archived && (
+                    <p className="archive-note">Archived: {e.archive_reason}</p>
+                  )}
+                  <div className="evidence-tags">
+                    {e.milestone_tags.map((id) => (
+                      <Link
+                        key={id}
+                        to={
+                          ["agent-1", "agent-3", "agent-4"].includes(id)
+                            ? `/methodology#progress-${id}-20260721`
+                            : `/forecasts?milestone=${id}`
+                        }
+                      >
+                        {milestonesById.get(id)?.code || id}
+                      </Link>
+                    ))}
+                    <span>Relevance: {e.diagnosticity}</span>
+                  </div>
+                  <div className="entry-actions">
+                    <a
+                      className="source-link"
+                      href={e.source_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Read the original <ArrowUpRight size={14} />
+                    </a>
+                    <Link className="text-link" to={`/evidence#${e.id}`}>
+                      Link to this record
+                    </Link>
+                  </div>
+                </div>
+              </details>
+            </div>
+          </article>
+        ))}
+      </div>
+      {!results.length && (
+        <div className="empty-state">
+          <h2>No records match.</h2>
+          <p>Try a shorter phrase, another topic, or include the archive.</p>
+          <button
+            className="button"
+            onClick={() => {
+              setParams({});
+              setIndependence("all");
+              setArchived(false);
+            }}
+          >
+            Reset filters
+          </button>
+        </div>
+      )}
+      {visible.length < results.length && (
+        <div className="load-more">
+          <button className="button" onClick={() => setLimit(limit + 16)}>
+            Read more records{" "}
+            <span>{results.length - visible.length} remaining</span>
+          </button>
+        </div>
+      )}
+      <div className="archive-sections">
+        <Disclosure
+          id="safety-readiness"
+          title="Safety & control: the maintained watchlist"
+        >
+          <p className="muted">
+            A separate question from capability: can these systems be evaluated
+            and deployed under dependable control? These notes retain their
+            underlying source dates.
+          </p>
+          {canonical.safety_readiness.map((s) => (
+            <div className="source-record" key={s.id}>
+              <h3>{s.name}</h3>
+              <p>{s.summary}</p>
+              <p className="muted">Next evidence: {s.next_signal}</p>
+              <Sources ids={s.evidence_refs} />
+            </div>
+          ))}
+        </Disclosure>
+        <Disclosure
+          id="open-weights"
+          title="Open models & deployment: dated snapshots"
+        >
+          <p className="muted">
+            These indicators describe their stated observation dates; they are
+            not live market statistics.
+          </p>
+          {canonical.open_weight_indicators.map((s) => (
+            <div className="source-record" key={s.id}>
+              <span className="eyebrow">{formatIsoDate(s.as_of)}</span>
+              <h3>
+                {s.label}: {s.value}
+              </h3>
+              <p>{s.detail}</p>
+              <Sources ids={s.evidence_refs} />
+            </div>
+          ))}
+        </Disclosure>
+      </div>
+      <p className="archive-footer">
+        The count is a reading index, not a vote. Several records can describe
+        the same experiment or incident.{" "}
+        <Link to="/methodology">
+          How evidence is weighed <ArrowUpRight size={14} />
+        </Link>
+      </p>
     </div>
   );
 }

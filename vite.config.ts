@@ -14,6 +14,7 @@ const isGitHubPages = process.env.GITHUB_PAGES === "true";
 const sitesWorkerSource =
   "export default { async fetch(request, env) { return env.ASSETS.fetch(request); } };";
 let projectRoot = process.cwd();
+let isSitesBuild = false;
 
 export default defineConfig({
   plugins: [
@@ -25,15 +26,22 @@ export default defineConfig({
           .replaceAll("%SITE_TITLE%", canonical.meta.site_title)
           .replaceAll("%SITE_DESCRIPTION%", canonical.meta.site_description)
           .replaceAll("%SITE_URL%", canonical.meta.site_url)
-          .replaceAll("%OG_IMAGE%", new URL("og-v3.png", canonical.meta.site_url).href);
+          .replaceAll(
+            "%OG_IMAGE%",
+            new URL("og-v4.png", canonical.meta.site_url).href,
+          );
       },
     },
     {
       name: "publish-canonical-data",
       configResolved(config) {
         projectRoot = config.root;
-        if (!isGitHubPages) {
-          rmSync(resolve(projectRoot, "dist"), { force: true, recursive: true });
+        isSitesBuild = config.command === "build" && !isGitHubPages;
+        if (isSitesBuild) {
+          rmSync(resolve(projectRoot, "dist"), {
+            force: true,
+            recursive: true,
+          });
         }
       },
       generateBundle() {
@@ -44,7 +52,7 @@ export default defineConfig({
         });
       },
       closeBundle() {
-        if (!isGitHubPages) {
+        if (isSitesBuild) {
           const serverDirectory = resolve(projectRoot, "dist", "server");
           mkdirSync(serverDirectory, { recursive: true });
           writeFileSync(
@@ -56,9 +64,7 @@ export default defineConfig({
       },
     },
   ],
-  base: isGitHubPages
-    ? process.env.VITE_BASE_PATH ?? "/my_first_repo/"
-    : "/",
+  base: isGitHubPages ? (process.env.VITE_BASE_PATH ?? "/my_first_repo/") : "/",
   build: {
     target: "es2022",
     sourcemap: false,
@@ -66,7 +72,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          "react-vendor": ["react", "react-dom", "react-dom/client", "react-router"],
+          "react-vendor": [
+            "react",
+            "react-dom",
+            "react-dom/client",
+            "react-router",
+          ],
           "markdown-vendor": ["react-markdown", "remark-gfm"],
           "validation-vendor": ["zod"],
           "icons-vendor": ["lucide-react"],

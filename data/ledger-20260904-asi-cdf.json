@@ -1,0 +1,15 @@
+{
+  "source": "September 4, 2026 Astra assessment with JJ Crowell",
+  "note": "Cumulative judgments for the end of a named year are placed at the start of the following year. p10, p50 and p90 come from the registered forecast; bare-year quantile placement is illustrative, not month precision.",
+  "points": [
+    {"year": 2028, "p": 0.04},
+    {"year": 2029.125, "p": 0.1},
+    {"year": 2030, "p": 0.25},
+    {"year": 2031, "p": 0.35},
+    {"year": 2032, "p": 0.5},
+    {"year": 2033, "p": 0.55},
+    {"year": 2036, "p": 0.7},
+    {"year": 2041, "p": 0.8},
+    {"year": 2050, "p": 0.9}
+  ]
+}
