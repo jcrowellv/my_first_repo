@@ -3,6 +3,10 @@ import { Navigate, Route, Routes } from "react-router";
 import { AppShell } from "./components/AppShell";
 import { TimelineView } from "./views/TimelineView";
 
+const RSIView = lazy(() =>
+  import("./views/RSIView").then((module) => ({ default: module.RSIView })),
+);
+
 const FalsifierBoard = lazy(() =>
   import("./views/FalsifierBoard").then((module) => ({
     default: module.FalsifierBoard,
@@ -59,6 +63,7 @@ export default function App() {
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<TimelineView />} />
+          <Route path="/rsi" element={<RSIView />} />
           <Route path="/forecasts" element={<ForecastsView />} />
           <Route path="/falsifiers" element={<FalsifierBoard />} />
           <Route path="/evidence" element={<EvidenceLedger />} />

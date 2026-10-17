@@ -22,6 +22,19 @@ export function FalsifierBoard() {
         A useful forecast says what would change it. Some tests have deadlines.
         Others require watching a mechanism until the evidence becomes clear.
       </PageIntro>
+      <aside className="review-note">
+        <span className="eyebrow">
+          OCTOBER REVIEW / THE LOOP IS NOT YET RESOLVED
+        </span>
+        <p>
+          Bounded research tasks now have stronger evidence. The new
+          successor-gains monitor asks whether those improvements can be
+          repeated. Existing locked tests retain their rules.
+        </p>
+        <Link className="text-link" to="/rsi">
+          See the evidence behind this judgment <ArrowUpRight size={14} />
+        </Link>
+      </aside>
       <section className="watch-feature">
         <div>
           <span className="eyebrow">THE NEAREST LOCKED TEST / 31 JAN 2027</span>
@@ -64,7 +77,7 @@ export function FalsifierBoard() {
           suite, evaluation date and any methodology break before a revision.
         </p>
       </section>
-      <section className="section compact-section">
+      <section className="section compact-section" id="dated">
         <SectionTitle
           label="01 / TESTS WITH A DATE"
           title={
@@ -111,13 +124,22 @@ export function FalsifierBoard() {
                   {f.resolution_record && (
                     <pre>{JSON.stringify(f.resolution_record, null, 2)}</pre>
                   )}
+                  {f.latest_review && (
+                    <div className="amendment">
+                      <span className="eyebrow">
+                        REVIEWED {formatIsoDate(f.latest_review.date)}
+                      </span>
+                      <p>{f.latest_review.note}</p>
+                      <Sources ids={f.latest_review.evidence_refs} />
+                    </div>
+                  )}
                   <Sources ids={f.evidence_refs} />
                 </Disclosure>
               </div>
             </article>
           ))}
       </section>
-      <section>
+      <section id="monitors">
         <SectionTitle
           label="02 / MECHANISMS TO FOLLOW"
           title={
@@ -144,6 +166,15 @@ export function FalsifierBoard() {
                   <p>
                     <strong>Consequence:</strong> {f.consequence}
                   </p>
+                  {f.latest_review && (
+                    <div className="amendment">
+                      <span className="eyebrow">
+                        REVIEWED {formatIsoDate(f.latest_review.date)}
+                      </span>
+                      <p>{f.latest_review.note}</p>
+                      <Sources ids={f.latest_review.evidence_refs} />
+                    </div>
+                  )}
                   <Sources ids={f.evidence_refs} />
                 </Disclosure>
               </article>

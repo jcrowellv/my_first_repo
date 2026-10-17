@@ -11,7 +11,7 @@ function download() {
   );
   const a = document.createElement("a");
   a.href = url;
-  a.download = "capability-ledger-2026-09-04.json";
+  a.download = `capability-ledger-${canonical.research_review.as_of}.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
@@ -34,6 +34,7 @@ export function MethodologyView() {
       <div className="article-layout">
         <aside className="article-nav" aria-label="On this page">
           <a href="#/methodology#purpose">Why this exists</a>
+          <a href="#/methodology#source-audit">How claims enter</a>
           <a href="#/methodology#private-frontier">The private frontier</a>
           <a href="#/methodology#reading-ranges">Reading the ranges</a>
           <a href="#/methodology#criteria">The capability audit</a>
@@ -84,6 +85,36 @@ export function MethodologyView() {
                 <p>How does that change what we expect, and why?</p>
               </div>
             </div>
+          </section>
+          <section id="source-audit">
+            <span className="eyebrow">THE OCTOBER SOURCE STANDARD</span>
+            <h2>
+              Separate the claim
+              <br />
+              <em>from its retelling.</em>
+            </h2>
+            <p>
+              The October review starts with a 26-page screenshot packet, treats
+              it as research leads, and traces claims to original papers,
+              artifacts and evaluation reports. Every page has a disposition,
+              including claims that remain unsubstantiated.
+            </p>
+            <p>
+              Source records distinguish publication, update and access dates. A
+              review date means the source was checked, not that its experiment
+              was independently reproduced. Multiple reports about one
+              underlying event share a source family.
+            </p>
+            <p>
+              The research loop separates execution, experiment selection,
+              verification, agenda selection and repeated successor gains. These
+              are qualitative judgments, not percentages of intelligence
+              achieved. Evidence can revise a mechanism without supplying a
+              calibrated new probability distribution.
+            </p>
+            <Link className="source-link" to="/rsi#packet-audit">
+              Inspect the complete audit <ArrowUpRight size={15} />
+            </Link>
           </section>
           <section id="private-frontier">
             <span className="eyebrow">02 / WHAT WE CANNOT DIRECTLY SEE</span>
@@ -197,8 +228,7 @@ export function MethodologyView() {
               percentages summarize weighted judgments about publicly
               demonstrated criteria. They are{" "}
               <strong>
-                not probabilities, benchmark scores, or updated September
-                ratings
+                not probabilities, benchmark scores, or updated October ratings
               </strong>
               .
             </p>

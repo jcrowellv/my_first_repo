@@ -33,6 +33,7 @@ export const ViewMetaSchema = z.object({
     "changelog",
     "methodology",
     "glossary",
+    "rsi",
   ]),
   label: z.string().min(1),
   eyebrow: z.string().min(1),
@@ -97,7 +98,14 @@ export const PaceSourceSchema = z.object({
 });
 
 export const PaceStatusSchema = z.object({
-  id: z.enum(["confirmed", "ahead", "on-track", "behind", "emerging", "not-testable"]),
+  id: z.enum([
+    "confirmed",
+    "ahead",
+    "on-track",
+    "behind",
+    "emerging",
+    "not-testable",
+  ]),
   label: z.string().min(1),
   value: z.number().int().nonnegative(),
 });
@@ -257,7 +265,7 @@ export const MetaSchema = z.object({
   action_center: ActionCenterSchema,
   reading_paths: z.array(ReadingPathSchema).min(1).optional(),
   tracks: z.array(TrackSchema).min(1),
-  views: z.array(ViewMetaSchema).length(8),
+  views: z.array(ViewMetaSchema).length(9),
   navigation: z.array(NavigationItemSchema).length(5),
 });
 
@@ -316,7 +324,12 @@ export const ForecastSchema = SampleFieldsSchema.extend({
   source_note: z.string().min(1),
 });
 
-export const FalsifierStatusSchema = z.enum(["watching", "met", "not-met", "inconclusive"]);
+export const FalsifierStatusSchema = z.enum([
+  "watching",
+  "met",
+  "not-met",
+  "inconclusive",
+]);
 
 export const FalsifierAmendmentSchema = z.object({
   original_statement: z.string().min(1),
@@ -347,11 +360,21 @@ export const FalsifierSchema = SampleFieldsSchema.extend({
   amendment_history: z.array(FalsifierAmendmentSchema),
   affected_milestones: z.array(z.string().min(1)).min(1),
   evidence_refs: z.array(z.string().min(1)).min(1),
+  latest_review: z
+    .object({
+      date: IsoDateSchema,
+      note: z.string().min(1),
+      evidence_refs: z.array(z.string().min(1)).min(1),
+    })
+    .optional(),
 });
 
 export const EvidenceSchema = SampleFieldsSchema.extend({
   id: z.string().min(1),
   date: IsoDateSchema,
+  date_kind: z.enum(["published", "updated", "accessed"]).optional(),
+  reviewed_on: IsoDateSchema.optional(),
+  event_id: z.string().min(1).optional(),
   source_url: z.string().url(),
   source_label: z.string().min(1),
   publisher: z.string().min(1),
@@ -372,20 +395,24 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
   milestone_tags: z.array(z.string().min(1)).min(1),
   favors: z.enum(["compression", "widening", "spine", "neutral"]),
   diagnosticity: z.enum(["high", "medium", "low"]),
-  themes: z.array(z.enum([
-    "open-weight",
-    "frontier-lab",
-    "independent-evaluation",
-    "research-autonomy",
-    "evaluation-methods",
-    "cybersecurity",
-    "alignment-control",
-    "scientific-discovery",
-    "forecasting",
-    "transparency",
-    "open-science",
-    "scaling",
-  ])).optional(),
+  themes: z
+    .array(
+      z.enum([
+        "open-weight",
+        "frontier-lab",
+        "independent-evaluation",
+        "research-autonomy",
+        "evaluation-methods",
+        "cybersecurity",
+        "alignment-control",
+        "scientific-discovery",
+        "forecasting",
+        "transparency",
+        "open-science",
+        "scaling",
+      ]),
+    )
+    .optional(),
   independence: z.enum(["first-party", "independent", "mixed"]),
   verification: z.enum([
     "documented",
@@ -399,10 +426,16 @@ export const EvidenceSchema = SampleFieldsSchema.extend({
   archive_reason: z.string().min(1).optional(),
 });
 
-export const BottleneckStatusSchema = z.enum(["easing", "mixed", "binding", "unresolved"]);
+export const BottleneckStatusSchema = z.enum([
+  "easing",
+  "mixed",
+  "binding",
+  "unresolved",
+]);
 
 export const BottleneckSchema = SampleFieldsSchema.extend({
   id: z.string().min(1),
+  reviewed_on: IsoDateSchema.optional(),
   name: z.string().min(1),
   mechanism: z.string().min(1),
   status: BottleneckStatusSchema,
@@ -520,6 +553,82 @@ export const ChangelogSchema = SampleFieldsSchema.extend({
   affected_entities: z.array(z.string().min(1)).min(1),
 });
 
+export const ResearchReviewSchema = z.object({
+  id: z.string().min(1),
+  as_of: IsoDateSchema,
+  title: z.string().min(1),
+  summary: z.string().min(1),
+  forecast_note: z.string().min(1),
+  packet: z.object({
+    name: z.string().min(1),
+    page_count: z.number().int().positive(),
+    sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  }),
+  stages: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        status: z.enum(["demonstrated", "partial", "unestablished"]),
+        signal: z.string().min(1),
+        missing: z.string().min(1),
+        evidence_refs: z.array(z.string().min(1)).min(1),
+      }),
+    )
+    .min(1),
+  claims: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        pages: z.array(z.number().int().positive()).min(1),
+        claim: z.string().min(1),
+        status: z.enum(["supported", "qualified", "unverified", "context"]),
+        assessment: z.string().min(1),
+        evidence_refs: z.array(z.string().min(1)),
+      }),
+    )
+    .min(1),
+  featured_evidence: z.array(z.string().min(1)).min(1),
+  additional_evidence: z.array(z.string().min(1)).min(1),
+  supplements: z.array(
+    z.object({
+      id: z.string().min(1),
+      origin: z.string().min(1),
+      claim: z.string().min(1),
+      assessment: z.string().min(1),
+      evidence_refs: z.array(z.string().min(1)).min(1),
+    }),
+  ),
+  measurements: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        title: z.string().min(1),
+        value: z.number().finite().nonnegative(),
+        unit: z.string().min(1),
+        low: z.number().finite().nonnegative().optional(),
+        high: z.number().finite().nonnegative().optional(),
+        reference: z.number().finite().positive(),
+        reference_label: z.string().min(1),
+        detail: z.string().min(1),
+        source_ref: z.string().min(1),
+      }),
+    )
+    .min(1),
+  forecast_impacts: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        direction: z.string().min(1),
+        detail: z.string().min(1),
+        evidence_refs: z.array(z.string().min(1)).min(1),
+      }),
+    )
+    .min(1),
+});
+
 export const CanonicalSchema = z
   .object({
     meta: MetaSchema,
@@ -536,6 +645,7 @@ export const CanonicalSchema = z
     open_weight_indicators: z.array(OpenWeightIndicatorSchema).min(1),
     glossary: z.array(GlossaryEntrySchema).min(1),
     changelog: z.array(ChangelogSchema).min(1),
+    research_review: ResearchReviewSchema,
   })
   .superRefine((data, ctx) => {
     const unique = (
@@ -562,17 +672,157 @@ export const CanonicalSchema = z
     const forecastIds = unique(data.forecasts, ["forecasts"], "forecast");
     const falsifierIds = unique(data.falsifiers, ["falsifiers"], "falsifier");
     const evidenceIds = unique(data.evidence, ["evidence"], "evidence");
-    const bottleneckIds = unique(data.bottlenecks, ["bottlenecks"], "bottleneck");
+    const review = data.research_review;
+    const checkReviewRefs = (refs: string[], path: (string | number)[]) => {
+      refs.forEach((ref, index) => {
+        if (!evidenceIds.has(ref))
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown evidence id: ${ref}`,
+            path: [...path, index],
+          });
+      });
+    };
+    for (const key of [
+      "stages",
+      "claims",
+      "forecast_impacts",
+      "supplements",
+    ] as const) {
+      unique(review[key], ["research_review", key], key);
+      review[key].forEach((item, index) =>
+        checkReviewRefs(item.evidence_refs, [
+          "research_review",
+          key,
+          index,
+          "evidence_refs",
+        ]),
+      );
+    }
+    for (const key of ["featured_evidence", "additional_evidence"] as const) {
+      checkReviewRefs(review[key], ["research_review", key]);
+    }
+    unique(
+      review.measurements,
+      ["research_review", "measurements"],
+      "measurement",
+    );
+    review.measurements.forEach((m, index) => {
+      checkReviewRefs(
+        [m.source_ref],
+        ["research_review", "measurements", index, "source_ref"],
+      );
+      if (
+        (m.low === undefined) !== (m.high === undefined) ||
+        (m.low !== undefined &&
+          m.high !== undefined &&
+          (m.low > m.value || m.high < m.value))
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Interval must be complete and contain the estimate",
+          path: ["research_review", "measurements", index],
+        });
+      }
+    });
+    const pages = new Set<number>();
+    review.claims.forEach((claim, index) => {
+      if (
+        ["supported", "qualified"].includes(claim.status) &&
+        !claim.evidence_refs.length
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Admitted claims need primary evidence",
+          path: ["research_review", "claims", index, "evidence_refs"],
+        });
+      }
+      claim.pages.forEach((page, pageIndex) => {
+        if (page > review.packet.page_count || pages.has(page)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Packet page must be in range and covered once",
+            path: ["research_review", "claims", index, "pages", pageIndex],
+          });
+        }
+        pages.add(page);
+      });
+    });
+    if (pages.size !== review.packet.page_count)
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Every packet page must have an audit disposition",
+        path: ["research_review", "claims"],
+      });
+    data.evidence.forEach((e, index) => {
+      if (
+        e.reviewed_on &&
+        (e.reviewed_on < e.date || e.reviewed_on > review.as_of)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Review date must follow the source date and not exceed the review cutoff",
+          path: ["evidence", index, "reviewed_on"],
+        });
+      }
+    });
+    data.falsifiers.forEach((f, index) => {
+      if (f.latest_review)
+        checkReviewRefs(f.latest_review.evidence_refs, [
+          "falsifiers",
+          index,
+          "latest_review",
+          "evidence_refs",
+        ]);
+    });
+    const bottleneckIds = unique(
+      data.bottlenecks,
+      ["bottlenecks"],
+      "bottleneck",
+    );
     const changelogIds = unique(data.changelog, ["changelog"], "changelog");
-    const progressIds = unique(data.capability_progress, ["capability_progress"], "capability progress");
-    const outsideViewIds = unique(data.outside_views, ["outside_views"], "outside view");
-    const driverIds = unique(data.forecast_drivers, ["forecast_drivers"], "forecast driver");
-    const safetyIds = unique(data.safety_readiness, ["safety_readiness"], "safety readiness");
-    const openWeightIds = unique(data.open_weight_indicators, ["open_weight_indicators"], "open-weight indicator");
+    const progressIds = unique(
+      data.capability_progress,
+      ["capability_progress"],
+      "capability progress",
+    );
+    const outsideViewIds = unique(
+      data.outside_views,
+      ["outside_views"],
+      "outside view",
+    );
+    const driverIds = unique(
+      data.forecast_drivers,
+      ["forecast_drivers"],
+      "forecast driver",
+    );
+    const safetyIds = unique(
+      data.safety_readiness,
+      ["safety_readiness"],
+      "safety readiness",
+    );
+    const openWeightIds = unique(
+      data.open_weight_indicators,
+      ["open_weight_indicators"],
+      "open-weight indicator",
+    );
     const glossaryIds = unique(data.glossary, ["glossary"], "glossary entry");
-    const methodStepIds = unique(data.methodology.steps, ["methodology", "steps"], "method step");
-    const methodAxisIds = unique(data.methodology.evidence_axes, ["methodology", "evidence_axes"], "evidence axis");
-    const scoreBandIds = unique(data.methodology.score_bands, ["methodology", "score_bands"], "score band");
+    const methodStepIds = unique(
+      data.methodology.steps,
+      ["methodology", "steps"],
+      "method step",
+    );
+    const methodAxisIds = unique(
+      data.methodology.evidence_axes,
+      ["methodology", "evidence_axes"],
+      "evidence axis",
+    );
+    const scoreBandIds = unique(
+      data.methodology.score_bands,
+      ["methodology", "score_bands"],
+      "score band",
+    );
 
     if (methodStepIds.size !== 5) {
       ctx.addIssue({
@@ -633,6 +883,7 @@ export const CanonicalSchema = z
     });
 
     const allEntityIds = new Set([
+      review.id,
       data.methodology.id,
       ...trackIds,
       ...milestoneIds,
@@ -684,14 +935,19 @@ export const CanonicalSchema = z
       }
 
       const q = forecast.distribution;
-      const ordered = [q.p10.value, q.p25?.value, q.p50.value, q.p75?.value, q.p90.value].filter(
-        (value): value is number => value !== undefined,
-      );
+      const ordered = [
+        q.p10.value,
+        q.p25?.value,
+        q.p50.value,
+        q.p75?.value,
+        q.p90.value,
+      ].filter((value): value is number => value !== undefined);
       for (let cursor = 1; cursor < ordered.length; cursor += 1) {
         if (ordered[cursor] < ordered[cursor - 1]) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Forecast quantiles must be ordered p10 <= p25 <= p50 <= p75 <= p90",
+            message:
+              "Forecast quantiles must be ordered p10 <= p25 <= p50 <= p75 <= p90",
             path: ["forecasts", index, "distribution"],
           });
           break;
@@ -709,10 +965,20 @@ export const CanonicalSchema = z
         });
       }
       falsifier.affected_milestones.forEach((ref, refIndex) => {
-        if (!milestoneIds.has(ref)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown milestone id: ${ref}`, path: ["falsifiers", index, "affected_milestones", refIndex] });
+        if (!milestoneIds.has(ref))
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown milestone id: ${ref}`,
+            path: ["falsifiers", index, "affected_milestones", refIndex],
+          });
       });
       falsifier.evidence_refs.forEach((ref, refIndex) => {
-        if (!evidenceIds.has(ref)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown evidence id: ${ref}`, path: ["falsifiers", index, "evidence_refs", refIndex] });
+        if (!evidenceIds.has(ref))
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unknown evidence id: ${ref}`,
+            path: ["falsifiers", index, "evidence_refs", refIndex],
+          });
       });
     });
 
@@ -749,7 +1015,15 @@ export const CanonicalSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Unknown evidence id: ${ref}`,
-            path: ["meta", "briefing", "reasoning", "steps", stepIndex, "evidence_refs", refIndex],
+            path: [
+              "meta",
+              "briefing",
+              "reasoning",
+              "steps",
+              stepIndex,
+              "evidence_refs",
+              refIndex,
+            ],
           });
         }
       });
@@ -759,7 +1033,13 @@ export const CanonicalSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Unknown evidence id: ${ref}`,
-          path: ["meta", "briefing", "reasoning", "disagreement_evidence_refs", refIndex],
+          path: [
+            "meta",
+            "briefing",
+            "reasoning",
+            "disagreement_evidence_refs",
+            refIndex,
+          ],
         });
       }
     });
@@ -769,24 +1049,62 @@ export const CanonicalSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Unknown evidence id: ${ref}`,
-            path: ["meta", "briefing", "reasoning", "cruxes", cruxIndex, "evidence_refs", refIndex],
+            path: [
+              "meta",
+              "briefing",
+              "reasoning",
+              "cruxes",
+              cruxIndex,
+              "evidence_refs",
+              refIndex,
+            ],
           });
         }
       });
     });
 
     data.bottlenecks.forEach((bottleneck, index) => {
-      [...bottleneck.evidence_for, ...bottleneck.evidence_against].forEach((ref, refIndex) => {
-        if (!evidenceIds.has(ref)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown evidence id: ${ref}`, path: ["bottlenecks", index, "evidence_refs", refIndex] });
-      });
+      [...bottleneck.evidence_for, ...bottleneck.evidence_against].forEach(
+        (ref, refIndex) => {
+          if (!evidenceIds.has(ref))
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Unknown evidence id: ${ref}`,
+              path: ["bottlenecks", index, "evidence_refs", refIndex],
+            });
+        },
+      );
     });
 
     data.capability_progress.forEach((progress, index) => {
-      if (!milestoneIds.has(progress.milestone_id)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Unknown milestone id: ${progress.milestone_id}`, path: ["capability_progress", index, "milestone_id"] });
-      const totalWeight = progress.criteria.reduce((sum, criterion) => sum + criterion.weight, 0);
-      if (Math.abs(totalWeight - 1) > 0.001) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Capability progress criterion weights must sum to 1", path: ["capability_progress", index, "criteria"] });
-      const calculated = Math.round(progress.criteria.reduce((sum, criterion) => sum + criterion.weight * criterion.completion, 0) * 100);
-      if (calculated !== progress.score) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Capability progress score must equal weighted criteria (${calculated})`, path: ["capability_progress", index, "score"] });
+      if (!milestoneIds.has(progress.milestone_id))
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Unknown milestone id: ${progress.milestone_id}`,
+          path: ["capability_progress", index, "milestone_id"],
+        });
+      const totalWeight = progress.criteria.reduce(
+        (sum, criterion) => sum + criterion.weight,
+        0,
+      );
+      if (Math.abs(totalWeight - 1) > 0.001)
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Capability progress criterion weights must sum to 1",
+          path: ["capability_progress", index, "criteria"],
+        });
+      const calculated = Math.round(
+        progress.criteria.reduce(
+          (sum, criterion) => sum + criterion.weight * criterion.completion,
+          0,
+        ) * 100,
+      );
+      if (calculated !== progress.score)
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Capability progress score must equal weighted criteria (${calculated})`,
+          path: ["capability_progress", index, "score"],
+        });
       progress.criteria.forEach((criterion, criterionIndex) => {
         if (
           criterion.completion_range.low > criterion.completion ||
@@ -794,11 +1112,20 @@ export const CanonicalSchema = z
         ) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Criterion completion must fall inside its uncertainty range",
-            path: ["capability_progress", index, "criteria", criterionIndex, "completion_range"],
+            message:
+              "Criterion completion must fall inside its uncertainty range",
+            path: [
+              "capability_progress",
+              index,
+              "criteria",
+              criterionIndex,
+              "completion_range",
+            ],
           });
         }
-        const band = data.methodology.score_bands.find((item) => item.id === criterion.rating);
+        const band = data.methodology.score_bands.find(
+          (item) => item.id === criterion.rating,
+        );
         if (
           band &&
           (criterion.completion < band.min || criterion.completion > band.max)
@@ -806,7 +1133,13 @@ export const CanonicalSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Criterion completion does not match the ${criterion.rating} score band`,
-            path: ["capability_progress", index, "criteria", criterionIndex, "rating"],
+            path: [
+              "capability_progress",
+              index,
+              "criteria",
+              criterionIndex,
+              "rating",
+            ],
           });
         }
         const supportingRefs = new Set(criterion.evidence_refs);
@@ -815,7 +1148,14 @@ export const CanonicalSchema = z
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: `Unknown evidence id: ${ref}`,
-              path: ["capability_progress", index, "criteria", criterionIndex, "evidence_refs", refIndex],
+              path: [
+                "capability_progress",
+                index,
+                "criteria",
+                criterionIndex,
+                "evidence_refs",
+                refIndex,
+              ],
             });
           }
         });
@@ -824,14 +1164,29 @@ export const CanonicalSchema = z
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: `Unknown evidence id: ${ref}`,
-              path: ["capability_progress", index, "criteria", criterionIndex, "counterevidence_refs", refIndex],
+              path: [
+                "capability_progress",
+                index,
+                "criteria",
+                criterionIndex,
+                "counterevidence_refs",
+                refIndex,
+              ],
             });
           }
           if (supportingRefs.has(ref)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: "A criterion cannot list the same record as evidence and counterevidence",
-              path: ["capability_progress", index, "criteria", criterionIndex, "counterevidence_refs", refIndex],
+              message:
+                "A criterion cannot list the same record as evidence and counterevidence",
+              path: [
+                "capability_progress",
+                index,
+                "criteria",
+                criterionIndex,
+                "counterevidence_refs",
+                refIndex,
+              ],
             });
           }
         });
@@ -853,7 +1208,8 @@ export const CanonicalSchema = z
         if (ordered[cursor] < ordered[cursor - 1]) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Outside-view percentiles must be ordered p25 <= p50 <= p75",
+            message:
+              "Outside-view percentiles must be ordered p25 <= p50 <= p75",
             path: ["outside_views", index],
           });
           break;
@@ -877,14 +1233,26 @@ export const CanonicalSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Unknown track id: ${position.track_id}`,
-            path: ["forecast_drivers", index, "track_positions", positionIndex, "track_id"],
+            path: [
+              "forecast_drivers",
+              index,
+              "track_positions",
+              positionIndex,
+              "track_id",
+            ],
           });
         }
         if (seenTracks.has(position.track_id)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Duplicate track position: ${position.track_id}`,
-            path: ["forecast_drivers", index, "track_positions", positionIndex, "track_id"],
+            path: [
+              "forecast_drivers",
+              index,
+              "track_positions",
+              positionIndex,
+              "track_id",
+            ],
           });
         }
         seenTracks.add(position.track_id);

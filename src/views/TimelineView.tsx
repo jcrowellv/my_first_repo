@@ -5,158 +5,111 @@ import { SectionTitle } from "../components/Editorial";
 import { Findings } from "../components/Findings";
 import { ForecastExplorer } from "../components/ForecastExplorer";
 import { ResearchLab } from "../components/ResearchLab";
-import { canonical } from "../lib/data";
+import { ResearchLoop } from "../components/ResearchLoop";
+import { ForecastReviewNote } from "../components/ForecastReviewNote";
+import { canonical, evidenceById } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
+
 export function TimelineView() {
+  const review = canonical.research_review;
   const latest = [
-    "ev-astra-system-card-20260903",
-    "ev-anthropic-internal-rd-20260904",
-    "ev-metr-hf-investigation-20260826",
-  ].map((id) => canonical.evidence.find((e) => e.id === id)!);
+    "ev-quantum-circuits-report-20261016",
+    "ev-scion-20261013",
+    "ev-metr-acceleration-20261014",
+  ].map((id) => evidenceById.get(id)!);
   return (
     <div className="home">
-      <section className="hero">
+      <section className="hero rsi-hero">
         <SignalField />
         <div className="container hero-content">
           <div className="eyebrow">
             <span className="live-dot" />
-            AN INDEPENDENT FIELD GUIDE TO AI
+            THE OCTOBER REVIEW / RECURSIVE SELF-IMPROVEMENT
           </div>
           <h1>
-            How far.
+            When AI
             <br />
-            <em>How fast.</em>
+            <em>builds AI.</em>
           </h1>
           <p className="hero-deck">
-            A new kind of intelligence is taking shape.
+            The research is accelerating.
             <br />
-            Follow the evidence. Explore the possible futures.
+            How much of the loop is really closed?
           </p>
           <div className="hero-actions">
-            <a
-              className="button button-light"
-              href="#/"
-              onClick={(e) => {
-                e.preventDefault();
-                document
-                  .getElementById("start")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Start with what's real <ArrowDown size={16} />
-            </a>
-            <Link className="text-link" to="/forecasts">
-              Explore the forecasts <ArrowUpRight size={17} />
+            <Link className="button button-light" to="/rsi">
+              Open the research dossier <ArrowUpRight size={16} />
             </Link>
+            <button
+              className="text-link"
+              onClick={() =>
+                document.getElementById("start")?.scrollIntoView({
+                  behavior: window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                  ).matches
+                    ? "instant"
+                    : "smooth",
+                })
+              }
+            >
+              See what changed <ArrowDown size={17} />
+            </button>
           </div>
         </div>
         <div className="hero-bottom container">
-          <span>THE FRONTIER, AS OF 04 SEPTEMBER 2026</span>
-          <span>OBSERVATION → INTERPRETATION → POSSIBILITY</span>
+          <span>REVIEWED {formatIsoDate(review.as_of).toUpperCase()}</span>
+          <span>OBSERVATION → INTERPRETATION → OPEN QUESTION</span>
         </div>
       </section>
       <section className="brief-strip container" id="start">
         <div>
-          <span className="eyebrow">01 / WHAT'S HERE</span>
+          <span className="eyebrow">01 / THE CHANGE THAT MATTERS</span>
           <h2>
-            Useful work.
+            Beyond writing code.
             <br />
-            Unfinished intelligence.
+            <em>Into choosing experiments.</em>
           </h2>
         </div>
-        <p>
-          AI can now write substantial software and solve some open research
-          problems. Choosing the right problem—and knowing when an answer
-          deserves trust—remains much harder.
-        </p>
+        <p>{review.summary}</p>
         <Link
-          to="/evidence"
+          to="/rsi#forecast-impact"
           className="circle-link"
-          aria-label="Read the capability evidence"
+          aria-label="Read what changes in the October assessment"
         >
           <ArrowRight />
         </Link>
       </section>
       <section className="section container">
         <SectionTitle
-          label="LOOK CLOSER"
+          label="THREE MEASUREMENTS / THREE DIFFERENT CLAIMS"
           title={
             <>
-              Progress isn't
+              Look past
               <br />
-              <em>one rising number.</em>
+              <em>the headline.</em>
             </>
           }
         />
         <Findings />
       </section>
-      <section className="forecast-section">
+      <section className="loop-section">
         <div className="container section">
-          <SectionTitle
-            label="02 / WHAT MAY COME NEXT"
-            title={
-              <>
-                The future has
-                <br />
-                <em>more than one date.</em>
-              </>
-            }
-          >
-            <p className="heading-note">
-              Choose a capability. Compare the possibilities.
-              <br />A central estimate is the middle of a forecast, not a
-              deadline.
-            </p>
-          </SectionTitle>
-          <ForecastExplorer compact />
+          <ResearchLoop compact />
         </div>
       </section>
-      <section className="section container">
-        <ResearchLab />
-      </section>
-      <section className="horizon-story">
-        <img
-          src={`${import.meta.env.BASE_URL}images/horizon.jpg`}
-          alt="An imagined blue-hour ocean: a lone observer sits on the shore beside a vast illuminated swell."
-          loading="lazy"
-          width="1672"
-          height="941"
-        />
-        <div className="horizon-shade" />
-        <div className="container horizon-copy">
-          <span className="eyebrow">03 / HOW TO WATCH</span>
-          <h2>
-            A front-row seat
-            <br />
-            <em>to the unknown.</em>
-          </h2>
-          <p>
-            You can take the stakes seriously and still find this fascinating.
-            Something new is happening. Understanding it starts with paying
-            attention.
-          </p>
-          <Link className="button" to="/falsifiers">
-            What would change our minds <ArrowUpRight size={16} />
-          </Link>
-        </div>
-        <span className="image-credit">
-          Original illustration · AI-generated
-        </span>
-      </section>
-      <section className="section container">
+      <section className="section container" id="signals">
         <SectionTitle
-          label="FROM THE RESEARCH DESK"
+          label="02 / THE SOURCE TRAIL"
           title={
             <>
-              Three things
+              A stronger claim
               <br />
-              <em>worth your attention.</em>
+              <em>needs a stronger record.</em>
             </>
           }
         >
-          <Link className="text-link" to="/evidence">
-            All {canonical.evidence.length} source records{" "}
-            <ArrowUpRight size={16} />
+          <Link className="text-link" to="/rsi#packet-audit">
+            All 26 packet pages, audited <ArrowUpRight size={16} />
           </Link>
         </SectionTitle>
         <div className="dispatches">
@@ -167,65 +120,75 @@ export function TimelineView() {
                 <div className="eyebrow">
                   {e.publisher} / {formatIsoDate(e.date)}
                 </div>
-                <h3>
-                  {
-                    [
-                      "More capable does not mean easier to contain.",
-                      "The research feedback loop is already beginning.",
-                      "One incident. A much fuller account.",
-                    ][i]
-                  }
-                </h3>
-                <p>
-                  {
-                    [
-                      "Astra’s system card puts cyber capability at Critical, while AI self-improvement remains below High. Capabilities advance unevenly.",
-                      "Anthropic reports extensive internal coding assistance. That supports acceleration—but code volume is not a measure of scientific progress.",
-                      "The independent Hugging Face investigation describes a coordinated agent effort to understand and interfere with an evaluation.",
-                    ][i]
-                  }
-                </p>
+                <h3>{e.source_label}</h3>
+                <p>{e.implication}</p>
               </div>
               <ArrowUpRight size={24} />
             </Link>
           ))}
         </div>
       </section>
+      <section className="forecast-section">
+        <div className="container section">
+          <SectionTitle
+            label="03 / THE POSSIBLE FUTURES"
+            title={
+              <>
+                Evidence moves.
+                <br />
+                <em>History stays visible.</em>
+              </>
+            }
+          >
+            <p className="heading-note">
+              Compare dated forecasts. Inspect their assumptions.
+              <br />A benchmark result is not an arrival probability.
+            </p>
+          </SectionTitle>
+          <ForecastReviewNote />
+          <ForecastExplorer compact />
+        </div>
+      </section>
+      <section className="section container">
+        <ResearchLab />
+      </section>
       <section className="reading-paths container">
-        <Link to="/methodology">
-          <span className="eyebrow">NEW TO THIS?</span>
+        <Link to="/falsifiers">
+          <span className="eyebrow">THE NEXT DECISIVE OBSERVATION</span>
           <h3>
-            Start with how
+            Show the
             <br />
-            we think.
+            successor gains.
           </h3>
           <p>
-            What a forecast means, what it leaves out, and why the private
-            frontier matters.
+            Repeated cycles, held-out results and an account of the human work.
           </p>
           <ArrowUpRight />
         </Link>
         <Link to="/bottlenecks">
-          <span className="eyebrow">WANT TO GO DEEPER?</span>
+          <span className="eyebrow">FOLLOW THE CONSTRAINTS</span>
           <h3>
-            Follow the
+            The bottleneck
             <br />
-            mechanisms.
+            can move.
           </h3>
           <p>
-            Research judgment, compute, learning and the constraints that set
-            the pace.
+            Compute, judgment, validation and infrastructure set the pace
+            together.
           </p>
           <ArrowUpRight />
         </Link>
-        <Link to="/glossary">
-          <span className="eyebrow">LOST IN THE LETTERS?</span>
+        <Link to="/methodology">
+          <span className="eyebrow">MAKE THE REASONING AUDITABLE</span>
           <h3>
-            Get the language.
+            How this ledger
             <br />
-            Skip the mystique.
+            changes its mind.
           </h3>
-          <p>Plain-English definitions, from agents to superintelligence.</p>
+          <p>
+            Definitions, dated judgments, source limitations and preserved
+            history.
+          </p>
           <ArrowUpRight />
         </Link>
       </section>
