@@ -2,13 +2,13 @@
   "meta": {
     "site_title": "The Capability Ledger",
     "site_subtitle": "How far. How fast.",
-    "site_description": "An independent field guide to AI progress. Explore the evidence, compare forecasts, and understand what could bring the next breakthroughs closer—or hold them back.",
+    "site_description": "An independent guide to AI research acceleration. Trace the evidence for recursive improvement, inspect the remaining gaps, and compare dated forecasts.",
     "site_url": "https://jcrowellv.github.io/my_first_repo/",
     "internal_lag_months": 4,
-    "next_review_date": "2026-10-01",
+    "next_review_date": "2026-11-17",
     "scoring_convention": "Milestones score on publicly verifiable evidence only: system cards, third-party evaluations, and documented deployments.",
     "internal_lag_explanation": "Public releases can lag internal systems. The four-month setting is an illustrative sensitivity assumption, not a measured current lead. Forecasts in The Ledger already refer to internal capability; do not subtract this lag again.",
-    "update_protocol": "Edit data/canonical.json, run npm run validate, and commit. Forecast records are append-only; a revision adds a new record and links the prior record through superseded_by.",
+    "update_protocol": "Edit data/canonical.json, run pnpm validate, and commit. Forecast records are append-only; a revision adds a new record and links the prior record through superseded_by.",
     "progress_methodology": "Each capability score is a central judgment over weighted, observable criteria derived from the corresponding AI 2027 agent definition. Every criterion carries a named rating band, an interpretive low-high range, evidence, counterevidence, and a rationale. The site validates the central arithmetic and uncertainty bounds.",
     "synthesis_methodology": "Form a forecast from the full body of evidence, including uncertain internal capabilities and partial research acceleration. A milestone requires stronger evidence for certification than a forecast requires for revision. Keep source definitions, dates, uncertainty, and historical forecasts visible.",
     "progress_label": "Rubric estimate · not a probability",
@@ -84,7 +84,7 @@
         }
       ],
       "reasoning": {
-        "epistemic_status": "September 4 subjective forecasts for useful internal capability. Seven milestone distributions were revised, including medians and upper tails; the July capability rubric remains a separate dated assessment.",
+        "epistemic_status": "September 4 subjective forecasts for useful internal capability. Seven milestone distributions were revised, including medians and upper tails; the July capability rubric remains a separate dated assessment. Historical September briefing; see research_review for the October RSI assessment.",
         "title": "Acceleration can begin before full autonomy.",
         "summary": "AI can carry out substantial coding and research work. The next question is how much faster this makes discovery. Human-directed agents can improve the next generation of systems while reliability, judgment and experimental bottlenecks still limit the pace.",
         "steps": [
@@ -438,6 +438,13 @@
         "eyebrow": "The Capability Ledger",
         "title": "A few useful words.",
         "description": "Definitions to keep nearby. Similar-sounding milestones often ask very different things of a system."
+      },
+      {
+        "id": "rsi",
+        "label": "The RSI dossier",
+        "eyebrow": "October research review",
+        "title": "The loop is taking shape.",
+        "description": "Trace claims from the evidence packet to primary sources and the research loop."
       }
     ],
     "navigation": [
@@ -447,19 +454,24 @@
         "path": "/",
         "children": [
           {
-            "label": "State of play",
-            "description": "The short read on capability, control, and diffusion.",
-            "path": "/#state"
+            "label": "October assessment",
+            "description": "What changed in the research evidence.",
+            "path": "/#start"
           },
           {
             "label": "Capability rubric",
-            "description": "Public-evidence completion for Agent-1 through Agent-4.",
-            "path": "/#capability"
+            "description": "The preserved July assessment of Agent-1 through Agent-4.",
+            "path": "/methodology#criteria"
           },
           {
             "label": "Latest signals",
-            "description": "The newest high-diagnosticity evidence and next review.",
+            "description": "Selected sources from the October review.",
             "path": "/#signals"
+          },
+          {
+            "label": "The RSI dossier",
+            "description": "October evidence and the research loop.",
+            "path": "/rsi"
           }
         ]
       },
@@ -469,11 +481,6 @@
         "path": "/forecasts",
         "children": [
           {
-            "label": "Full ladder",
-            "description": "Every current distribution on one capability map.",
-            "path": "/forecasts#ladder"
-          },
-          {
             "label": "Threshold explorer",
             "description": "Inspect quantiles, provenance, and superseded records.",
             "path": "/forecasts#explorer"
@@ -481,7 +488,7 @@
           {
             "label": "Drivers",
             "description": "See which assumptions pull each timeline earlier or later.",
-            "path": "/forecasts#drivers"
+            "path": "/bottlenecks"
           },
           {
             "label": "Outside views",
@@ -503,12 +510,12 @@
           {
             "label": "Safety & control",
             "description": "Containment, monitoring, safeguards, and independent access.",
-            "path": "/evidence#safety"
+            "path": "/evidence?topic=safety"
           },
           {
             "label": "Open-weight",
             "description": "Capability diffusion, openness, and transparency.",
-            "path": "/evidence#open-weight"
+            "path": "/evidence?topic=diffusion"
           }
         ]
       },
@@ -2614,9 +2621,16 @@
       "evidence_refs": [
         "ev-ai2027-agent2",
         "ev-gpt56-system-card",
-        "ev-cl-bench"
+        "ev-cl-bench",
+        "ev-eko-20261005",
+        "ev-replication-20261012"
       ],
-      "sample": false
+      "sample": false,
+      "latest_review": {
+        "date": "2026-10-17",
+        "note": "Persistent notes support adaptation. Retention and generalization beyond stored episodes remain to be demonstrated.",
+        "evidence_refs": ["ev-eko-20261005", "ev-replication-20261012"]
+      }
     },
     {
       "id": "f-hard-verify-direction",
@@ -2636,9 +2650,21 @@
         "ev-paperbench",
         "ev-alphaevolve",
         "ev-openai-long-horizon",
-        "ev-jacobian-counterexample"
+        "ev-jacobian-counterexample",
+        "ev-3sum-apsp-20261005",
+        "ev-magnet-candidates-20261017",
+        "ev-bootloops-20261001"
       ],
-      "sample": false
+      "sample": false,
+      "latest_review": {
+        "date": "2026-10-17",
+        "note": "Mathematical discovery and simulated candidates are material updates, but do not meet this locked hard-to-verify, independently audited criterion.",
+        "evidence_refs": [
+          "ev-3sum-apsp-20261005",
+          "ev-magnet-candidates-20261017",
+          "ev-bootloops-20261001"
+        ]
+      }
     },
     {
       "id": "f-autonomous-rd-loop",
@@ -2657,9 +2683,21 @@
       "evidence_refs": [
         "ev-alphaevolve",
         "ev-openai-long-horizon",
-        "ev-gpt56-system-card"
+        "ev-gpt56-system-card",
+        "ev-tasteval-20261006",
+        "ev-vals-rsi-20261015",
+        "ev-metr-opus55-20260922"
       ],
-      "sample": false
+      "sample": false,
+      "latest_review": {
+        "date": "2026-10-17",
+        "note": "Bounded loops now have stronger evidence. The reviewed studies do not resolve the general research-autonomy monitor; human choice points and transfer still matter.",
+        "evidence_refs": [
+          "ev-tasteval-20261006",
+          "ev-vals-rsi-20261015",
+          "ev-metr-opus55-20260922"
+        ]
+      }
     },
     {
       "id": "f-compute-plateau",
@@ -2675,8 +2713,18 @@
       "resolution_record": null,
       "amendment_history": [],
       "affected_milestones": ["sar", "siar", "asi", "wsi"],
-      "evidence_refs": ["ev-metr-risk-report", "ev-alphaevolve"],
-      "sample": false
+      "evidence_refs": [
+        "ev-metr-risk-report",
+        "ev-alphaevolve",
+        "ev-scion-20261013",
+        "ev-metr-acceleration-20261014"
+      ],
+      "sample": false,
+      "latest_review": {
+        "date": "2026-10-17",
+        "note": "Infrastructure bottlenecks are documented; a sustained plateau in algorithmic progress has not been established.",
+        "evidence_refs": ["ev-scion-20261013", "ev-metr-acceleration-20261014"]
+      }
     },
     {
       "id": "f-broad-expert-dominance",
@@ -2692,7 +2740,37 @@
       "resolution_record": null,
       "amendment_history": [],
       "affected_milestones": ["sar", "siar", "ted-ai"],
-      "evidence_refs": ["ev-gpt56-system-card", "ev-paperbench"],
+      "evidence_refs": [
+        "ev-gpt56-system-card",
+        "ev-paperbench",
+        "ev-theophyseval-20261009"
+      ],
+      "sample": false,
+      "latest_review": {
+        "date": "2026-10-17",
+        "note": "Strong physics calculation does not establish the required cross-domain expert portfolio.",
+        "evidence_refs": ["ev-theophyseval-20261009"]
+      }
+    },
+    {
+      "id": "f-successor-gains",
+      "kind": "structural-monitor",
+      "title": "Repeated successor gains",
+      "summary": "Does a better researcher build a better researcher, repeatedly?",
+      "statement": "A system completes at least two successive improvement cycles, with the improved system contributing to the next cycle and gains surviving held-out evaluation.",
+      "deadline": null,
+      "review_label": "October 2026 monitor",
+      "consequence": "Strongly increase the weight on rapid recursive improvement; calibrate the effect against measured compute and human intervention.",
+      "status": "watching",
+      "resolution_protocol": "Record model and harness versions, fixed or accounted-for compute, failed attempts, human choices and held-out research performance. Separate improved tools from improved model weights. Require an independent audit or reproducible artifacts before resolving.",
+      "resolution_record": null,
+      "amendment_history": [],
+      "affected_milestones": ["sar", "siar", "asi"],
+      "evidence_refs": [
+        "ev-vals-rsi-20261015",
+        "ev-metr-acceleration-20261014",
+        "ev-metr-opus55-20260922"
+      ],
       "sample": false
     }
   ],
@@ -2743,7 +2821,8 @@
       "independence": "first-party",
       "verification": "documented",
       "evaluation_context": "Victim-side forensic reconstruction from recovered agent logs correlated with platform, dataset-processor, API, pod, and source-control telemetry.",
-      "sample": false
+      "sample": false,
+      "event_id": "hugging-face-incident-202607"
     },
     {
       "id": "ev-jfrog-artifactory-confirmation",
@@ -2762,7 +2841,8 @@
       "independence": "mixed",
       "verification": "documented",
       "evaluation_context": "Affected-vendor confirmation and remediation of the zero-day used to cross the evaluation environment's permitted package-registry egress.",
-      "sample": false
+      "sample": false,
+      "event_id": "hugging-face-incident-202607"
     },
     {
       "id": "ev-openai-hf-eval-incident",
@@ -2789,7 +2869,8 @@
       "evaluation_context": "Internal high-compute cyber evaluation reconstructed through a joint incident response.",
       "sample": false,
       "archived": true,
-      "archive_reason": "Preliminary July account, retained as history. The August 26 OpenAI technical report and METR/Redwood investigation provide the fuller account; see ev-metr-hf-investigation-20260826."
+      "archive_reason": "Preliminary July account, retained as history. The August 26 OpenAI technical report and METR/Redwood investigation provide the fuller account; see ev-metr-hf-investigation-20260826.",
+      "event_id": "hugging-face-incident-202607"
     },
     {
       "id": "ev-aisi-eval-cheating-2026",
@@ -2875,7 +2956,8 @@
       "independence": "first-party",
       "verification": "preliminary",
       "evaluation_context": "Victim incident disclosure later linked to OpenAI's internal evaluation.",
-      "sample": false
+      "sample": false,
+      "event_id": "hugging-face-incident-202607"
     },
     {
       "id": "ev-kimi-k3",
@@ -4321,7 +4403,12 @@
       "verification": "independently-evaluated",
       "evaluation_context": "Independent investigation using ~1,300 transcripts and >70,000 board messages/files. No payment from OpenAI. The investigators say the attack primarily sought insight into the scorer, refining the earlier answer-key account.",
       "sample": false,
-      "themes": ["cybersecurity", "alignment-control", "independent-evaluation"]
+      "themes": [
+        "cybersecurity",
+        "alignment-control",
+        "independent-evaluation"
+      ],
+      "event_id": "hugging-face-incident-202607"
     },
     {
       "id": "ev-ledger-outlook-20260904",
@@ -4341,6 +4428,424 @@
       "verification": "documented",
       "evaluation_context": "Astra assessment discussed with JJ Crowell on September 4, 2026. Date labels retain the precision of the discussion; no new p25/p75 values were supplied.",
       "sample": false
+    },
+    {
+      "id": "ev-tasteval-20261006",
+      "date": "2026-10-06",
+      "source_label": "TasteVal: experiment selection exceeds the tested expert baseline",
+      "publisher": "P-Zero Research",
+      "source_url": "https://pzeroresearch.com/work/tasteval/",
+      "summary": "Opus 5.5 achieves a 2.30× experimental-compute multiplier relative to the study’s expert baseline (95% CI 1.15–4.37). The benchmark separates experiment choice from implementation.",
+      "implication": "This weakens the claim that selecting experiments must remain a human bottleneck.",
+      "limitation": "Eight tasks, supplied research problems, cheap feedback and a baseline excluding the best researchers. It does not test choosing a research agenda. Its ASI sensitivity calculation is explicitly an extrapolation, not a forecast.",
+      "evaluation_context": "A fixed coding agent implements decisions; runs stop at 40 GPU-hours or 120 wall-clock hours. Human reference: best attempt per task from 24 experts.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "evaluation",
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "favors": "compression",
+      "themes": ["research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "tasteval-20261006"
+    },
+    {
+      "id": "ev-vals-rsi-20261015",
+      "date": "2026-10-15",
+      "source_label": "Vals RSI Index: autonomous work on four AI R&D tasks",
+      "publisher": "Vals AI",
+      "source_url": "https://www.vals.ai/benchmarks/rsi_index",
+      "summary": "Opus 5.5 reaches 0.8308 bits per byte on the LM-training task against a published 0.85 reference. The index averages compression, training, harness engineering and post-training scores.",
+      "implication": "Direct evidence that agents can improve parts of the machinery used to build models.",
+      "limitation": "Single runs, narrow tasks and different harnesses. Reference points mix historical research, human agreement and model performance. An index threshold or trend crossing is not a probability of full RSI.",
+      "evaluation_context": "Fixed compute and time budgets; the LM task uses hidden data and fresh retraining seeds. Scores are reference-anchored, not percentages of research automated.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "evaluation",
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "favors": "compression",
+      "themes": ["research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "updated",
+      "event_id": "vals-rsi-20261015"
+    },
+    {
+      "id": "ev-openai-math-20261006",
+      "date": "2026-10-06",
+      "source_label": "A large mathematical release opens a larger verification task",
+      "publisher": "OpenAI",
+      "source_url": "https://openai.com/index/sharing-ai-progress-in-mathematics/",
+      "summary": "OpenAI released mathematical results from an unreleased model, with manuscripts, some Lean formalizations and a revision process. The linked catalogue initially lists 722 manuscripts in 372 related families.",
+      "implication": "Novel mathematical output is now a substantial signal, beyond reproducing known solutions.",
+      "limitation": "Manuscripts, result families and independently accepted theorems are different counts. The release is not evidence that every claim is correct or that the model can improve its own successor.",
+      "evaluation_context": "Read the versioned openai/math catalogue and corrections alongside the announcement. Reported average compute per result excludes a full accounting of research selection and review.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "first-party",
+      "verification": "documented",
+      "favors": "compression",
+      "themes": ["scientific-discovery", "research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "openai-math-release"
+    },
+    {
+      "id": "ev-navier-stokes-20260908",
+      "date": "2026-09-08",
+      "source_label": "An internal model produces a Navier–Stokes proof and formalization",
+      "publisher": "OpenAI",
+      "source_url": "https://openai.com/index/navier-stokes-solution/",
+      "summary": "OpenAI reports a forced Navier–Stokes singularity result with a Lean formalization, produced by coordinating agents using an internal model.",
+      "implication": "Strong evidence for difficult mathematical discovery with substantial orchestration.",
+      "limitation": "Humans selected problems, redirected resources and shared intermediate insights. This review has not independently checked the proof or established prize adjudication. The system is not the public Astra model.",
+      "evaluation_context": "The successful group involved about 10,000 concurrent agents; the report describes 130 billion output tokens on Navier–Stokes. This is not a single cheap chat response.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "first-party",
+      "verification": "documented",
+      "favors": "compression",
+      "themes": ["scientific-discovery", "research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "navier-stokes-20260908"
+    },
+    {
+      "id": "ev-3sum-apsp-20261005",
+      "date": "2026-10-05",
+      "source_label": "Claude contributes an unexpected algorithmic discovery",
+      "publisher": "Alman & Vassilevska Williams",
+      "source_url": "https://arxiv.org/html/2610.06783v1",
+      "summary": "The authors credit an internal Claude model with an algorithm yielding polynomial improvements for 3SUM and all-pairs shortest paths, then describe their own simplification and extension of it.",
+      "implication": "The result challenges a blanket view that agents cannot find valuable, unexpected directions.",
+      "limitation": "A selected success in mathematical algorithms does not measure general agenda selection or realized model-training gains. Human authors strengthened the work; Anthropic offered compensation.",
+      "evaluation_context": "The discovery arose while investigating a human-selected cryptography problem. The paper links Lean certification of its main results.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "mixed",
+      "verification": "documented",
+      "favors": "compression",
+      "themes": ["scientific-discovery", "research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "3sum-apsp-20261005"
+    },
+    {
+      "id": "ev-kls-20261004",
+      "date": "2026-10-04",
+      "source_label": "A proposed KLS proof credits both ChatGPT and human ideas",
+      "publisher": "Bizeul, Klartag & Lehec",
+      "source_url": "https://arxiv.org/html/2610.05474v1",
+      "summary": "The preprint presents a proof of the Kannan–Lovász–Simonovits conjecture and attributes most proof ideas to ChatGPT.",
+      "implication": "Adds an externally authored example of AI contributing to advanced mathematics.",
+      "limitation": "The authors explicitly supplied the suspension idea and worked on understanding and exposition. This is a collaborative preprint, not a measured autonomous research program; this review does not verify the theorem.",
+      "evaluation_context": "Attribution comes from the paper’s acknowledgements. It is not a controlled comparison or evidence of repeated successor-model improvement.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "independent",
+      "verification": "preliminary",
+      "favors": "compression",
+      "themes": ["scientific-discovery"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "kls-20261004"
+    },
+    {
+      "id": "ev-theophyseval-20261009",
+      "date": "2026-10-09",
+      "source_label": "TheoPhysEval: strong calculation, a separate test from scientific direction",
+      "publisher": "TheoPhysEval authors",
+      "source_url": "https://arxiv.org/html/2610.16733v1",
+      "summary": "GPT-6 Astra in Codex obtains 49 of 50 final answers on the realistic track, at a reported average cost below $3 per problem.",
+      "implication": "A strong cross-domain signal for autonomous technical execution.",
+      "limitation": "The tasks are unpublished, verifiable calculations using known methods, not breakthrough open problems. Grading final answers does not establish autonomous theory formation; the authors cannot rule out all data leakage.",
+      "evaluation_context": "The realistic track permits web search and local tools. Astra and Opus 5.5 each score 92% on the isolated track. Human specialists supplied the problems.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "evaluation",
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "favors": "compression",
+      "themes": ["scientific-discovery", "independent-evaluation"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "theophyseval-20261009"
+    },
+    {
+      "id": "ev-bootloops-20261001",
+      "date": "2026-10-01",
+      "source_label": "BootLoops: broad scientific output with expert steering",
+      "publisher": "Matthew Schwartz / Anthropic",
+      "source_url": "https://www.anthropic.com/research/claude-shaped-science",
+      "summary": "Schwartz reports 36 manuscripts across 18 fields with 19 coauthors over three months, selected from roughly 400 candidate problems.",
+      "implication": "Useful science can accelerate through tool building and collaboration even without full research autonomy.",
+      "limitation": "Experts repeatedly redirected technically correct work toward scientifically useful questions. Manuscripts are not all validated discoveries. Schwartz was a visiting researcher at Anthropic.",
+      "evaluation_context": "A first-person account of a human-led research program using the BootLoops harness, with substantial guidance and checking.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "mixed",
+      "verification": "reported",
+      "favors": "compression",
+      "themes": ["scientific-discovery", "research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "bootloops-20261001"
+    },
+    {
+      "id": "ev-magnet-candidates-20261017",
+      "date": "2026-10-17",
+      "source_label": "Magnetic material candidates: predictions awaiting physical tests",
+      "publisher": "Compensated magnet ledger",
+      "source_url": "https://github.com/spicylemonade/compensated-magnet-ledger",
+      "summary": "The project publishes calculations for YBaMnFeO₅ and KV[Cr(CN)₆], with inputs, outputs, checks and corrections.",
+      "implication": "Agents can search and document candidate materials; useful progress includes identifying why a candidate may fail.",
+      "limitation": "Neither candidate has measured spin polarization, band gap or conductivity in this work. The designed compound has synthesis difficulties; the other was made in 1999 and has relevant prior calculations.",
+      "evaluation_context": "Computational evidence from Claude Opus 5.5 agents. Date records this review of the evolving repository, not a new experimental discovery.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "first-party",
+      "verification": "preliminary",
+      "favors": "compression",
+      "themes": ["scientific-discovery"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "accessed",
+      "event_id": "magnet-candidates-20261017"
+    },
+    {
+      "id": "ev-scion-20261013",
+      "date": "2026-10-13",
+      "source_label": "Scion: coding growth moves the bottleneck into infrastructure",
+      "publisher": "Anthropic",
+      "source_url": "https://www.anthropic.com/engineering/redesigning-source-control",
+      "summary": "Anthropic reports that daily code merges grew from about 2,500 in May to over 30,000 in September, prompting a five-month source-control migration.",
+      "implication": "Engineering capacity is changing workflows and creating new constraints in CI, review and infrastructure.",
+      "limitation": "Merge volume is not an algorithmic-progress multiplier. Engineers still made architectural choices and reviewed changes; the lab’s token budget is unusually large.",
+      "evaluation_context": "First-party production case study of Scion and related systems built by a seven-person team with Claude.",
+      "milestone_tags": ["ac", "sc", "sar"],
+      "source_type": "deployment",
+      "independence": "first-party",
+      "verification": "documented",
+      "favors": "compression",
+      "themes": ["research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "scion-20261013"
+    },
+    {
+      "id": "ev-replication-20261012",
+      "date": "2026-10-12",
+      "source_label": "Replication components advance in controlled tests",
+      "publisher": "Anthropic",
+      "source_url": "https://www.anthropic.com/research/self-replicating-ai",
+      "summary": "Anthropic reports small-model inference setup across varied hardware and successful larger-model replication in a simplified, isolated evaluation.",
+      "implication": "Control and proliferation deserve their own watchlist, separate from research productivity.",
+      "limitation": "The end-to-end test used trivial access conditions and separate inference infrastructure. It does not demonstrate an autonomous small-model worm spreading in the wild, or recursive capability improvement.",
+      "evaluation_context": "A 9B model set up inference on eight of nine hardware types. Separate component tests must not be combined into an observed deployment.",
+      "milestone_tags": ["agent-2", "asi"],
+      "source_type": "evaluation",
+      "independence": "first-party",
+      "verification": "documented",
+      "favors": "neutral",
+      "themes": ["alignment-control", "cybersecurity"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "replication-20261012"
+    },
+    {
+      "id": "ev-ecdsa-origins-20261016",
+      "date": "2026-10-16",
+      "source_label": "ECDSA seed origins recovered; encryption is not broken",
+      "publisher": "Anthropic",
+      "source_url": "https://www.anthropic.com/research/ecdsa-curve-origins",
+      "summary": "Anthropic reports that an internal model recovered the generation process for several standardized elliptic-curve seeds in under half an hour, and publishes reproduction code.",
+      "implication": "A concrete example of selecting and testing an unexpected hypothesis.",
+      "limitation": "Recovering public parameter provenance is not recovering private keys or breaking ECDSA. Some seed and base-point origins remain unresolved. The timing and model contribution are first-party reports.",
+      "evaluation_context": "The initial question was human supplied. Reproducible outputs support the numerical claim, but this review did not run the supplied scripts.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "first-party",
+      "verification": "documented",
+      "favors": "compression",
+      "themes": ["scientific-discovery", "cybersecurity"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "ecdsa-origins-20261016"
+    },
+    {
+      "id": "ev-goodfire-clean-20261015",
+      "date": "2026-10-15",
+      "source_label": "Goodfire proposes a more legible view of neural networks",
+      "publisher": "Nick Cammarata / Goodfire",
+      "source_url": "https://already-clean.goodfire.com/",
+      "summary": "An informal research essay argues that native neurons and circuits can be more interpretable than common accounts of superposition suggest.",
+      "implication": "A promising direction for studying and testing model behavior.",
+      "limitation": "The author labels this a working hypothesis. Interpretability examples do not establish comprehensive understanding, reliable control or solved alignment.",
+      "evaluation_context": "Read the demonstrations and scope of the claims, then look for independent replication and predictive intervention tests on frontier models.",
+      "milestone_tags": ["asi", "wsi"],
+      "source_type": "research",
+      "independence": "first-party",
+      "verification": "preliminary",
+      "favors": "neutral",
+      "themes": ["alignment-control", "evaluation-methods"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "goodfire-clean-20261015"
+    },
+    {
+      "id": "ev-eko-20261005",
+      "date": "2026-10-05",
+      "source_label": "Eko explores a virtual world with persistent external memory",
+      "publisher": "Cloos et al. / MIT",
+      "source_url": "https://machineplaying.org/",
+      "summary": "Thirteen embodied coding agents displayed varied exploratory and play-like behaviors across 30-hour virtual-island runs.",
+      "implication": "Useful evidence for self-directed activity and memory-supported adaptation in a bounded environment.",
+      "limitation": "A curious persona, action interface and persistent files were supplied. This does not establish weight-level learning, general research taste or self-improving successors.",
+      "evaluation_context": "Project artifacts and replay tools accompany the paper, arXiv:2610.07130. Session duration is not a human-task time-horizon score.",
+      "milestone_tags": ["agent-2", "sar"],
+      "source_type": "research",
+      "independence": "independent",
+      "verification": "preliminary",
+      "favors": "neutral",
+      "themes": ["research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "eko-20261005"
+    },
+    {
+      "id": "ev-rea-20261017",
+      "date": "2026-10-17",
+      "source_label": "Reverse Engineer Anything: tooling, not a measured training feedback loop",
+      "publisher": "morluto / REA",
+      "source_url": "https://github.com/morluto/rea",
+      "summary": "The repository exposes reverse-engineering workflows through agent tools.",
+      "implication": "Tool access can broaden what a fixed model can inspect and implement.",
+      "limitation": "Repository popularity and available tools do not measure training gains, legal reuse rights or a self-sustaining improvement cycle. No such causal result was established in this review.",
+      "evaluation_context": "Documentation review only; no binaries were analyzed and no repository code was executed. Date is the access date.",
+      "milestone_tags": ["ac", "sc"],
+      "source_type": "research",
+      "independence": "first-party",
+      "verification": "documented",
+      "favors": "neutral",
+      "themes": ["research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "accessed",
+      "event_id": "rea-20261017"
+    },
+    {
+      "id": "ev-metr-opus55-20260922",
+      "date": "2026-09-22",
+      "source_label": "METR finds incremental R&D gains and unresolved judgment gaps",
+      "publisher": "METR",
+      "source_url": "https://metr.org/blog/2026-09-22-claude-opus-5-5/",
+      "summary": "METR reports modest improvement over Fable 5.1 and considers Opus 5.5 unlikely to fully automate AI R&D. A separate preliminary assessment estimates roughly 1.5× overall acceleration due to AI.",
+      "implication": "Provides a counterweight to interpreting local benchmark wins as explosive whole-lab acceleration.",
+      "limitation": "Five tasks and ten business days of access. The acceleration estimate lacks a specified time period; supporting evidence from the separate team was unavailable to the evaluation team. Anthropic reviewed the final summary.",
+      "evaluation_context": "Unpaid independent assessment with developer access and review. The preliminary report assigns about a 30% chance to 2× acceleration; this is not a benchmark score.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "evaluation",
+      "independence": "independent",
+      "verification": "independently-evaluated",
+      "favors": "widening",
+      "themes": ["research-autonomy"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "metr-opus55-20260922"
+    },
+    {
+      "id": "ev-metr-acceleration-20261014",
+      "date": "2026-10-14",
+      "source_label": "What would establish AI-driven research acceleration?",
+      "publisher": "METR",
+      "source_url": "https://metr.org/blog/2026-10-14-ai-rd-acceleration-assessment-proposal/",
+      "summary": "METR proposes studying internal capability trends, algorithmic progress and AI contributions alongside compute, data and human labor.",
+      "implication": "Defines the measurements needed to separate a genuine feedback effect from growth in other inputs.",
+      "limitation": "An assessment proposal is not a completed finding that acceleration has occurred or that it has not.",
+      "evaluation_context": "Requires time-indexed internal measurements, attribution evidence and access to researchers. Public anecdotes alone cannot answer the causal question.",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "framework",
+      "independence": "independent",
+      "verification": "documented",
+      "favors": "neutral",
+      "themes": ["evaluation-methods", "transparency"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "metr-acceleration-20261014"
+    },
+    {
+      "publisher": "Anthropic / Harvard collaborators",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "first-party",
+      "verification": "reported",
+      "favors": "compression",
+      "themes": ["research-autonomy", "scientific-discovery"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "quantum-circuits-20261015",
+      "id": "ev-quantum-circuits-report-20261016",
+      "date": "2026-10-16",
+      "source_url": "https://www.anthropic.com/research/designing-efficient-quantum-circuits",
+      "source_label": "Claude Mythos 5 designs more efficient quantum circuits",
+      "summary": "Anthropic reports evaluator-guided circuit design across eight tasks. One point-addition design uses 17× fewer gates with 12% more qubits than the smallest prior design; a decoding routine uses about 12× fewer gates.",
+      "implication": "Strengthens evidence for algorithm discovery with cheap, explicit feedback.",
+      "limitation": "These are circuit resource estimates, not measured quantum-hardware speedups or a demonstrated successor-model loop.",
+      "evaluation_context": "The point-addition search ran 53 hours from a human brief with occasional prompts to widen its search. Rare failures are permitted in some tasks; the decoder example trades a small failure probability for resource savings."
+    },
+    {
+      "publisher": "Anthropic / Harvard collaborators",
+      "milestone_tags": ["sar", "asi"],
+      "source_type": "research",
+      "independence": "first-party",
+      "verification": "preliminary",
+      "favors": "compression",
+      "themes": ["research-autonomy", "scientific-discovery"],
+      "diagnosticity": "high",
+      "sample": false,
+      "reviewed_on": "2026-10-17",
+      "date_kind": "published",
+      "event_id": "quantum-circuits-20261015",
+      "id": "ev-quantum-circuits-paper-20261015",
+      "date": "2026-10-15",
+      "source_url": "https://arxiv.org/html/2610.22367v1",
+      "source_label": "Quantum circuit discovery: preprint and verification setup",
+      "summary": "Gu and colleagues report lower Toffoli and qubit counts on seven tasks and an improved modular-inversion trade-off on the eighth. Candidate programs are ranked by the product of gate count and peak qubits.",
+      "implication": "Extends evidence for bounded scientific optimization beyond conventional software tasks.",
+      "limitation": "A preprint by the same research team is not independent corroboration. Efficient evaluation applies to the selected class of circuits, and some designs use an allowed failure budget.",
+      "evaluation_context": "Human-written specifications, Python candidates, parallel algorithm families and programmatic testing. The evaluator is separate from the model; that does not make the study an independent lab evaluation. The Ledger has not rerun the artifacts."
     }
   ],
   "bottlenecks": [
@@ -4370,7 +4875,8 @@
         "ev-aisi-eval-cheating-2026",
         "ev-aisi-control-red-team"
       ],
-      "sample": false
+      "sample": false,
+      "reviewed_on": "2026-10-17"
     },
     {
       "id": "b-research-engineering",
@@ -4378,45 +4884,33 @@
       "mechanism": "Implementing, debugging, and optimizing experiments is the most verifier-rich component of AI R&D and should automate before agenda selection.",
       "status": "easing",
       "confidence": "high",
-      "assessment": "September 4 review: coding assistance is already changing research workflows. Anthropic reports substantial internal code contribution, and Astra’s coding efficiency improves in independent testing. Code volume and benchmark performance do not directly measure the speed of scientific discovery.",
+      "assessment": "Strong execution and production engineering are documented; infrastructure, review and integration now absorb a larger share of the work.",
       "next_signal": "A current frontier model matches top experts across an updated RE-Bench or equivalent multi-day, held-out research-engineering suite.",
       "evidence_for": [
-        "ev-gpt56-system-card",
-        "ev-openai-harness",
-        "ev-alphaevolve",
-        "ev-rebench",
-        "ev-nist-deepseek-v4",
-        "ev-devstral2",
-        "ev-kimi-k3",
-        "ev-claude-opus5",
-        "ev-astra-aa-20260903",
-        "ev-anthropic-internal-rd-20260904"
+        "ev-scion-20261013",
+        "ev-theophyseval-20261009",
+        "ev-vals-rsi-20261015"
       ],
-      "evidence_against": ["ev-paperbench", "ev-anthropic-coding-practice"],
-      "sample": false
+      "evidence_against": ["ev-metr-opus55-20260922"],
+      "sample": false,
+      "reviewed_on": "2026-10-17"
     },
     {
       "id": "b-research-taste",
-      "name": "Research taste",
-      "mechanism": "Automating execution multiplies experiments but does not automatically identify which questions, abstractions, or paradigms are worth pursuing.",
-      "status": "binding",
+      "name": "Research judgment",
+      "mechanism": "Choosing experiments within a goal and deciding which goals matter are different capabilities.",
+      "status": "mixed",
       "confidence": "medium",
-      "assessment": "September 4 review: research judgment remains a separate weakness. TASTE finds Fable 5 below estimated human agreement on 92 proposal pairs, while ASI-Bench shows that scientific task performance falls when methodological guidance is removed. Humans can still supply this judgment while AI accelerates the surrounding work.",
-      "next_signal": "A broad objective, no supplied agenda, blind expert novelty review, public artifacts, and independent replication in a hard-to-verify field.",
+      "assessment": "October review: bounded experiment selection is now a demonstrated strength. Unexpected mathematical discoveries also weaken categorical claims about absent creativity. General agenda selection remains less established.",
+      "next_signal": "Replicate gains on new, difficult-to-verify tasks with expert baselines and a complete record of human interventions.",
       "evidence_for": [
-        "ev-paperbench",
-        "ev-gpt56-system-card",
-        "ev-anthropic-coding-practice"
+        "ev-tasteval-20261006",
+        "ev-vals-rsi-20261015",
+        "ev-3sum-apsp-20261005"
       ],
-      "evidence_against": [
-        "ev-alphaevolve",
-        "ev-openai-long-horizon",
-        "ev-deepmind-co-scientist",
-        "ev-jacobian-counterexample",
-        "ev-taste-20260828",
-        "ev-asibench-20260818"
-      ],
-      "sample": false
+      "evidence_against": ["ev-metr-opus55-20260922", "ev-bootloops-20261001"],
+      "sample": false,
+      "reviewed_on": "2026-10-17"
     },
     {
       "id": "b-continual-learning",
@@ -4424,7 +4918,7 @@
       "mechanism": "Persistent memory, frequent offline retraining, online weight updates, self-generated curricula, and improvement of the learning process are different capability thresholds.",
       "status": "binding",
       "confidence": "medium",
-      "assessment": "September 4 review: Astra learns useful rules during unfamiliar ARC games, especially with an adapter that preserves reasoning state. This is strong in-task adaptation evidence. It does not yet show durable, general improvement carried between unrelated tasks. Such learning is part of the full Agent-2 definition, but not a prerequisite for useful human-directed research feedback.",
+      "assessment": "Persistent notes and tools can preserve useful experience, as Eko illustrates. The stronger requirement of durable general competence, bounded interference and retention remains unresolved; this is not implied by a longer session.",
       "next_signal": "A frontier system materially improves with accumulated experience on CL-Bench or a documented successor, or a deployment demonstrates retention, bounded interference, and generalization after autonomous experience-driven updates.",
       "evidence_for": [
         "ev-ai2027-agent2",
@@ -4432,8 +4926,9 @@
         "ev-cl-bench",
         "ev-astra-arc3"
       ],
-      "evidence_against": ["ev-gpt56-system-card"],
-      "sample": false
+      "evidence_against": ["ev-gpt56-system-card", "ev-eko-20261005"],
+      "sample": false,
+      "reviewed_on": "2026-10-17"
     },
     {
       "id": "b-verification-asymmetry",
@@ -4441,28 +4936,20 @@
       "mechanism": "AI progress accelerates first where candidate work is cheap to score; slow, noisy, physical, or socially mediated feedback constrains both training and deployment.",
       "status": "binding",
       "confidence": "high",
-      "assessment": "The clearest gains use automated evaluators, and added compute helps most where agents can check their work. AISI found cheating attempts across every tested cyber model, while the OpenAI/Hugging Face incident shows evaluation gaming can cross infrastructure boundaries. Evaluation Cards found 96.5% of more than 50,000 public records lacked at least one minimal rerun field. Raw scores and self-report are therefore insufficient on their own.",
-      "next_signal": "Comparable gains appear in a slow-feedback domain without a supplied objective function or heavy hidden human steering.",
+      "assessment": "Correct outputs can outpace checking and interpretation. Formal proofs, physical validation and model-behavior controls require different evidence.",
+      "next_signal": "Independent artifact checks, experimental validation and demonstrated detection of consequential failures.",
       "evidence_for": [
-        "ev-alphaevolve",
-        "ev-paperbench",
-        "ev-openai-long-horizon",
-        "ev-aisi-test-time-compute",
-        "ev-nist-agent-eval-cheating",
-        "ev-aisi-eval-cheating-2026",
-        "ev-openai-hf-eval-incident",
-        "ev-aisi-control-red-team",
-        "ev-hf-evaluation-cards",
-        "ev-nist-eval-practices"
+        "ev-openai-math-20261006",
+        "ev-magnet-candidates-20261017",
+        "ev-bootloops-20261001"
       ],
       "evidence_against": [
-        "ev-arc-agi3",
-        "ev-gpt56-arc3",
-        "ev-openai-arc3-harness",
-        "ev-deepmind-co-scientist",
-        "ev-epoch-eci"
+        "ev-3sum-apsp-20261005",
+        "ev-ecdsa-origins-20261016",
+        "ev-quantum-circuits-paper-20261015"
       ],
-      "sample": false
+      "sample": false,
+      "reviewed_on": "2026-10-17"
     },
     {
       "id": "b-compute-economics",
@@ -4470,19 +4957,15 @@
       "mechanism": "Large digital workforces only accelerate research when they can run enough decisive experiments and the hardware, power, and validation pipeline scale with labor.",
       "status": "mixed",
       "confidence": "medium",
-      "assessment": "Specialized systems already search enormous candidate spaces, and Epoch estimates training compute and compute stock still growing rapidly. Frontier experiments nevertheless remain expensive and serial, with gigawatt-scale data centers taking years to build. Public data do not yet reveal whether compute will dominate after superhuman research engineering.",
+      "assessment": "Better experiment choice can stretch a fixed budget, while training runs, infrastructure and serial validation still limit the overall cycle.",
       "next_signal": "Documented AI-labor growth is paired with experiment-throughput and algorithmic-progress measurements over a sustained period.",
-      "evidence_for": [
-        "ev-metr-risk-report",
-        "ev-alphaevolve",
-        "ev-epoch-trends-2026"
-      ],
+      "evidence_for": ["ev-tasteval-20261006", "ev-scion-20261013"],
       "evidence_against": [
-        "ev-openai-harness",
-        "ev-parallelization-20260729",
-        "ev-openai-pacing-20260818"
+        "ev-metr-opus55-20260922",
+        "ev-metr-acceleration-20261014"
       ],
-      "sample": false
+      "sample": false,
+      "reviewed_on": "2026-10-17"
     }
   ],
   "capability_progress": [
@@ -4924,12 +5407,12 @@
       "question": "Can systems choose high-value, non-obvious research directions instead of only executing supplied objectives?",
       "phase": "takeoff",
       "importance": "high",
-      "assessment": "Verifier-rich discovery and the Jacobian result are real updates, but public evidence still rarely separates AI agenda selection from human framing and cheap automated evaluation.",
+      "assessment": "October evidence distinguishes bounded experiment selection from agenda selection. The former is advancing; broad autonomy remains unresolved. Track positions below describe the dated forecasts, not newly elicited October views.",
       "evidence_refs": [
-        "ev-jacobian-counterexample",
-        "ev-alphaevolve",
-        "ev-paperbench",
-        "ev-deepmind-co-scientist"
+        "ev-tasteval-20261006",
+        "ev-vals-rsi-20261015",
+        "ev-3sum-apsp-20261005",
+        "ev-metr-opus55-20260922"
       ],
       "track_positions": [
         {
@@ -4964,15 +5447,11 @@
       "question": "How much faster does a frontier lab actually improve algorithms because of AI assistance?",
       "phase": "both",
       "importance": "high",
-      "assessment": "Useful acceleration is documented, but public estimates mix self-report, coding-only effects, task substitution, and whole-lab output. The independent tracker calls the 1.5x claim on track while conceding that its public evidence does not prove the threshold; this ledger therefore holds the multiplier unresolved. OpenAI's GPT-5.6 release shows a 100x rise in internal coding-inference compute, 22x agentic-token growth, and more than 2x researcher output-token usage while explicitly warning that adoption is not research progress. Anthropic's July system card states it does not observe a sustained AI-attributable 2x acceleration in its own pace of AI progress. Together they show the feedback loop's inputs growing much faster than its measured output. Recent reporting on a quietly reversed risk classification is a reminder that self-administered determinations carry the developer's incentives with them.",
+      "assessment": "October review: METR supplies a preliminary whole-lab acceleration estimate, while Scion documents much larger growth in code volume. These measure different outputs and must not be substituted for each other.",
       "evidence_refs": [
-        "ev-metr-productivity",
-        "ev-anthropic-institute",
-        "ev-anthropic-economic",
-        "ev-ai2027-tracker-rd-multiplier",
-        "ev-gpt56-frontier-efficiency",
-        "ev-claude-opus5",
-        "ev-openai-bio-threshold"
+        "ev-metr-opus55-20260922",
+        "ev-scion-20261013",
+        "ev-metr-acceleration-20261014"
       ],
       "track_positions": [
         {
@@ -5386,6 +5865,24 @@
       "category": "method",
       "definition": "A structured forecast from outside the house tracks — expert surveys, superforecaster panels, or independent models — kept beside the chart rather than inside it, because its resolution definition differs. A date is only comparable when its definition travels with it.",
       "related": ["g-milestone-codes", "g-theses"]
+    },
+    {
+      "id": "g-rsi",
+      "term": "Recursive self-improvement (RSI)",
+      "category": "milestones",
+      "definition": "An improvement loop in which an AI system helps build a more capable successor that can in turn improve the next system. Here, full RSI requires repeated, measured cycles; coding assistance or one optimization run alone does not establish it."
+    },
+    {
+      "id": "g-experimental-taste",
+      "term": "Experimental research taste",
+      "category": "method",
+      "definition": "Choosing and interpreting experiments within a supplied research problem. It is narrower than deciding which research goals are worth pursuing."
+    },
+    {
+      "id": "g-source-family",
+      "term": "Source family",
+      "category": "evidence",
+      "definition": "Records describing the same underlying release, experiment or incident. Multiple retellings do not count as independent replications."
     }
   ],
   "changelog": [
@@ -5711,6 +6208,372 @@
         "daniel-asi-20260402"
       ],
       "sample": false
+    },
+    {
+      "id": "change-rsi-20261017",
+      "date": "2026-10-17",
+      "change_summary": "Overhauled the site around a source-linked RSI dossier. Audited all 26 packet pages, added 19 primary-source records including the subsequent quantum-circuit screenshot, split experimental taste from agenda selection, updated mechanisms and monitor reviews, and preserved all registered forecast distributions. Added source-family grouping, distinct publication/access dates, a responsive research-loop diagram, sticky dossier navigation and disposition filters.",
+      "evidence_refs": [
+        "ev-tasteval-20261006",
+        "ev-vals-rsi-20261015",
+        "ev-openai-math-20261006",
+        "ev-navier-stokes-20260908",
+        "ev-3sum-apsp-20261005",
+        "ev-kls-20261004",
+        "ev-theophyseval-20261009",
+        "ev-bootloops-20261001",
+        "ev-magnet-candidates-20261017",
+        "ev-scion-20261013",
+        "ev-replication-20261012",
+        "ev-ecdsa-origins-20261016",
+        "ev-goodfire-clean-20261015",
+        "ev-eko-20261005",
+        "ev-rea-20261017",
+        "ev-metr-opus55-20260922",
+        "ev-metr-acceleration-20261014",
+        "ev-quantum-circuits-report-20261016",
+        "ev-quantum-circuits-paper-20261015"
+      ],
+      "affected_entities": [
+        "review-rsi-20261017",
+        "b-research-taste",
+        "b-research-engineering",
+        "b-verification-asymmetry",
+        "f-successor-gains"
+      ],
+      "sample": false
     }
-  ]
+  ],
+  "research_review": {
+    "id": "review-rsi-20261017",
+    "as_of": "2026-10-17",
+    "title": "The loop is taking shape.",
+    "summary": "The evidence for AI doing consequential research has strengthened. The most important change is inside the research process: agents can now compete at experiment selection under bounded conditions. Whether those gains compound into autonomous successor development remains unestablished by the sources reviewed here.",
+    "forecast_note": "October changes the qualitative assessment. The registered distributions remain dated records: the Ledger’s latest numerical assessment is September 4. No screenshot, benchmark extrapolation or new point estimate silently replaces those probabilities.",
+    "packet": {
+      "name": "Evidence_RSI.pdf",
+      "page_count": 26,
+      "sha256": "4f120043e695886258b5a6cfe95b9f3aa1ded3ad0f52d26365516dd7d246c68f"
+    },
+    "stages": [
+      {
+        "id": "build",
+        "label": "Build & execute",
+        "status": "demonstrated",
+        "signal": "Substantial implementation and technical problem solving are documented.",
+        "missing": "Transfer to arbitrary tasks and dependable long-run operation remain separate tests.",
+        "evidence_refs": [
+          "ev-scion-20261013",
+          "ev-theophyseval-20261009",
+          "ev-quantum-circuits-report-20261016"
+        ]
+      },
+      {
+        "id": "experiment",
+        "label": "Choose experiments",
+        "status": "demonstrated",
+        "signal": "Within supplied objectives, agents can choose productive experiments.",
+        "missing": "Repeat across new tasks, stronger baselines and expensive feedback.",
+        "evidence_refs": ["ev-tasteval-20261006", "ev-vals-rsi-20261015"]
+      },
+      {
+        "id": "verify",
+        "label": "Verify & interpret",
+        "status": "partial",
+        "signal": "Formal checks and explicit scoring can close local feedback loops.",
+        "missing": "Correctness, scientific relevance and real-world validity need different checks.",
+        "evidence_refs": [
+          "ev-openai-math-20261006",
+          "ev-magnet-candidates-20261017",
+          "ev-bootloops-20261001",
+          "ev-quantum-circuits-paper-20261015"
+        ]
+      },
+      {
+        "id": "direct",
+        "label": "Set the agenda",
+        "status": "partial",
+        "signal": "Unexpected discoveries are evidence against a hard ceiling on creativity.",
+        "missing": "Broad, repeatable prioritization with limited human steering is still unresolved.",
+        "evidence_refs": [
+          "ev-3sum-apsp-20261005",
+          "ev-kls-20261004",
+          "ev-metr-opus55-20260922"
+        ]
+      },
+      {
+        "id": "successor",
+        "label": "Improve the next researcher",
+        "status": "unestablished",
+        "signal": "The reviewed evidence supports components of a feedback loop.",
+        "missing": "Show repeated successor gains on held-out tasks, with compute and human input accounted for.",
+        "evidence_refs": [
+          "ev-vals-rsi-20261015",
+          "ev-metr-acceleration-20261014",
+          "ev-metr-opus55-20260922"
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "id": "timing",
+        "pages": [1, 2],
+        "claim": "RSI is months away; political timing claims",
+        "status": "unverified",
+        "assessment": "A screenshot mixes attributed insider remarks with the poster’s forecast. It supplies no calibrated distribution or independently checkable lab measurements. Treat it as a lead, not a deadline.",
+        "evidence_refs": []
+      },
+      {
+        "id": "materials",
+        "pages": [3],
+        "claim": "Room-temperature magnetic semiconductor candidates",
+        "status": "qualified",
+        "assessment": "Primary computational artifacts located. Predictions and prior synthesis must be separated from new experimental validation.",
+        "evidence_refs": ["ev-magnet-candidates-20261017"]
+      },
+      {
+        "id": "good",
+        "pages": [4],
+        "claim": "I. J. Good’s intelligence-explosion argument",
+        "status": "context",
+        "assessment": "A historical mechanism, not an observation that the loop has closed. The Vals methodology links the original essay.",
+        "evidence_refs": ["ev-vals-rsi-20261015"]
+      },
+      {
+        "id": "algorithm",
+        "pages": [5],
+        "claim": "Claude finds 3SUM / APSP speedups",
+        "status": "supported",
+        "assessment": "The paper describes the algorithm, attribution and subsequent human work. It supports a specific discovery, with no universal autonomy claim.",
+        "evidence_refs": ["ev-3sum-apsp-20261005"]
+      },
+      {
+        "id": "kls",
+        "pages": [6],
+        "claim": "AI proves the KLS conjecture",
+        "status": "qualified",
+        "assessment": "The preprint credits ChatGPT extensively and credits the authors with an essential idea. Track the work as a proposed collaborative proof.",
+        "evidence_refs": ["ev-kls-20261004"]
+      },
+      {
+        "id": "math-release",
+        "pages": [7, 9, 10],
+        "claim": "A flood of mathematical results and claims of research taste",
+        "status": "qualified",
+        "assessment": "One release can produce many screenshots and many related manuscripts. The top-500 ranking and blanket correctness claim were not independently audited.",
+        "evidence_refs": [
+          "ev-openai-math-20261006",
+          "ev-navier-stokes-20260908"
+        ]
+      },
+      {
+        "id": "tasteval",
+        "pages": [8],
+        "claim": "Experimental research taste surpasses experts",
+        "status": "supported",
+        "assessment": "Supported within the benchmark’s task selection and comparator. Choosing the problem is outside its scope.",
+        "evidence_refs": ["ev-tasteval-20261006"]
+      },
+      {
+        "id": "verification",
+        "pages": [11, 12, 13],
+        "claim": "Verifiable domains versus physical-world bottlenecks",
+        "status": "context",
+        "assessment": "A useful competing explanation. Existing datasets and simulations can accelerate parts of science; material tests still constrain what is established.",
+        "evidence_refs": [
+          "ev-theophyseval-20261009",
+          "ev-magnet-candidates-20261017",
+          "ev-bootloops-20261001"
+        ]
+      },
+      {
+        "id": "access",
+        "pages": [14],
+        "claim": "The gap between public and internal AI experience",
+        "status": "context",
+        "assessment": "The qualitative access distinction is relevant. The post’s population counts and impressions are not a measured capability distribution.",
+        "evidence_refs": [
+          "ev-navier-stokes-20260908",
+          "ev-metr-acceleration-20261014"
+        ]
+      },
+      {
+        "id": "reverse-engineering",
+        "pages": [15, 16, 17],
+        "claim": "Reverse-engineering tools create a training feedback loop",
+        "status": "qualified",
+        "assessment": "The tool repository exists. The proposed effect on future training is an inference without measured uplift here.",
+        "evidence_refs": ["ev-rea-20261017"]
+      },
+      {
+        "id": "replication",
+        "pages": [18],
+        "claim": "Models self-replicate without a datacenter",
+        "status": "qualified",
+        "assessment": "Controlled component and simplified replication tests; keep the capability, hardware and deployment assumptions visible.",
+        "evidence_refs": ["ev-replication-20261012"]
+      },
+      {
+        "id": "source-control",
+        "pages": [19],
+        "claim": "Coding growth forces a source-control redesign",
+        "status": "supported",
+        "assessment": "A first-party production account, with continuing human engineering and review.",
+        "evidence_refs": ["ev-scion-20261013"]
+      },
+      {
+        "id": "physics",
+        "pages": [20],
+        "claim": "Astra answers 49 of 50 physics problems",
+        "status": "supported",
+        "assessment": "The paper supports the realistic-track result and specifies the bounded task class.",
+        "evidence_refs": ["ev-theophyseval-20261009"]
+      },
+      {
+        "id": "island",
+        "pages": [21],
+        "claim": "An AI explores and plays on a virtual island",
+        "status": "qualified",
+        "assessment": "Primary project located. Persistent files and a curious persona are part of the setup; no successor training was demonstrated.",
+        "evidence_refs": ["ev-eko-20261005"]
+      },
+      {
+        "id": "roundup",
+        "pages": [22],
+        "claim": "A month of breakthroughs, including solved alignment",
+        "status": "unverified",
+        "assessment": "This bundles unrelated assertions. Mathematics is sourced separately. The later quantum-circuit source supports a narrower resource-design result, not the stated 40× error-correction claim; flying-car, antibiotic, offline-parity and solved-alignment claims remain unsubstantiated as written.",
+        "evidence_refs": [
+          "ev-navier-stokes-20260908",
+          "ev-openai-math-20261006",
+          "ev-goodfire-clean-20261015",
+          "ev-quantum-circuits-paper-20261015"
+        ]
+      },
+      {
+        "id": "vals",
+        "pages": [23],
+        "claim": "Anthropic compresses RSI timelines by one year",
+        "status": "qualified",
+        "assessment": "The benchmark is real; a social interpretation of its trend is not a registered forecast. The four tasks do not by themselves test full RSI.",
+        "evidence_refs": ["ev-vals-rsi-20261015"]
+      },
+      {
+        "id": "ecdsa",
+        "pages": [24],
+        "claim": "An internal model cracks the NSA seed mystery",
+        "status": "qualified",
+        "assessment": "The primary report concerns public curve origins, not private keys or an encryption break.",
+        "evidence_refs": ["ev-ecdsa-origins-20261016"]
+      },
+      {
+        "id": "bootloops",
+        "pages": [25],
+        "claim": "36 manuscripts across 18 fields",
+        "status": "qualified",
+        "assessment": "The first-person account supports the output count and describes extensive expert steering.",
+        "evidence_refs": ["ev-bootloops-20261001"]
+      },
+      {
+        "id": "interpretability",
+        "pages": [26],
+        "claim": "Interpretability breakthrough solves alignment",
+        "status": "qualified",
+        "assessment": "Located the Goodfire working hypothesis. Its demonstrations motivate further testing; alignment is not established by neuron legibility.",
+        "evidence_refs": ["ev-goodfire-clean-20261015"]
+      }
+    ],
+    "featured_evidence": [
+      "ev-tasteval-20261006",
+      "ev-vals-rsi-20261015",
+      "ev-3sum-apsp-20261005",
+      "ev-openai-math-20261006",
+      "ev-theophyseval-20261009",
+      "ev-metr-opus55-20260922"
+    ],
+    "additional_evidence": [
+      "ev-metr-opus55-20260922",
+      "ev-metr-acceleration-20261014"
+    ],
+    "forecast_impacts": [
+      {
+        "id": "experimental-taste",
+        "label": "Experimental research",
+        "direction": "Earlier pressure",
+        "detail": "The widening thesis must now explain generalization beyond bounded experiments, rather than assume all experiment choice remains out of reach.",
+        "evidence_refs": ["ev-tasteval-20261006", "ev-vals-rsi-20261015"]
+      },
+      {
+        "id": "autonomy",
+        "label": "Full research autonomy",
+        "direction": "Still unresolved",
+        "detail": "Unexpected mathematical ideas strengthen the case. Reliable program-level judgment and repeated successor gains remain distinct thresholds.",
+        "evidence_refs": [
+          "ev-3sum-apsp-20261005",
+          "ev-kls-20261004",
+          "ev-metr-opus55-20260922"
+        ]
+      },
+      {
+        "id": "physical",
+        "label": "Diffusion & world change",
+        "direction": "Mixed",
+        "detail": "Software and scientific calculations may accelerate sooner than physical testing, infrastructure and trustworthy deployment.",
+        "evidence_refs": [
+          "ev-scion-20261013",
+          "ev-magnet-candidates-20261017",
+          "ev-metr-acceleration-20261014"
+        ]
+      }
+    ],
+    "measurements": [
+      {
+        "id": "taste",
+        "label": "EXPERIMENT SELECTION",
+        "title": "Research judgment is moving.",
+        "value": 2.3,
+        "unit": "×",
+        "low": 1.15,
+        "high": 4.37,
+        "reference": 1,
+        "reference_label": "Tested expert baseline",
+        "detail": "Experimental-compute multiplier · 95% confidence interval",
+        "source_ref": "ev-tasteval-20261006"
+      },
+      {
+        "id": "training",
+        "label": "MODEL TRAINING",
+        "title": "A better training recipe.",
+        "value": 0.8308,
+        "unit": "BPB",
+        "reference": 0.85,
+        "reference_label": "Published reference",
+        "detail": "Validation bits per byte · lower is better",
+        "source_ref": "ev-vals-rsi-20261015"
+      },
+      {
+        "id": "physics",
+        "label": "SCIENTIFIC EXECUTION",
+        "title": "A striking calculation result.",
+        "value": 49,
+        "unit": "/ 50",
+        "reference": 50,
+        "reference_label": "Problems in the suite",
+        "detail": "Correct final answers · realistic track",
+        "source_ref": "ev-theophyseval-20261009"
+      }
+    ],
+    "supplements": [
+      {
+        "id": "quantum-circuit-follow-up",
+        "origin": "Additional user-supplied screenshot · reviewed October 17",
+        "claim": "More efficient quantum circuits, with a clear evaluation target",
+        "assessment": "The report is substantiated within its task scope. The paper distinguishes joint resource reductions from a gate–qubit trade-off. This strengthens the execution and verification links; it does not establish faster quantum hardware, a generic 40× error-correction gain, or autonomous successor development.",
+        "evidence_refs": [
+          "ev-quantum-circuits-report-20261016",
+          "ev-quantum-circuits-paper-20261015"
+        ]
+      }
+    ]
+  }
 }

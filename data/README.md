@@ -18,12 +18,28 @@ Explicit cumulative judgments from the September 4 Astra assessment with JJ Crow
 
 The underlying discussion gave 4% by end-2027, 25% by end-2029, 35% by end-2030, 55% by end-2032, 70% by end-2035, and 80% by end-2040. The registered ASI quantiles are early-2029 / 2032 / 2050 for 10% / 50% / 90%.
 
-## Featured experiment charts
+## Historical September experiment charts
 
-The overview’s original charts use these primary evaluation records, linked from each graphic:
+The September overview used these primary evaluation records, linked from each graphic:
 
 - ARC Prize: https://arcprize.org/blog/astra — standard max 62.7, adapter max 98.6; standard high 54.8, adapter high 99.9. Action-efficiency scores, not percentage of games completed. The adapter preserves reasoning state.
 - Epoch AI: https://epoch.ai/latest/announcing-frontiermath-erdos — two of 68 open problems solved under the fixed one-attempt, $300, 72-hour setup. Accepted solutions are formally checked.
 - Anthropic: https://alignment.anthropic.com/2026/taste/ — Fable 5 agreement 60%, estimated human agreement 77%, on 92 proposal pairs. These are noisy agreement estimates, not scores of objective idea quality. Astra was not evaluated in this test.
 
 The research-speed instrument is an illustrative fixed-work calculation, not a fitted estimate or forecast revision: `1 / ((1 - share) + share / speed)`. Its limitations are stated beside its controls.
+
+## October 17 RSI review
+
+`research_review` is the current review record. It contains the packet filename, page count and SHA-256 fingerprint; five qualitative research stages; 19 claim groups; three measurements; forecast implications; and links to additional research beyond the packet. A separate `supplements` array records the later quantum-circuit screenshot without assigning it a PDF page. Its report and preprint share one source family. The source PDF and OCR are not redistributed.
+
+Every packet page has exactly one audit disposition. Multiple pages can belong to one claim group. Supported or qualified claims require evidence references. Validation rejects missing, duplicate or out-of-range pages, dangling references, and incomplete or reversed measurement intervals.
+
+The three current measurements come from:
+
+- [TasteVal](https://pzeroresearch.com/work/tasteval/): 2.30× experimental-compute multiplier, 95% interval 1.15–4.37×, within supplied research tasks. This is not a whole-lab acceleration factor.
+- [Vals RSI Index](https://www.vals.ai/benchmarks/rsi_index): 0.8308 validation bits per byte versus a 0.8500 published reference. Task budgets, harnesses and reference conditions matter; the index is not a probability of RSI.
+- [TheoPhysEval](https://arxiv.org/html/2610.16733v1): 49/50 final answers on its realistic track. These are known-method calculations, not 49 new discoveries.
+
+New evidence includes `date_kind` (published, updated, accessed), `reviewed_on`, and `event_id`. An access date must not be presented as a publication date. Shared `event_id` values identify related coverage; a source-family count is not a count of independent experiments. Untagged legacy records default to their own family and are not thereby certified independent.
+
+Falsifiers may carry a `latest_review` without overwriting locked statements, deadlines, amendment history or prior resolution records. The new successor-gains monitor has no invented deadline. Forecast distributions and July capability criteria remain unchanged. A later review must append numerical forecast revisions through the existing supersession protocol.

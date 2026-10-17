@@ -19,15 +19,10 @@ export function ResearchLab() {
           one part and the others take a larger share of the day.
         </p>
         <p>
-          Try changing how much work AI accelerates. The fraction left to humans
-          matters more than it first appears.
+          Try changing how much work AI accelerates. The portion that stays
+          slow—whether human work, compute or validation—sets the ceiling.
         </p>
-        <Sources
-          ids={[
-            "ev-parallelization-20260729",
-            "ev-anthropic-internal-rd-20260904",
-          ]}
-        />
+        <Sources ids={["ev-metr-acceleration-20261014", "ev-scion-20261013"]} />
       </div>
       <div className="lab-instrument">
         <div className="lab-output">
@@ -75,8 +70,9 @@ export function ResearchLab() {
         </div>
         <p className="fine-print">
           Illustrative, fixed-work model: 1 ÷ [(1 − share) + share ÷ speed]. It
-          leaves out new ideas, changing workflows, parallel work and compute
-          limits. It does not change the registered forecasts.
+          leaves out new ideas, changing workflows, parallel work and changing
+          compute budgets. This is a single cycle, not a model of recursive
+          growth. It does not change the registered forecasts.
         </p>
       </div>
     </section>

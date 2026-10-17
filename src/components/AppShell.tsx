@@ -1,9 +1,12 @@
 import { useEffect, useLayoutEffect, useState, type ReactNode } from "react";
 import { HashRouter, Link, NavLink, useLocation } from "react-router";
+import { canonical } from "../lib/data";
+import { formatIsoDate } from "../lib/dates";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
 const links = [
   { to: "/", label: "The overview" },
+  { to: "/rsi", label: "The RSI dossier" },
   { to: "/forecasts", label: "The futures" },
   { to: "/evidence", label: "The evidence" },
   { to: "/falsifiers", label: "What to watch" },
@@ -54,7 +57,7 @@ function Shell({ children }: { children: ReactNode }) {
       }[pathname];
     document.title =
       pathname === "/"
-        ? "The Capability Ledger — How far. How fast."
+        ? "The Capability Ledger — When AI builds AI."
         : `${title || "The Capability Ledger"} · The Capability Ledger`;
   }, [pathname]);
   useEffect(() => {
@@ -151,6 +154,7 @@ function Shell({ children }: { children: ReactNode }) {
             </p>
           </div>
           <div className="footer-links">
+            <Link to="/rsi">The October RSI dossier</Link>
             <Link to="/forecasts">Explore the futures</Link>
             <Link to="/evidence">Follow the evidence</Link>
             <Link to="/methodology">How we think</Link>
@@ -167,7 +171,9 @@ function Shell({ children }: { children: ReactNode }) {
         </div>
         <div className="container footer-bottom">
           <span>Curated by JJ Crowell · Research and development with AI</span>
-          <span>Evidence reviewed 4 September 2026</span>
+          <span>
+            RSI review {formatIsoDate(canonical.research_review.as_of)}
+          </span>
         </div>
       </footer>
     </>

@@ -4,14 +4,12 @@ import { Search, ArrowUpRight, ChevronDown, X } from "lucide-react";
 import { canonical, milestonesById } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
 import { PageIntro, Disclosure, Sources } from "../components/Editorial";
-const topics = [
-  ["all", "Everything"],
-  ["research", "Research & agents"],
-  ["evaluation", "Evaluations"],
-  ["forecast", "Forecasts"],
-  ["safety", "Safety & control"],
-  ["diffusion", "Open models & deployment"],
-];
+import {
+  evidenceTopics as topics,
+  matchesTopic,
+  sourceFamily,
+  sourceFamilyCount,
+} from "../lib/evidence";
 export function EvidenceLedger() {
   const { hash } = useLocation();
   const [params, setParams] = useSearchParams();
@@ -52,38 +50,7 @@ export function EvidenceLedger() {
             .join(" ")
             .toLowerCase();
           if (query && !text.includes(query.toLowerCase())) return false;
-          if (
-            topic === "research" &&
-            !e.milestone_tags.some((x) =>
-              ["agent-2", "sar", "siar", "sc"].includes(x),
-            )
-          )
-            return false;
-          if (
-            topic === "evaluation" &&
-            !["evaluation", "system-card"].includes(e.source_type)
-          )
-            return false;
-          if (
-            topic === "forecast" &&
-            !["forecast", "scenario", "survey"].includes(e.source_type)
-          )
-            return false;
-          if (
-            topic === "safety" &&
-            !e.themes?.some((x) =>
-              ["cybersecurity", "alignment-control", "governance"].includes(x),
-            ) &&
-            e.source_type !== "incident"
-          )
-            return false;
-          if (
-            topic === "diffusion" &&
-            !e.themes?.some((x) =>
-              ["open-weights", "deployment", "diffusion"].includes(x),
-            ) &&
-            e.source_type !== "deployment"
-          )
+          if (!matchesTopic(e, topic, canonical.research_review.as_of))
             return false;
           return true;
         })
@@ -114,6 +81,15 @@ export function EvidenceLedger() {
         An experiment is more useful than a headline. Here is what was observed,
         what it might mean, and where the inference stops.
       </PageIntro>
+      <aside className="review-note">
+        <p>
+          New: the October review traces 26 screenshot pages to primary sources,
+          with explicit dispositions for unsupported claims.
+        </p>
+        <Link className="text-link" to="/rsi#packet-audit">
+          Inspect the packet audit <ArrowUpRight size={14} />
+        </Link>
+      </aside>
       <div className="evidence-toolbar">
         <label className="search-field">
           <Search size={20} />
@@ -142,7 +118,8 @@ export function EvidenceLedger() {
         </div>
         <div className="filter-bottom">
           <p aria-live="polite">
-            {results.length} source record{results.length === 1 ? "" : "s"}
+            {results.length} source record{results.length === 1 ? "" : "s"} ·{" "}
+            {sourceFamilyCount(results)} source families
           </p>
           <div>
             <label>
@@ -192,8 +169,15 @@ export function EvidenceLedger() {
               <span>
                 {e.id === "ev-anthropic-internal-rd-20260904"
                   ? "Verified on this date"
-                  : e.source_type.replace("-", " ")}
+                  : e.date_kind === "accessed"
+                    ? "Source accessed"
+                    : e.date_kind === "updated"
+                      ? "Source updated"
+                      : e.source_type.replace("-", " ")}
               </span>
+              {e.reviewed_on && (
+                <span>Reviewed {formatIsoDate(e.reviewed_on)}</span>
+              )}
               {e.archived && <b>Historical account</b>}
             </div>
             <div className="evidence-main">
@@ -254,6 +238,26 @@ export function EvidenceLedger() {
                     ))}
                     <span>Relevance: {e.diagnosticity}</span>
                   </div>
+                  {canonical.evidence.filter(
+                    (other) =>
+                      other.id !== e.id &&
+                      sourceFamily(other) === sourceFamily(e),
+                  ).length > 0 && (
+                    <div className="related-evidence">
+                      <span className="eyebrow">
+                        SAME SOURCE FAMILY · NOT INDEPENDENT EVENTS
+                      </span>
+                      <Sources
+                        ids={canonical.evidence
+                          .filter(
+                            (other) =>
+                              other.id !== e.id &&
+                              sourceFamily(other) === sourceFamily(e),
+                          )
+                          .map((other) => other.id)}
+                      />
+                    </div>
+                  )}
                   <div className="entry-actions">
                     <a
                       className="source-link"

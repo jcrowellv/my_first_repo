@@ -4,7 +4,7 @@ An independent field guide to AI progress. Start with observed results, explore 
 
 **Published site:** https://jcrowellv.github.io/my_first_repo/
 
-The September 2026 redesign pairs an editorial overview with interactive research comparisons, a forecast explorer, and a searchable evidence archive. The visual direction is a quiet ocean observatory: dark reading surfaces, restrained cyan, expressive serif type, an original ocean illustration, and a pointer-responsive field of signals. Research and development are transparently AI-assisted.
+The October 17, 2026 overhaul centers the site on the evidence for recursive self-improvement: a clickable research-loop diagram, a five-stage explorer, three carefully scoped measurements, and a searchable audit of all 26 pages in the supplied evidence packet. The ledger now contains 101 evidence records, including 19 additions checked against primary sources. The visual direction is a quiet ocean observatory: dark reading surfaces, restrained cyan, expressive serif type, an original ocean illustration, and a pointer-responsive field of signals. Research and development are transparently AI-assisted.
 
 ## Run and validate
 
@@ -17,7 +17,7 @@ pnpm test
 pnpm build
 ```
 
-`build` validates data and typechecks before compiling. The test suite covers source integrity, supersession references, criterion arithmetic, percentile ordering, censored probability tails, source-curve ordering, date precision, and the research-speed illustration.
+`build` validates data and typechecks before compiling. The test suite covers source integrity, supersession references, criterion arithmetic, percentile ordering, censored probability tails, source-curve ordering, date precision, the research-speed illustration, complete packet coverage, review provenance, evidence grouping, and route/navigation rendering.
 
 For the production GitHub Pages build:
 
@@ -25,19 +25,22 @@ For the production GitHub Pages build:
 GITHUB_PAGES=true VITE_BASE_PATH=/my_first_repo/ pnpm build
 ```
 
-The existing workflow publishes `dist/` when `main` changes. Hash-based routes work without server rewrites. The non-Pages build preserves the existing Sites-compatible `dist/client` and `dist/server` structure.
+Pull requests run the tests and production build in CI. The deployment workflow publishes `dist/` when `main` changes. Hash-based routes work without server rewrites. The non-Pages build preserves the existing Sites-compatible `dist/client` and `dist/server` structure.
 
 ## Reading paths
 
-- **Overview:** three source-linked experiments, an interactive forecast comparison, a research-speed thought experiment, and recent evidence.
+- **Overview:** October measurements, the five links in the research loop, current sources, dated forecasts and a research-speed thought experiment.
+- **The RSI dossier:** 19 claim groups covering all 26 packet pages; sticky section navigation and count-based disposition filters; source links; a review download; and explicit observations that would change the assessment.
 - **The futures:** arrival ranges or cumulative probability curves; milestone, forecaster and horizon controls; exact quantiles, source conditions and historical records; definition-separated outside forecasts.
-- **The evidence:** full-text search, topic and source filters, archive inclusion, stable links, and expandable interpretation, limitations and experimental context.
+- **The evidence:** full-text search, topic and source filters, archive inclusion, source-family grouping, publication/update/access dates, stable links, and expandable interpretation, limitations and experimental context.
 - **What to watch:** dated tests with preserved amendment histories, followed by ongoing observations without invented deadlines.
 - **Mechanisms, methodology, glossary and revision history:** the underlying arguments, dated capability criteria, definitions, complete data download and audit trail.
 
 ## Data and source conventions
 
 `data/canonical.json` remains the authoritative record of evidence, forecast quantiles, milestone definitions, capability criteria, tests and revisions. Editorial framing and presentation live in the views and components. Supplemental probability series are versioned under `data/`, with their source documentation in [`data/README.md`](data/README.md).
+
+The October review strengthens the case for bounded experiment selection while leaving repeated autonomous successor gains unestablished. It updates the mechanism assessment, bottlenecks and monitors. It does **not** manufacture new numerical forecast distributions or rescore the July capability rubric. See the [research decision record](docs/research/2026-10-17-rsi-review.md).
 
 Current comparisons include:
 
@@ -63,7 +66,10 @@ React, TypeScript, Vite, React Router and Zod. No backend, authentication, datab
 - `src/components/ProbabilityChart.tsx`: responsive original probability chart.
 - `src/lib/forecast-series.ts`: chooses the appropriate published curve or recorded quantiles.
 - `src/lib/forecast-math.ts`: bounded interpolation and the fixed-work research illustration.
-- `src/views/`: eight routes with progressive disclosure.
+- `src/components/ResearchLoop.tsx`: source-linked research stages and open tests.
+- `src/views/RSIView.tsx`: complete packet audit and downloadable review.
+- `src/lib/evidence.ts`: review filtering and related-source grouping.
+- `src/views/`: nine routes with progressive disclosure.
 - `src/index.css`: shared editorial design and responsive layouts.
 - `scripts/validate.ts` and `src/schema.ts`: schema and cross-reference validation.
 

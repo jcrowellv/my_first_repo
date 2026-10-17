@@ -4,7 +4,7 @@ import { ResearchLab } from "../components/ResearchLab";
 const names: Record<string, string> = {
   "b-autonomy-horizon": "Staying useful without supervision",
   "b-research-engineering": "Building and running the experiment",
-  "b-research-taste": "Choosing an idea worth testing",
+  "b-research-taste": "Experiment selection is not agenda selection",
   "b-continual-learning": "Keeping what experience teaches",
   "b-verification-asymmetry": "Knowing which answers to trust",
   "b-compute-economics": "Finding enough compute and time",
@@ -39,6 +39,7 @@ export function BottleneckTracker() {
             <div>
               <div className="eyebrow">
                 {b.name} / {b.status}
+                {b.reviewed_on && ` / Reviewed ${b.reviewed_on}`}
               </div>
               <h2>{names[b.id]}</h2>
               <p className="mechanism-deck">{b.mechanism}</p>

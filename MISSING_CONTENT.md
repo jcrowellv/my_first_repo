@@ -19,3 +19,11 @@ Daniel's August 16 all-things-considered source supplies AC, SAR experiment-sele
 Anthropic's internal-R&D article did not expose a publication date in the reviewed source. Its September 4 ledger date is the verification date; the underlying observations are explicitly dated March, May and Q2 2026. The UI labels this distinction.
 
 The July Agent-1 through Agent-4 capability assessments have not been numerically rescored for September. Their original assessment dates and limitations remain attached. A source update or forecast revision is not an automatic rubric revision.
+
+## October 17 review
+
+The supplied `Evidence_RSI.pdf` is a collection of screenshots, not a calibrated forecast or a substitute for originating papers. All 26 pages have an explicit disposition in `research_review.claims`. Unverified insider timing, bundled breakthrough assertions and the claim of solved alignment are not promoted into established results.
+
+This review checks source reporting and public artifacts. It does not rerun the experiments, independently certify the mathematical proofs, measure private model capabilities, or experimentally validate predicted materials. Older evidence records have not all been re-audited. Repository access dates are labeled separately from publication dates.
+
+The new sources do not provide replacement percentile distributions for the Ledger. The September forecasts and July capability assessments remain dated historical judgments. Bounded benchmark multipliers, a proposed causal assessment, and preliminary lab estimates are insufficient to identify a sustained autonomous improvement rate.

@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { PageIntro, SectionTitle, External } from "../components/Editorial";
 import { ForecastExplorer } from "../components/ForecastExplorer";
 import { ResearchLab } from "../components/ResearchLab";
+import { ForecastReviewNote } from "../components/ForecastReviewNote";
 import { canonical } from "../lib/data";
 export function ForecastsView() {
   return (
@@ -18,11 +19,12 @@ export function ForecastsView() {
         Useful AI is already here. The difficult question is when it becomes
         capable enough to transform research—and how quickly the rest follows.
       </PageIntro>
+      <ForecastReviewNote />
       <ForecastExplorer />
       <section className="section">
         <ResearchLab />
       </section>
-      <section className="outside-view">
+      <section className="outside-view" id="outside">
         <SectionTitle
           label="STEP OUTSIDE THIS COMPARISON"
           title={
