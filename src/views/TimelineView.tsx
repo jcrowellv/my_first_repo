@@ -6,6 +6,7 @@ import { Findings } from "../components/Findings";
 import { ForecastExplorer } from "../components/ForecastExplorer";
 import { ResearchLab } from "../components/ResearchLab";
 import { ResearchLoop } from "../components/ResearchLoop";
+import { ResearchOrbit } from "../components/ResearchOrbit";
 import { ForecastReviewNote } from "../components/ForecastReviewNote";
 import { canonical, evidenceById } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
@@ -22,38 +23,43 @@ export function TimelineView() {
       <section className="hero rsi-hero">
         <SignalField />
         <div className="container hero-content">
-          <div className="eyebrow">
-            <span className="live-dot" />
-            THE OCTOBER REVIEW / RECURSIVE SELF-IMPROVEMENT
-          </div>
-          <h1>
-            When AI
-            <br />
-            <em>builds AI.</em>
-          </h1>
-          <p className="hero-deck">
-            The research is accelerating.
-            <br />
-            How much of the loop is really closed?
-          </p>
-          <div className="hero-actions">
-            <Link className="button button-light" to="/rsi">
-              Open the research dossier <ArrowUpRight size={16} />
-            </Link>
-            <button
-              className="text-link"
-              onClick={() =>
-                document.getElementById("start")?.scrollIntoView({
-                  behavior: window.matchMedia(
-                    "(prefers-reduced-motion: reduce)",
-                  ).matches
-                    ? "instant"
-                    : "smooth",
-                })
-              }
-            >
-              See what changed <ArrowDown size={17} />
-            </button>
+          <div className="hero-grid">
+            <div className="hero-lead">
+              <div className="eyebrow">
+                <span className="live-dot" />
+                THE OCTOBER REVIEW / RECURSIVE SELF-IMPROVEMENT
+              </div>
+              <h1>
+                When AI
+                <br />
+                <em>builds AI.</em>
+              </h1>
+              <p className="hero-deck">
+                The research is accelerating.
+                <br />
+                How much of the loop is really closed?
+              </p>
+              <div className="hero-actions">
+                <Link className="button button-light" to="/rsi">
+                  Open the research dossier <ArrowUpRight size={16} />
+                </Link>
+                <button
+                  className="text-link"
+                  onClick={() =>
+                    document.getElementById("start")?.scrollIntoView({
+                      behavior: window.matchMedia(
+                        "(prefers-reduced-motion: reduce)",
+                      ).matches
+                        ? "instant"
+                        : "smooth",
+                    })
+                  }
+                >
+                  See what changed <ArrowDown size={17} />
+                </button>
+              </div>
+            </div>
+            <ResearchOrbit />
           </div>
         </div>
         <div className="hero-bottom container">

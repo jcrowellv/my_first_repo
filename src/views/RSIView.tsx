@@ -67,6 +67,13 @@ export function RSIView() {
           Download this review <ArrowDownToLine size={16} />
         </button>
       </div>
+      <nav className="dossier-nav" aria-label="Dossier sections">
+        <span>IN THIS REVIEW</span>
+        <Link to="/rsi#research-loop">01 The loop</Link>
+        <Link to="/rsi#forecast-impact">02 What changes</Link>
+        <Link to="/rsi#follow-up">03 New evidence</Link>
+        <Link to="/rsi#packet-audit">04 The claim audit</Link>
+      </nav>
       <ResearchLoop />
       <section className="section" id="forecast-impact">
         <SectionTitle
@@ -146,6 +153,32 @@ export function RSIView() {
             is supported only within the stated scope.
           </p>
         </SectionTitle>
+        <div
+          className="audit-dispositions"
+          aria-label="Filter claims by disposition"
+        >
+          {[
+            ["all", "All claims"],
+            ["supported", "Supported"],
+            ["qualified", "Qualified"],
+            ["unverified", "Unverified"],
+            ["context", "Context"],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              className={`disposition-${id}`}
+              aria-pressed={filter === id}
+              onClick={() => setFilter(id)}
+            >
+              <strong>
+                {id === "all"
+                  ? review.claims.length
+                  : review.claims.filter((claim) => claim.status === id).length}
+              </strong>
+              <span>{label}</span>
+            </button>
+          ))}
+        </div>
         <div className="audit-toolbar">
           <label className="search-field">
             <Search size={18} />
@@ -156,21 +189,17 @@ export function RSIView() {
               onChange={(e) => setQuery(e.target.value)}
             />
           </label>
-          <label>
-            Disposition{" "}
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              aria-label="Filter audit disposition"
+          {(query || filter !== "all") && (
+            <button
+              className="text-link"
+              onClick={() => {
+                setQuery("");
+                setFilter("all");
+              }}
             >
-              <option value="all">All claims</option>
-              {Object.entries(statusLabels).map(([id, label]) => (
-                <option value={id} key={id}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
+              Clear filters
+            </button>
+          )}
         </div>
         <p className="fine-print" aria-live="polite">
           {claims.length} of {review.claims.length} claim groups

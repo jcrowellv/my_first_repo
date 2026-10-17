@@ -6212,7 +6212,7 @@
     {
       "id": "change-rsi-20261017",
       "date": "2026-10-17",
-      "change_summary": "Overhauled the site around a source-linked RSI dossier. Audited all 26 packet pages, added 19 primary-source records including the subsequent quantum-circuit screenshot, split experimental taste from agenda selection, updated mechanisms and monitor reviews, and preserved all registered forecast distributions. Added source-family grouping and distinct publication/access dates.",
+      "change_summary": "Overhauled the site around a source-linked RSI dossier. Audited all 26 packet pages, added 19 primary-source records including the subsequent quantum-circuit screenshot, split experimental taste from agenda selection, updated mechanisms and monitor reviews, and preserved all registered forecast distributions. Added source-family grouping, distinct publication/access dates, a responsive research-loop diagram, sticky dossier navigation and disposition filters.",
       "evidence_refs": [
         "ev-tasteval-20261006",
         "ev-vals-rsi-20261015",

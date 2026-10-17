@@ -64,4 +64,15 @@ describe("route content and navigation", () => {
     }
     expect(rendered.get("/falsifiers")).toContain('id="f-successor-gains"');
   });
+  it.each(canonical.research_review.stages)(
+    "opens the $id stage from a shared link",
+    (stage) => {
+      const html = renderToStaticMarkup(
+        <MemoryRouter initialEntries={[`/rsi?stage=${stage.id}#research-loop`]}>
+          <RSIView />
+        </MemoryRouter>,
+      );
+      expect(html).toContain(renderToStaticMarkup(<>{stage.missing}</>));
+    },
+  );
 });

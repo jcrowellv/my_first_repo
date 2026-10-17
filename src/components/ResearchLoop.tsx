@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams, useNavigate, useLocation } from "react-router";
 import { ArrowRight, ArrowUpRight, Check, CircleDashed } from "lucide-react";
 import { canonical } from "../lib/data";
 import { Sources } from "./Editorial";
@@ -11,16 +11,25 @@ const labels = {
 };
 export function ResearchLoop({ compact = false }: { compact?: boolean }) {
   const { stages } = canonical.research_review;
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const requested = params.get("stage");
   const [active, setActive] = useState(
     Math.max(
       0,
-      stages.findIndex((stage) => stage.id === "experiment"),
+      stages.findIndex((stage) => stage.id === (requested || "experiment")),
     ),
   );
+  useEffect(() => {
+    const index = stages.findIndex((stage) => stage.id === requested);
+    if (index >= 0) setActive(index);
+  }, [requested, stages]);
   const stage = stages[active];
   return (
     <section
       className={`loop-explorer ${compact ? "loop-compact" : ""}`}
+      id="research-loop"
       aria-label="Evidence across the research loop"
     >
       <div className="loop-heading">
@@ -44,7 +53,17 @@ export function ResearchLoop({ compact = false }: { compact?: boolean }) {
             key={s.id}
             aria-pressed={active === i}
             aria-controls="loop-detail"
-            onClick={() => setActive(i)}
+            onClick={() => {
+              setActive(i);
+              if (!compact) {
+                const next = new URLSearchParams(params);
+                next.set("stage", s.id);
+                navigate(
+                  { search: next.toString(), hash: location.hash },
+                  { replace: true, preventScrollReset: true },
+                );
+              }
+            }}
           >
             <span className="loop-step-number">
               0{i + 1}{" "}

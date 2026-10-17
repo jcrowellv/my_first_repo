@@ -4,7 +4,7 @@ An independent field guide to AI progress. Start with observed results, explore 
 
 **Published site:** https://jcrowellv.github.io/my_first_repo/
 
-The October 17, 2026 overhaul centers the site on the evidence for recursive self-improvement: a five-stage research-loop explorer, three carefully scoped measurements, and a searchable audit of all 26 pages in the supplied evidence packet. The ledger now contains 101 evidence records, including 19 additions checked against primary sources. The visual direction is a quiet ocean observatory: dark reading surfaces, restrained cyan, expressive serif type, an original ocean illustration, and a pointer-responsive field of signals. Research and development are transparently AI-assisted.
+The October 17, 2026 overhaul centers the site on the evidence for recursive self-improvement: a clickable research-loop diagram, a five-stage explorer, three carefully scoped measurements, and a searchable audit of all 26 pages in the supplied evidence packet. The ledger now contains 101 evidence records, including 19 additions checked against primary sources. The visual direction is a quiet ocean observatory: dark reading surfaces, restrained cyan, expressive serif type, an original ocean illustration, and a pointer-responsive field of signals. Research and development are transparently AI-assisted.
 
 ## Run and validate
 
@@ -30,7 +30,7 @@ Pull requests run the tests and production build in CI. The deployment workflow 
 ## Reading paths
 
 - **Overview:** October measurements, the five links in the research loop, current sources, dated forecasts and a research-speed thought experiment.
-- **The RSI dossier:** 19 claim groups covering all 26 packet pages; searchable dispositions; source links; a review download; and explicit observations that would change the assessment.
+- **The RSI dossier:** 19 claim groups covering all 26 packet pages; sticky section navigation and count-based disposition filters; source links; a review download; and explicit observations that would change the assessment.
 - **The futures:** arrival ranges or cumulative probability curves; milestone, forecaster and horizon controls; exact quantiles, source conditions and historical records; definition-separated outside forecasts.
 - **The evidence:** full-text search, topic and source filters, archive inclusion, source-family grouping, publication/update/access dates, stable links, and expandable interpretation, limitations and experimental context.
 - **What to watch:** dated tests with preserved amendment histories, followed by ongoing observations without invented deadlines.
