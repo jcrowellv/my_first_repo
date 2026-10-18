@@ -366,12 +366,12 @@ export function ForecastExplorer({ compact = false }: { compact?: boolean }) {
           </div>
           <p className="fine-print">
             Daniel’s updated milestones use his published August probability
-            curve, interpolated between samples. The Ledger’s ASI curve also
-            includes the September cumulative judgments. Other readings
-            interpolate recorded quantiles. Open-ended percentiles are not
-            treated as exact dates; beyond the last known point, we show a
-            bound. Bare-year estimates have approximate placement; use the
-            source labels below for precision.
+            curve, interpolated between samples. The October Ledger curves
+            interpolate the newly recorded quantiles; September’s stated ASI
+            probability anchors remain with that historical record. Open-ended
+            percentiles are not treated as exact dates; beyond the last known
+            point, we show a bound. Bare-year estimates have approximate
+            placement; use the source labels below for precision.
           </p>
         </div>
       )}

@@ -1,203 +1,211 @@
 import { Link } from "react-router";
-import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
-import { SignalField } from "../components/SignalField";
-import { SectionTitle } from "../components/Editorial";
-import { Findings } from "../components/Findings";
-import { ForecastExplorer } from "../components/ForecastExplorer";
-import { ResearchLab } from "../components/ResearchLab";
-import { ResearchLoop } from "../components/ResearchLoop";
-import { ResearchOrbit } from "../components/ResearchOrbit";
-import { ForecastReviewNote } from "../components/ForecastReviewNote";
-import { canonical, evidenceById } from "../lib/data";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+  ChartNoAxesCombined,
+  Microscope,
+} from "lucide-react";
+import { SectionTitle, Sources } from "../components/Editorial";
+import { AgentExplorer } from "../components/AgentExplorer";
+import { StoryTimeline } from "../components/StoryTimeline";
+import { canonical } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
+import "../agents.css";
 
 export function TimelineView() {
-  const review = canonical.research_review;
-  const latest = [
-    "ev-quantum-circuits-report-20261016",
-    "ev-scion-20261013",
-    "ev-metr-acceleration-20261014",
-  ].map((id) => evidenceById.get(id)!);
+  const assessment = canonical.agent_assessment;
   return (
-    <div className="home">
-      <section className="hero rsi-hero">
-        <SignalField />
-        <div className="container hero-content">
-          <div className="hero-grid">
-            <div className="hero-lead">
-              <div className="eyebrow">
-                <span className="live-dot" />
-                THE OCTOBER REVIEW / RECURSIVE SELF-IMPROVEMENT
-              </div>
+    <div className="agent-home">
+      <section className="agent-hero">
+        <div className="container">
+          <div className="agent-hero-meta">
+            <span className="eyebrow">
+              <span className="live-dot" />
+              AI 2027 / A LIVING ASSESSMENT
+            </span>
+            <span>{formatIsoDate(assessment.as_of)}</span>
+          </div>
+          <div className="agent-hero-grid">
+            <div>
               <h1>
-                When AI
+                Tracking the
                 <br />
-                <em>builds AI.</em>
+                <em>AI 2027 story.</em>
               </h1>
-              <p className="hero-deck">
-                The research is accelerating.
+              <p className="agent-hero-deck">
+                Capable assistants are here.
                 <br />
-                How much of the loop is really closed?
+                The next jump is a complete research engineer.
               </p>
-              <div className="hero-actions">
-                <Link className="button button-light" to="/rsi">
-                  Open the research dossier <ArrowUpRight size={16} />
-                </Link>
-                <button
-                  className="text-link"
-                  onClick={() =>
-                    document.getElementById("start")?.scrollIntoView({
-                      behavior: window.matchMedia(
-                        "(prefers-reduced-motion: reduce)",
-                      ).matches
-                        ? "instant"
-                        : "smooth",
-                    })
-                  }
-                >
-                  See what changed <ArrowDown size={17} />
-                </button>
-              </div>
+              <Link className="button button-accent" to="/#agents">
+                Explore the agents <ArrowDown size={16} />
+              </Link>
             </div>
-            <ResearchOrbit />
+            <aside className="story-position">
+              <span className="eyebrow">WHERE THE EVIDENCE PLACES US</span>
+              <div className="story-position-path" aria-hidden="true">
+                <span>A1</span>
+                <i />
+                <span>A2</span>
+              </div>
+              <h2>{assessment.position}</h2>
+              <p>{assessment.summary}</p>
+              <Link className="text-link" to="/#pace">
+                Are we ahead of the story? <ArrowRight size={15} />
+              </Link>
+            </aside>
+          </div>
+          <div className="agent-hero-bottom">
+            <p>
+              An independent reading of the scenario, not an AI Futures Project
+              rating.
+            </p>
+            <a
+              className="text-link"
+              href="https://ai-2027.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Read the original story <ArrowUpRight size={14} />
+            </a>
           </div>
         </div>
-        <div className="hero-bottom container">
-          <span>REVIEWED {formatIsoDate(review.as_of).toUpperCase()}</span>
-          <span>OBSERVATION → INTERPRETATION → OPEN QUESTION</span>
-        </div>
       </section>
-      <section className="brief-strip container" id="start">
-        <div>
-          <span className="eyebrow">01 / THE CHANGE THAT MATTERS</span>
-          <h2>
-            Beyond writing code.
-            <br />
-            <em>Into choosing experiments.</em>
-          </h2>
-        </div>
-        <p>{review.summary}</p>
-        <Link
-          to="/rsi#forecast-impact"
-          className="circle-link"
-          aria-label="Read what changes in the October assessment"
-        >
-          <ArrowRight />
-        </Link>
-      </section>
-      <section className="section container">
-        <SectionTitle
-          label="THREE MEASUREMENTS / THREE DIFFERENT CLAIMS"
-          title={
-            <>
-              Look past
-              <br />
-              <em>the headline.</em>
-            </>
-          }
-        />
-        <Findings />
-      </section>
-      <section className="loop-section">
-        <div className="container section">
-          <ResearchLoop compact />
-        </div>
-      </section>
-      <section className="section container" id="signals">
-        <SectionTitle
-          label="02 / THE SOURCE TRAIL"
-          title={
-            <>
-              A stronger claim
-              <br />
-              <em>needs a stronger record.</em>
-            </>
-          }
-        >
-          <Link className="text-link" to="/rsi#packet-audit">
-            All 26 packet pages, audited <ArrowUpRight size={16} />
-          </Link>
-        </SectionTitle>
-        <div className="dispatches">
-          {latest.map((e, i) => (
-            <Link className="dispatch" to={`/evidence#${e.id}`} key={e.id}>
-              <span className="dispatch-number">0{i + 1}</span>
-              <div>
-                <div className="eyebrow">
-                  {e.publisher} / {formatIsoDate(e.date)}
-                </div>
-                <h3>{e.source_label}</h3>
-                <p>{e.implication}</p>
-              </div>
-              <ArrowUpRight size={24} />
-            </Link>
-          ))}
-        </div>
-      </section>
-      <section className="forecast-section">
-        <div className="container section">
+      <div className="container">
+        <section className="agent-section" id="agents">
+          <span id="start" className="anchor-alias" />
           <SectionTitle
-            label="03 / THE POSSIBLE FUTURES"
+            label="01 / THE AGENT LADDER"
             title={
               <>
-                Evidence moves.
+                Five profiles.
                 <br />
-                <em>History stays visible.</em>
+                <em>Different distances to go.</em>
               </>
             }
           >
-            <p className="heading-note">
-              Compare dated forecasts. Inspect their assumptions.
-              <br />A benchmark result is not an arrival probability.
+            <p>
+              Start with the current assessment. Open any agent for the
+              abilities, evidence and remaining gaps behind its score.
             </p>
           </SectionTitle>
-          <ForecastReviewNote />
-          <ForecastExplorer compact />
-        </div>
-      </section>
-      <section className="section container">
-        <ResearchLab />
-      </section>
-      <section className="reading-paths container">
-        <Link to="/falsifiers">
-          <span className="eyebrow">THE NEXT DECISIVE OBSERVATION</span>
-          <h3>
-            Show the
-            <br />
-            successor gains.
-          </h3>
-          <p>
-            Repeated cycles, held-out results and an account of the human work.
+          <AgentExplorer />
+        </section>
+        <section className="agent-section pace-section" id="pace">
+          <span id="signals" className="anchor-alias" />
+          <SectionTitle
+            label="02 / STORY VERSUS EVIDENCE"
+            title={
+              <>
+                Some pieces are early.
+                <br />
+                <em>The whole jump is unfinished.</em>
+              </>
+            }
+          >
+            <p>
+              Ahead in one capability does not put every chapter ahead of
+              schedule. Here is where that distinction matters most.
+            </p>
+          </SectionTitle>
+          <div className="pace-cards">
+            {assessment.pace.map((p) => (
+              <article className="pace-card" key={p.id}>
+                <span className={`pace-verdict ${p.verdict}`}>{p.label}</span>
+                <h3>{p.title}</h3>
+                <p>{p.summary}</p>
+                <details>
+                  <summary>
+                    Compare with the story <ArrowDown size={14} />
+                  </summary>
+                  <div>
+                    <p>{p.story_comparison}</p>
+                    <p className="muted">{p.limitation}</p>
+                    <Sources ids={p.evidence_refs} />
+                  </div>
+                </details>
+              </article>
+            ))}
+          </div>
+          <p className="pace-bottom-note">
+            Our reading: parts of Agent-2 are arriving before its January 2027
+            chapter. Public evidence does not yet establish that the complete
+            agent sequence is ahead, or by how many months.
           </p>
-          <ArrowUpRight />
-        </Link>
-        <Link to="/bottlenecks">
-          <span className="eyebrow">FOLLOW THE CONSTRAINTS</span>
-          <h3>
-            The bottleneck
-            <br />
-            can move.
-          </h3>
-          <p>
-            Compute, judgment, validation and infrastructure set the pace
-            together.
-          </p>
-          <ArrowUpRight />
-        </Link>
-        <Link to="/methodology">
-          <span className="eyebrow">MAKE THE REASONING AUDITABLE</span>
-          <h3>
-            How this ledger
-            <br />
-            changes its mind.
-          </h3>
-          <p>
-            Definitions, dated judgments, source limitations and preserved
-            history.
-          </p>
-          <ArrowUpRight />
-        </Link>
-      </section>
+        </section>
+        <section className="agent-section" id="story-timeline">
+          <SectionTitle
+            label="03 / THE TIMELINE"
+            title={
+              <>
+                The story’s dates.
+                <br />
+                <em>Our updated outlook.</em>
+              </>
+            }
+          >
+            <p>
+              The October forecast moves earlier than September. Its central
+              dates still leave more time than the original 2027 narrative.
+            </p>
+          </SectionTitle>
+          <StoryTimeline />
+        </section>
+        <section className="agent-section deeper-section" id="go-deeper">
+          <SectionTitle
+            label="04 / FOLLOW YOUR CURIOSITY"
+            title={
+              <>
+                Go deeper.
+                <br />
+                <em>One question at a time.</em>
+              </>
+            }
+          />
+          <div className="deeper-links">
+            <Link to="/evidence">
+              <BookOpen size={22} />
+              <span>
+                <h3>What actually happened?</h3>
+                <p>
+                  Search the source ledger and inspect the limits of each
+                  finding.
+                </p>
+              </span>
+              <ArrowUpRight size={18} />
+            </Link>
+            <Link to="/rsi">
+              <Microscope size={22} />
+              <span>
+                <h3>Can AI improve AI?</h3>
+                <p>
+                  Follow the research loop and the full October evidence
+                  dossier.
+                </p>
+              </span>
+              <ArrowUpRight size={18} />
+            </Link>
+            <Link to="/forecasts">
+              <ChartNoAxesCombined size={22} />
+              <span>
+                <h3>How do forecasts differ?</h3>
+                <p>Compare dates, assumptions and the full revision history.</p>
+              </span>
+              <ArrowUpRight size={18} />
+            </Link>
+          </div>
+          <div className="agent-next-links">
+            <Link className="text-link" to="/falsifiers">
+              What would change this assessment? <ArrowRight size={15} />
+            </Link>
+            <Link className="text-link" to="/methodology#criteria">
+              How the percentages are calculated <ArrowRight size={15} />
+            </Link>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

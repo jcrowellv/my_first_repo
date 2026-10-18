@@ -469,8 +469,78 @@ export const CapabilityProgressSchema = z.object({
   confidence: z.enum(["high", "medium", "low"]),
   confidence_note: z.string().min(1),
   as_of: IsoDateSchema,
+  supersedes: z.string().min(1).nullable().optional(),
   summary: z.string().min(1),
   criteria: z.array(ProgressCriterionSchema).min(1),
+});
+
+export const AgentAssessmentSchema = z.object({
+  id: z.string().min(1),
+  as_of: IsoDateSchema,
+  position: z.string().min(1),
+  summary: z.string().min(1),
+  score_note: z.string().min(1),
+  forecast_note: z.string().min(1),
+  agents: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        role: z.string().min(1),
+        milestone_id: z.string().min(1),
+        progress_id: z.string().min(1),
+        status: z.enum([
+          "assessed-met",
+          "partial",
+          "early-evidence",
+          "precursors",
+        ]),
+        story_date: z.object({
+          value: z.number().finite(),
+          label: z.string().min(1),
+          source_ref: z.string().min(1),
+        }),
+        story_summary: z.string().min(1),
+        mapping_note: z.string().min(1),
+        changed: z.string().min(1),
+        missing: z.string().min(1),
+        next_test: z.string().min(1),
+        forecast_id: z.string().min(1).nullable(),
+        evidence_refs: z.array(z.string().min(1)).min(1),
+        counterevidence_refs: z.array(z.string().min(1)),
+      }),
+    )
+    .length(5),
+  pace: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        title: z.string().min(1),
+        verdict: z.enum(["early-signal", "mixed", "not-established"]),
+        label: z.string().min(1),
+        summary: z.string().min(1),
+        story_comparison: z.string().min(1),
+        limitation: z.string().min(1),
+        evidence_refs: z.array(z.string().min(1)).min(1),
+      }),
+    )
+    .min(1),
+  outlook: z
+    .array(
+      z.object({
+        milestone_id: z.string().min(1),
+        label: z.string().min(1),
+        forecast_id: z.string().min(1),
+        scenario: z.object({
+          value: z.number().finite(),
+          label: z.string().min(1),
+          source_ref: z.string().min(1),
+        }),
+        context: z.string().min(1),
+        later_milestone: z.boolean(),
+      }),
+    )
+    .min(1),
 });
 
 export const OutsideViewSchema = z.object({
@@ -646,6 +716,7 @@ export const CanonicalSchema = z
     glossary: z.array(GlossaryEntrySchema).min(1),
     changelog: z.array(ChangelogSchema).min(1),
     research_review: ResearchReviewSchema,
+    agent_assessment: AgentAssessmentSchema,
   })
   .superRefine((data, ctx) => {
     const unique = (
@@ -757,7 +828,9 @@ export const CanonicalSchema = z
     data.evidence.forEach((e, index) => {
       if (
         e.reviewed_on &&
-        (e.reviewed_on < e.date || e.reviewed_on > review.as_of)
+        (e.reviewed_on < e.date ||
+          e.reviewed_on >
+            [review.as_of, data.agent_assessment.as_of].sort().at(-1)!)
       ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -787,6 +860,89 @@ export const CanonicalSchema = z
       ["capability_progress"],
       "capability progress",
     );
+    const assessment = data.agent_assessment;
+    unique(assessment.agents, ["agent_assessment", "agents"], "agent");
+    unique(assessment.pace, ["agent_assessment", "pace"], "pace assessment");
+    const referenceIssue = (message: string, path: (string | number)[]) =>
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message, path });
+    const validateForecastRef = (
+      id: string,
+      milestoneId: string,
+      path: (string | number)[],
+    ) => {
+      const forecast = data.forecasts.find((f) => f.id === id);
+      if (
+        !forecast ||
+        forecast.milestone_id !== milestoneId ||
+        forecast.track !== "codex" ||
+        forecast.superseded_by ||
+        forecast.committed_on > assessment.as_of
+      )
+        referenceIssue(
+          "Assessment must reference a current house forecast for the same milestone, available by its review date",
+          path,
+        );
+    };
+    assessment.agents.forEach((agent, index) => {
+      const path = ["agent_assessment", "agents", index];
+      const progress = data.capability_progress.find(
+        (p) => p.id === agent.progress_id,
+      );
+      if (
+        !progress ||
+        progress.milestone_id !== agent.milestone_id ||
+        progress.as_of !== assessment.as_of ||
+        data.capability_progress.some((p) => p.supersedes === progress.id)
+      )
+        referenceIssue(
+          "Agent must reference its current dated capability assessment",
+          [...path, "progress_id"],
+        );
+      if (!milestoneIds.has(agent.milestone_id))
+        referenceIssue("Unknown milestone", [...path, "milestone_id"]);
+      if (
+        agent.status === "assessed-met" &&
+        progress?.criteria.some((c) => c.completion < 1)
+      )
+        referenceIssue("A met agent requires every criterion to be met", [
+          ...path,
+          "status",
+        ]);
+      checkReviewRefs(
+        [agent.story_date.source_ref],
+        [...path, "story_date", "source_ref"],
+      );
+      checkReviewRefs(agent.evidence_refs, [...path, "evidence_refs"]);
+      checkReviewRefs(agent.counterevidence_refs, [
+        ...path,
+        "counterevidence_refs",
+      ]);
+      if (agent.forecast_id)
+        validateForecastRef(agent.forecast_id, agent.milestone_id, [
+          ...path,
+          "forecast_id",
+        ]);
+    });
+    assessment.pace.forEach((item, index) =>
+      checkReviewRefs(item.evidence_refs, [
+        "agent_assessment",
+        "pace",
+        index,
+        "evidence_refs",
+      ]),
+    );
+    assessment.outlook.forEach((item, index) => {
+      validateForecastRef(item.forecast_id, item.milestone_id, [
+        "agent_assessment",
+        "outlook",
+        index,
+        "forecast_id",
+      ]);
+      checkReviewRefs(
+        [item.scenario.source_ref],
+        ["agent_assessment", "outlook", index, "scenario", "source_ref"],
+      );
+    });
     const outsideViewIds = unique(
       data.outside_views,
       ["outside_views"],
@@ -884,6 +1040,7 @@ export const CanonicalSchema = z
 
     const allEntityIds = new Set([
       review.id,
+      assessment.id,
       data.methodology.id,
       ...trackIds,
       ...milestoneIds,
@@ -1077,6 +1234,34 @@ export const CanonicalSchema = z
     });
 
     data.capability_progress.forEach((progress, index) => {
+      unique(
+        progress.criteria,
+        ["capability_progress", index, "criteria"],
+        "criterion",
+      );
+      if (progress.supersedes) {
+        const previous = data.capability_progress.find(
+          (p) => p.id === progress.supersedes,
+        );
+        if (
+          !previous ||
+          previous.milestone_id !== progress.milestone_id ||
+          previous.as_of >= progress.as_of
+        )
+          referenceIssue(
+            "Superseded progress must be an earlier assessment of the same milestone",
+            ["capability_progress", index, "supersedes"],
+          );
+        if (
+          data.capability_progress.filter(
+            (p) => p.supersedes === progress.supersedes,
+          ).length > 1
+        )
+          referenceIssue(
+            "A capability assessment may only have one successor",
+            ["capability_progress", index, "supersedes"],
+          );
+      }
       if (!milestoneIds.has(progress.milestone_id))
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -1094,10 +1279,12 @@ export const CanonicalSchema = z
           path: ["capability_progress", index, "criteria"],
         });
       const calculated = Math.round(
-        progress.criteria.reduce(
+        (progress.criteria.reduce(
           (sum, criterion) => sum + criterion.weight * criterion.completion,
           0,
-        ) * 100,
+        ) +
+          Number.EPSILON) *
+          100,
       );
       if (calculated !== progress.score)
         ctx.addIssue({

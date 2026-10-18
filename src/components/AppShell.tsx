@@ -5,11 +5,11 @@ import { formatIsoDate } from "../lib/dates";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
 const links = [
-  { to: "/", label: "The overview" },
-  { to: "/rsi", label: "The RSI dossier" },
-  { to: "/forecasts", label: "The futures" },
-  { to: "/evidence", label: "The evidence" },
-  { to: "/falsifiers", label: "What to watch" },
+  { to: "/", label: "AI 2027" },
+  { to: "/forecasts", label: "Timeline" },
+  { to: "/evidence", label: "Evidence" },
+  { to: "/rsi", label: "Research" },
+  { to: "/methodology", label: "Method" },
 ];
 function ScrollManager() {
   const { pathname, hash } = useLocation();
@@ -21,6 +21,11 @@ function ScrollManager() {
     const jump = () => {
       const node = document.getElementById(decodeURIComponent(hash.slice(1)));
       if (node) {
+        let ancestor: HTMLElement | null = node;
+        while (ancestor) {
+          if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
+          ancestor = ancestor.parentElement;
+        }
         node.scrollIntoView({ block: "start", behavior: "instant" });
         return true;
       }
@@ -57,7 +62,7 @@ function Shell({ children }: { children: ReactNode }) {
       }[pathname];
     document.title =
       pathname === "/"
-        ? "The Capability Ledger — When AI builds AI."
+        ? "The Capability Ledger — Tracking AI 2027"
         : `${title || "The Capability Ledger"} · The Capability Ledger`;
   }, [pathname]);
   useEffect(() => {
@@ -127,7 +132,7 @@ function Shell({ children }: { children: ReactNode }) {
           >
             {[
               ...links,
-              { to: "/methodology", label: "How we think" },
+              { to: "/falsifiers", label: "What to watch" },
               { to: "/glossary", label: "A field glossary" },
             ].map((l) => (
               <NavLink to={l.to} key={l.to} onClick={() => setOpen(false)}>
@@ -150,13 +155,15 @@ function Shell({ children }: { children: ReactNode }) {
             <p>
               An independent record of AI progress.
               <br />
-              The evidence, the possibilities, and the things we don't know.
+              The AI 2027 story, current evidence, and what comes next.
             </p>
           </div>
           <div className="footer-links">
+            <Link to="/#agents">The AI 2027 agents</Link>
             <Link to="/rsi">The October RSI dossier</Link>
             <Link to="/forecasts">Explore the futures</Link>
             <Link to="/evidence">Follow the evidence</Link>
+            <Link to="/falsifiers">What to watch</Link>
             <Link to="/methodology">How we think</Link>
             <Link to="/glossary">Field glossary</Link>
             <Link to="/changelog">Revision history</Link>
@@ -172,7 +179,7 @@ function Shell({ children }: { children: ReactNode }) {
         <div className="container footer-bottom">
           <span>Curated by JJ Crowell · Research and development with AI</span>
           <span>
-            RSI review {formatIsoDate(canonical.research_review.as_of)}
+            Agent assessment {formatIsoDate(canonical.agent_assessment.as_of)}
           </span>
         </div>
       </footer>

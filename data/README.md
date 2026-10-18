@@ -43,3 +43,13 @@ The three current measurements come from:
 New evidence includes `date_kind` (published, updated, accessed), `reviewed_on`, and `event_id`. An access date must not be presented as a publication date. Shared `event_id` values identify related coverage; a source-family count is not a count of independent experiments. Untagged legacy records default to their own family and are not thereby certified independent.
 
 Falsifiers may carry a `latest_review` without overwriting locked statements, deadlines, amendment history or prior resolution records. The new successor-gains monitor has no invented deadline. Forecast distributions and July capability criteria remain unchanged. A later review must append numerical forecast revisions through the existing supersession protocol.
+
+## October 18 AI 2027 assessment
+
+`agent_assessment` is the current story-facing assessment. It points to five new `capability_progress` records and seven appended house forecasts. The four July progress records remain byte-for-byte equivalent as JSON records; each October replacement links backward through `supersedes`. Agent-5 starts a separate low-confidence rubric for the race ending and has no invented arrival distribution.
+
+Current scores are Agent-1 **100%**, Agent-2 **65%**, Agent-3 **33%**, Agent-4 **25%**, Agent-5 **4%**. They are weighted evidence judgments, not probabilities. Each criterion retains its supporting evidence, counterevidence and judgment range. Every defining criterion must be complete before a profile can be labeled met. The schema checks current pointers, dates, history, sources, forecast associations and this completion rule.
+
+The October forecasts use IDs ending in `20261018`; September predecessors point forward through `superseded_by`. Six forecasts reaffirm the separately prepared October outlook and Agent-2 adds an explicitly elicited estimate. These are subjective distributions with long late tails, not a fitted law or a conversion from rubric scores. The September ASI CDF above is not reused for the October record.
+
+The October 17 packet review and its numerical non-revision decision remain frozen as history. See [the October 18 decision record](../docs/research/2026-10-18-agent-assessment.md) for the subsequent rescoring, definitions and forecasts.

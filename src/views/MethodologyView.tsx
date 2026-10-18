@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ArrowDownToLine, ArrowUpRight } from "lucide-react";
-import { canonical, getProgressRange } from "../lib/data";
+import { canonical, currentAgentProgress, getProgressRange } from "../lib/data";
 import { formatIsoDate } from "../lib/dates";
 import { PageIntro, Disclosure, Sources } from "../components/Editorial";
 function download() {
@@ -11,7 +11,7 @@ function download() {
   );
   const a = document.createElement("a");
   a.href = url;
-  a.download = `capability-ledger-${canonical.research_review.as_of}.json`;
+  a.download = `capability-ledger-${canonical.agent_assessment.as_of}.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
@@ -37,6 +37,7 @@ export function MethodologyView() {
           <a href="#/methodology#source-audit">How claims enter</a>
           <a href="#/methodology#private-frontier">The private frontier</a>
           <a href="#/methodology#reading-ranges">Reading the ranges</a>
+          <a href="#/methodology#agent-update">The October update</a>
           <a href="#/methodology#criteria">The capability audit</a>
           <a href="#/methodology#record">The open record</a>
         </aside>
@@ -60,10 +61,11 @@ export function MethodologyView() {
             </p>
             <p>
               The Ledger is curated by JJ Crowell, with AI assistance in
-              research, analysis and development. The September house forecast
-              is an Astra assessment developed in that collaboration. It is not
-              an OpenAI forecast, and this site has no privileged access to
-              frontier labs.
+              research, analysis and development. The October house forecast is
+              a Codex assessment; the earlier Astra judgments remain in the
+              record. These are independent judgments, not OpenAI or AI Futures
+              Project forecasts. The site has no privileged access to frontier
+              labs.
             </p>
             <div className="three-steps">
               <div>
@@ -136,13 +138,13 @@ export function MethodologyView() {
               tools can help build better tools.
             </p>
             <p>
-              The September forecast assumes a typical private lead of roughly
-              three to six months in useful research capability, with a
+              The retained September forecast assumed a typical private lead of
+              roughly three to six months in useful research capability, with a
               meaningful chance of a year or more in some systems or domains.
               That is an assumption, not a measurement of today’s hidden models.
             </p>
             <p>
-              The dates already target practically useful{" "}
+              The October dates also target practically useful{" "}
               <strong>internal capability</strong>. Subtracting a private lead
               again would count it twice. Nor does a stronger private prototype
               establish reliable autonomy, continual learning or
@@ -210,6 +212,52 @@ export function MethodologyView() {
               Explore the forecasts <ArrowUpRight size={15} />
             </Link>
           </section>
+          <section id="agent-update">
+            <span className="eyebrow">OCTOBER 18 / THE NEW ASSESSMENT</span>
+            <h2>
+              Early components.
+              <br />
+              <em>An unfinished bundle.</em>
+            </h2>
+            <p>
+              {canonical.agent_assessment.summary} The strongest upward update
+              is to experimental research taste; it does not by itself establish
+              agenda selection, durable learning or a tripling of lab progress.
+            </p>
+            <p>
+              Agent-1 through Agent-4 now score 100%, 65%, 33% and 25% on the
+              retained July rubric. Their weights are unchanged. Agent-5 adds a
+              separate, very low-confidence 4% precursor baseline tied to the
+              race-branch narrative, not to an assumed equivalence with SIAR or
+              ASI.
+            </p>
+            <p>
+              {canonical.agent_assessment.forecast_note} The six core forecast
+              ranges from the October 17 independent outlook are reaffirmed
+              here. Agent-2 adds a new judgmental range of 2027–2032, centered
+              on mid-2027, for the full learning-and-uplift bundle.
+            </p>
+            <p>
+              We did not fit a trend to the two percentage snapshots. Better
+              experimental judgment and technical execution support earlier
+              arrival; uncertain generalization, frontier training cycles and
+              physical compute preserve broad late tails. Rubric ranges are
+              interpretive bounds, while forecast ranges are elicited p10–p90
+              probability intervals.
+            </p>
+            <Sources
+              ids={[
+                "ev-tasteval-20261006",
+                "ev-vals-rsi-20261015",
+                "ev-metr-hf-investigation-20260826",
+                "ev-metr-opus55-20260922",
+                "ev-epoch-power-20260904",
+              ]}
+            />
+            <Link className="source-link" to="/#story-timeline">
+              View the story and forecast together <ArrowUpRight size={15} />
+            </Link>
+          </section>
           <section id="criteria">
             <span className="eyebrow">04 / A CLOSER CAPABILITY AUDIT</span>
             <h2>
@@ -218,21 +266,37 @@ export function MethodologyView() {
               <em>have we seen?</em>
             </h2>
             <p>
-              The Agent-1 through Agent-4 sequence comes from AI 2027. Each
+              The Agent-1 through Agent-5 sequence comes from AI 2027. Each
               level combines several abilities. A coding result cannot establish
               research judgment, just as an impressive single run cannot
               establish reliability.
             </p>
             <p>
-              The following assessments are preserved July snapshots. Their
-              percentages summarize weighted judgments about publicly
-              demonstrated criteria. They are{" "}
+              Current October assessments appear first, followed by the
+              preserved July snapshots. The percentages summarize weighted
+              judgments about publicly documented criteria. They are{" "}
               <strong>
-                not probabilities, benchmark scores, or updated October ratings
+                not probabilities, benchmark scores, or a percentage of time
+                remaining
               </strong>
-              .
+              . Every defining ability must be established before the bundle is
+              assessed as met; a strong average cannot hide a missing
+              requirement.
             </p>
-            {canonical.capability_progress.map((p) => {
+            <p>
+              Calculation: round(100 × sum of criterion weight × completion).
+              The low and high judgment ranges use the same weights. These
+              ranges are not statistical confidence intervals. New entries point
+              back to their predecessors; earlier scores and rationales are
+              preserved.
+            </p>
+            {[
+              ...currentAgentProgress,
+              ...canonical.capability_progress.filter(
+                (p) =>
+                  !currentAgentProgress.some((current) => current.id === p.id),
+              ),
+            ].map((p) => {
               const range = getProgressRange(p);
               return (
                 <Disclosure
@@ -242,8 +306,11 @@ export function MethodologyView() {
                     <span>
                       {p.label}
                       <small className="disclosure-subtitle">
-                        {p.score}% rubric completion · {range.low}–{range.high}%
-                        judgment range · {formatIsoDate(p.as_of)}
+                        {p.as_of === canonical.agent_assessment.as_of
+                          ? "Current"
+                          : "Historical"}{" "}
+                        · {p.score}% rubric completion · {range.low}–
+                        {range.high}% judgment range · {formatIsoDate(p.as_of)}
                       </small>
                     </span>
                   }

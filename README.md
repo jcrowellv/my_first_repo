@@ -1,10 +1,30 @@
 # The Capability Ledger
 
-An independent field guide to AI progress. Start with observed results, explore competing forecasts, and inspect the assumptions and sources behind them.
+An independent assessment of where current AI capabilities fit in the **AI 2027** story. Start with the five agent profiles, compare the story's dates with our forecast, then inspect the evidence behind each judgment.
 
 **Published site:** https://jcrowellv.github.io/my_first_repo/
 
-The October 17, 2026 overhaul centers the site on the evidence for recursive self-improvement: a clickable research-loop diagram, a five-stage explorer, three carefully scoped measurements, and a searchable audit of all 26 pages in the supplied evidence packet. The ledger now contains 101 evidence records, including 19 additions checked against primary sources. The visual direction is a quiet ocean observatory: dark reading surfaces, restrained cyan, expressive serif type, an original ocean illustration, and a pointer-responsive field of signals. Research and development are transparently AI-assisted.
+The October 18, 2026 assessment places the frontier **between Agent-1 and Agent-2**. Bounded experiment selection, technical execution and some coordination abilities resemble pieces of later chapters already. Public evidence does not yet establish the complete Agent-2 combination of research engineering, continual learning and roughly 3× lab-wide algorithmic progress. We do not infer a single number of months ahead.
+
+| Profile | Current rubric score | July score |
+| --- | ---: | ---: |
+| Agent-1: managed assistant | 100% | 100% |
+| Agent-2: research engineer | 65% | 53% |
+| Agent-3: superhuman coder | 33% | 21% |
+| Agent-4: superhuman researcher | 25% | 8% |
+| Agent-5: AI-designed successor | 4% | New rubric |
+
+These are **weighted judgments of evidence for each capability profile**, not benchmark results, arrival probabilities or percentages of time remaining. Each score has a judgment range and criterion-level sources. A high average cannot compensate for a missing defining capability. Agent-5 is a low-confidence baseline for the race ending, not a relabeling of SIAR or ASI.
+
+## Reading paths
+
+- **AI 2027:** five selectable agents; current scores, remaining gaps and next tests; component-by-component comparison with the story; an interactive timeline with optional long tails. Evidence and previous scores open on demand. Agent selections have shareable URLs.
+- **Timeline:** arrival ranges or probability curves; milestone, forecaster and horizon controls; exact quantiles and historical forecasts. Narrative dates and forecast distributions remain distinct.
+- **Evidence:** full-text search, topic and source filters, related-source grouping, stable links, and expandable methods, interpretations and limitations.
+- **Research:** the RSI dossier covers all 26 supplied packet pages and the separate quantum-circuit screenshot, with sources, qualification notes and a downloadable audit. The five-stage research-loop explorer remains available here.
+- **Method, glossary and what to watch:** dated criteria, scoring rules, definitions, complete data download and observations that would change the assessment.
+
+The interface puts the story first, with detailed evidence available through disclosures and dedicated routes. Research and development are transparently AI-assisted; the assessment is not an official AI Futures Project rating.
 
 ## Run and validate
 
@@ -17,60 +37,41 @@ pnpm test
 pnpm build
 ```
 
-`build` validates data and typechecks before compiling. The test suite covers source integrity, supersession references, criterion arithmetic, percentile ordering, censored probability tails, source-curve ordering, date precision, the research-speed illustration, complete packet coverage, review provenance, evidence grouping, and route/navigation rendering.
+`build` validates data and typechecks before compiling. Tests cover source integrity, append-only assessment history, current references, criterion arithmetic, completion gates, forecast supersession, percentile ordering, source curves, censored tails, date precision, packet coverage and routes.
 
-For the production GitHub Pages build:
+For GitHub Pages:
 
 ```sh
 GITHUB_PAGES=true VITE_BASE_PATH=/my_first_repo/ pnpm build
 ```
 
-Pull requests run the tests and production build in CI. The deployment workflow publishes `dist/` when `main` changes. Hash-based routes work without server rewrites. The non-Pages build preserves the existing Sites-compatible `dist/client` and `dist/server` structure.
-
-## Reading paths
-
-- **Overview:** October measurements, the five links in the research loop, current sources, dated forecasts and a research-speed thought experiment.
-- **The RSI dossier:** 19 claim groups covering all 26 packet pages; sticky section navigation and count-based disposition filters; source links; a review download; and explicit observations that would change the assessment.
-- **The futures:** arrival ranges or cumulative probability curves; milestone, forecaster and horizon controls; exact quantiles, source conditions and historical records; definition-separated outside forecasts.
-- **The evidence:** full-text search, topic and source filters, archive inclusion, source-family grouping, publication/update/access dates, stable links, and expandable interpretation, limitations and experimental context.
-- **What to watch:** dated tests with preserved amendment histories, followed by ongoing observations without invented deadlines.
-- **Mechanisms, methodology, glossary and revision history:** the underlying arguments, dated capability criteria, definitions, complete data download and audit trail.
+Pull requests run the tests and production build in CI. Changes to `main` deploy `dist/`. Hash-based routes work without server rewrites. The non-Pages build preserves the Sites-compatible `dist/client` and `dist/server` structure.
 
 ## Data and source conventions
 
-`data/canonical.json` remains the authoritative record of evidence, forecast quantiles, milestone definitions, capability criteria, tests and revisions. Editorial framing and presentation live in the views and components. Supplemental probability series are versioned under `data/`, with their source documentation in [`data/README.md`](data/README.md).
+`data/canonical.json` is authoritative: 105 evidence records, 50 forecasts, nine dated capability assessments and seven falsifiers. `agent_assessment` connects the current five profiles, story dates and forecast comparison; `research_review` preserves the October 17 packet audit. Supplemental probability series are documented in [`data/README.md`](data/README.md).
 
-The October review strengthens the case for bounded experiment selection while leaving repeated autonomous successor gains unestablished. It updates the mechanism assessment, bottlenecks and monitors. It does **not** manufacture new numerical forecast distributions or rescore the July capability rubric. See the [research decision record](docs/research/2026-10-17-rsi-review.md).
+The [October 18 decision record](docs/research/2026-10-18-agent-assessment.md) explains the rescoring and seven appended house forecasts. The [October 17 research record](docs/research/2026-10-17-rsi-review.md) remains a historical account of the initial qualitative overhaul. The later assessment explicitly revises numerical judgments without overwriting the July scores or earlier forecast quantiles.
 
-Current comparisons include:
+Current comparisons include the Ledger's October outlook, Daniel Kokotajlo's August all-things-considered forecasts, Claude's July registered alternative, and the fixed original AI 2027 story. Definitions travel with each forecast: Agent-4's September narrative chapter differs from the supplement's August SAR marker, and Agent-5 has no separately asserted arrival distribution.
 
-- The Ledger’s September 4 Astra assessment, targeting useful internal capability and including interruptions.
-- Daniel Kokotajlo’s August 16 all-things-considered forecasts for AC, SAR experiment-selection, TED-AI and ASI. April SC/SIAR records remain visibly dated because the August all-things-considered source does not provide those milestones.
-- Claude’s July registered alternative, retained as a dated forecast rather than an official Anthropic position.
-- The original AI 2027 story, held fixed. Narrative diamonds are separate from the research supplement’s distributions, including its conditional later-milestone estimates.
+**Append revisions.** Forecasts link forward with `superseded_by` and name moving evidence through `moved_by`; capability assessments link backward with `supersedes`. Keep original dates, criteria and quantiles. Multiple accounts of one incident are not independent events.
 
-**Forecast revisions append records.** Add a new record, link the previous record through `superseded_by`, name the moving evidence with `moved_by`, and append a changelog entry. Do not overwrite historical quantiles. Corrections to evidence are explained; multiple accounts of one incident are not treated as independent events.
+**Do not invent precision.** Missing quartiles stay missing. Bare-year labels remain years. October dates target useful internal capability, including interruptions, and do not subtract a private lead again. The numerical outlook is an elicited judgment, not an extrapolation of two progress-bar snapshots.
 
-**Do not invent precision.** Missing quartiles remain missing. Bare-year labels stay as years. The September WSI estimate is only a rough 2034 center; the UI labels July’s complete distributions as historical instead of fabricating new tails.
-
-**Probability curves distinguish sources.** Daniel’s updated milestones use his published sampled CDF. The Ledger’s ASI view includes its explicitly stated cumulative judgments. Other curves interpolate uncensored quantiles. Lines stop at the available endpoints; readouts show bounds beyond them. A lower-bound p90 is never treated as an exact percentile date.
-
-**Capability scores are dated judgments.** The retained July criteria are weighted assessments of public evidence, not probabilities or September ratings. The schema recomputes weighted scores and validates each criterion’s supporting and contrary evidence.
+**Keep probability series versioned.** Daniel's supported milestones use published sampled CDFs. The September house ASI CDF belongs only to its historical forecast. October curves interpolate the new uncensored quantiles; readouts show bounds beyond available endpoints. A censored p90 is not an exact date.
 
 ## Implementation
 
 React, TypeScript, Vite, React Router and Zod. No backend, authentication, database or runtime external data fetches.
 
-- `src/components/SignalField.tsx`: original ambient canvas animation. Pauses offscreen, in background tabs, on user command, and for reduced-motion preferences.
-- `src/components/ForecastExplorer.tsx`: source-aware comparison instrument.
-- `src/components/ProbabilityChart.tsx`: responsive original probability chart.
-- `src/lib/forecast-series.ts`: chooses the appropriate published curve or recorded quantiles.
-- `src/lib/forecast-math.ts`: bounded interpolation and the fixed-work research illustration.
-- `src/components/ResearchLoop.tsx`: source-linked research stages and open tests.
-- `src/views/RSIView.tsx`: complete packet audit and downloadable review.
-- `src/lib/evidence.ts`: review filtering and related-source grouping.
-- `src/views/`: nine routes with progressive disclosure.
-- `src/index.css`: shared editorial design and responsive layouts.
-- `scripts/validate.ts` and `src/schema.ts`: schema and cross-reference validation.
+- `src/components/AgentExplorer.tsx`: selectable profiles, criteria, evidence and assessment history.
+- `src/components/StoryTimeline.tsx`: original scenario versus current outlook, with optional later milestones and long tails.
+- `src/components/ForecastExplorer.tsx` and `ProbabilityChart.tsx`: full source-aware forecast comparison.
+- `src/lib/data.ts`: validated canonical data and assessment history.
+- `src/lib/forecast-series.ts` and `forecast-math.ts`: source-specific curves and bounded interpolation.
+- `src/views/RSIView.tsx` and `src/lib/evidence.ts`: complete packet audit, related-source grouping and filters.
+- `src/agents.css` and `src/index.css`: responsive story-first and shared editorial layouts.
+- `src/schema.ts` and `scripts/validate.ts`: schema and cross-reference validation.
 
-The original horizon illustration and social preview were AI-generated for this project. Earlier social assets are retained. Fonts are self-hosted; the wave uses no third-party animation service.
+Fonts are self-hosted. Original illustration and social assets from earlier versions are retained. The separate interactive forecast artifact requested outside this repository is not bundled into the site.
