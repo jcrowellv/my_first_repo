@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ArrowRight, ArrowUpRight, Check, ChevronDown } from "lucide-react";
 import {
   canonical,
@@ -18,7 +18,9 @@ const statusLabels = {
 
 export function AgentExplorer() {
   const assessment = canonical.agent_assessment;
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const agent =
     assessment.agents.find((a) => a.id === params.get("agent")) ??
     assessment.agents[1];
@@ -28,7 +30,10 @@ export function AgentExplorer() {
   function choose(id: string) {
     const next = new URLSearchParams(params);
     next.set("agent", id);
-    setParams(next, { preventScrollReset: true });
+    navigate(
+      { search: next.toString(), hash: location.hash },
+      { preventScrollReset: true },
+    );
   }
   return (
     <div className="agent-explorer">
