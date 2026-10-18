@@ -64,6 +64,19 @@ describe("route content and navigation", () => {
     }
     expect(rendered.get("/falsifiers")).toContain('id="f-successor-gains"');
   });
+  it.each(canonical.agent_assessment.agents)(
+    "opens the $label assessment from a shared link",
+    (agent) => {
+      const html = renderToStaticMarkup(
+        <MemoryRouter initialEntries={[`/?agent=${agent.id}#agents`]}>
+          <TimelineView />
+        </MemoryRouter>,
+      );
+      expect(html).toContain(renderToStaticMarkup(<>{agent.missing}</>));
+      expect(html).toContain(`aria-label="${agent.label} assessment"`);
+      expect(html.match(/class="agent-card"/g)).toHaveLength(5);
+    },
+  );
   it.each(canonical.research_review.stages)(
     "opens the $id stage from a shared link",
     (stage) => {

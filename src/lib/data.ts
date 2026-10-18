@@ -18,10 +18,30 @@ export const evidenceById = new Map(
 export const falsifiersById = new Map(
   canonical.falsifiers.map((falsifier) => [falsifier.id, falsifier]),
 );
+export const progressById = new Map(
+  canonical.capability_progress.map((progress) => [progress.id, progress]),
+);
+export const currentAgentProgress = canonical.agent_assessment.agents.map(
+  (agent) => progressById.get(agent.progress_id)!,
+);
 
-export const newestChangelogDate = [...canonical.changelog]
-  .sort((a, b) => b.date.localeCompare(a.date))[0]
-  .date;
+export function getProgressHistory(progressId: string) {
+  const history = [];
+  const visited = new Set<string>();
+  let current = progressById.get(progressId);
+  while (current && !visited.has(current.id)) {
+    history.push(current);
+    visited.add(current.id);
+    current = current.supersedes
+      ? progressById.get(current.supersedes)
+      : undefined;
+  }
+  return history;
+}
+
+export const newestChangelogDate = [...canonical.changelog].sort((a, b) =>
+  b.date.localeCompare(a.date),
+)[0].date;
 
 export function getForecastChain(forecastId: string) {
   const chain = [];
@@ -41,18 +61,22 @@ export function getProgressRange(
   progress: (typeof canonical.capability_progress)[number],
 ) {
   const low = Math.round(
-    progress.criteria.reduce(
+    (progress.criteria.reduce(
       (sum, criterion) =>
         sum + criterion.weight * criterion.completion_range.low,
       0,
-    ) * 100,
+    ) +
+      Number.EPSILON) *
+      100,
   );
   const high = Math.round(
-    progress.criteria.reduce(
+    (progress.criteria.reduce(
       (sum, criterion) =>
         sum + criterion.weight * criterion.completion_range.high,
       0,
-    ) * 100,
+    ) +
+      Number.EPSILON) *
+      100,
   );
   return { low, high };
 }
